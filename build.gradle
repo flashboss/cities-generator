@@ -1,0 +1,23 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+group = 'it.vige'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 12
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('org.slf4j:slf4j-simple:1.7.29')
+    implementation('commons-cli:commons-cli:1.4')
+    implementation('org.apache.commons:commons-lang3:3.9')
+}
