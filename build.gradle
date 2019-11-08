@@ -18,6 +18,9 @@ repositories {
 
 dependencies {
     implementation('org.slf4j:slf4j-simple:1.7.29')
+    implementation('org.jsoup:jsoup:1.12.1')
     implementation('commons-cli:commons-cli:1.4')
     implementation('org.apache.commons:commons-lang3:3.9')
+    implementation('com.fasterxml.jackson.core:jackson-annotations:2.10.0')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.10.0')
 }

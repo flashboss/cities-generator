@@ -11,6 +11,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.vige.cities.templates.ComuniItaliani;
+import it.vige.cities.templates.Tuttitalia;
 import it.vige.cities.templates.Wikipedia;
 
 public class Generator {
@@ -48,16 +50,16 @@ public class Generator {
 			template = new Wikipedia();
 			break;
 		case TUTTITALIA:
-			template = new Wikipedia();
+			template = new Tuttitalia();
 			break;
 		case COMUNI_ITALIANI:
-			template = new Wikipedia();
+			template = new ComuniItaliani();
 			break;
 		}
 		return template;
 	}
 
-	public void generate(String[] args) throws ParseException {
+	public void generate(String[] args) throws Exception {
 		logger.info("Start generation");
 		CommandLine cmd = configureOptions(args);
 		String provider = cmd.getParsedOptionValue(SINGLE_PROVIDER) + "";
@@ -66,7 +68,7 @@ public class Generator {
 
 	}
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
 		Generator generator = new Generator();
 		generator.generate(args);
 	}
