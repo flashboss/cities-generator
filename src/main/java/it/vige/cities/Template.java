@@ -22,7 +22,13 @@ public abstract class Template {
 	}
 
 	protected void writeFile(Nodes nodes) throws Exception {
-		mapper.writeValue(new File("target/bubbusettete.json"), nodes);
+		mapper.writeValue(new File("build/output.json"), nodes);
+	}
 
+	protected String caseSensitive(boolean caseSensitive, String text) {
+		if (caseSensitive)
+			return text;
+		else
+			return text.toUpperCase();
 	}
 }

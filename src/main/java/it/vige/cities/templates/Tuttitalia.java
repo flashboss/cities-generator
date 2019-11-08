@@ -21,10 +21,6 @@ public class Tuttitalia extends Template {
 	@Override
 	public void generate(CommandLine cmd) throws Exception {
 		boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
-		String provider = cmd.getParsedOptionValue(Generator.SINGLE_PROVIDER) + "";
-
-		logger.info("case sensitive: " + caseSensitive + "");
-		logger.info("provider: " + provider);
 
 		Document level0 = getPage(URL);
 		Elements lines0 = level0.select("dl dt a");
@@ -34,7 +30,7 @@ public class Tuttitalia extends Template {
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
-			node0.setName(head0.text());
+			caseSensitive(caseSensitive, head0.text());
 			nodes.getZones().add(node0);
 			Document level1 = getPage(head0.absUrl("href"));
 			Elements lines1 = level1.select(".ut tr td a");
@@ -42,25 +38,27 @@ public class Tuttitalia extends Template {
 				Node node1 = new Node();
 				node1.setId(counter++);
 				node1.setLevel(1);
-				String[] splittedName = head1.text().split("Provincia di ");
+				String name = caseSensitive(caseSensitive, head1.text());
+				String[] splittedName = name.split("Provincia di ");
 				if (splittedName.length < 2)
-					splittedName = head1.text().split("Provincia del");
+					splittedName = name.split("Provincia del");
 				if (splittedName.length < 2)
-					splittedName = head1.text().split("Città Metropolitana di ");
+					splittedName = name.split("Città Metropolitana di ");
 				node1.setName(splittedName[1]);
-				node1.getZones().add(node1);
-				Document level2 = getPage(head0.absUrl("href"));
+				node0.getZones().add(node1);
+				Document level2 = getPage(head1.absUrl("href"));
 				Elements lines2 = level2.select(".at tr td a");
 				for (Element head2 : lines2) {
 					Node node2 = new Node();
 					node2.setId(counter++);
 					node2.setLevel(2);
-					node2.setName(head2.text());
-					node2.getZones().add(node2);
+					node2.setName(caseSensitive(caseSensitive, head2.text()));
+					node1.getZones().add(node2);
 				}
 			}
 		}
 		logger.info(nodes + "");
+		writeFile(nodes);
 	}
 
 }
