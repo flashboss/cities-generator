@@ -53,15 +53,15 @@ public class Generator {
 		switch (Countries.valueOf(country)) {
 		case IT:
 			switch (it.vige.cities.templates.it.Providers.valueOf(provider)) {
-				case TUTTITALIA:
-					template = new Tuttitalia();
-					break;
-				case COMUNI_ITALIANI:
-					template = new ComuniItaliani();
-					break;
-				default:
-					template = new Tuttitalia();
-					break;
+			case TUTTITALIA:
+				template = new Tuttitalia();
+				break;
+			case COMUNI_ITALIANI:
+				template = new ComuniItaliani();
+				break;
+			default:
+				template = new Tuttitalia();
+				break;
 			}
 			break;
 		case EN:
@@ -75,8 +75,8 @@ public class Generator {
 			default:
 				template = new CityMetric();
 				break;
-		}
-		break;
+			}
+			break;
 		}
 		return template;
 	}

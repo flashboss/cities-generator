@@ -14,7 +14,7 @@ public abstract class Template {
 
 	private ObjectMapper mapper = new ObjectMapper();
 
-	protected abstract void generate(CommandLine cmd) throws Exception;
+	protected abstract Result generate(CommandLine cmd);
 
 	protected Document getPage(String url) throws Exception {
 		Document doc = Jsoup.connect(url).get();
