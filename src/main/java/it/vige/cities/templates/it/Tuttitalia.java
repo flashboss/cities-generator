@@ -1,4 +1,4 @@
-package it.vige.cities.templates;
+package it.vige.cities.templates.it;
 
 import org.apache.commons.cli.CommandLine;
 import org.jsoup.nodes.Document;
@@ -30,7 +30,7 @@ public class Tuttitalia extends Template {
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
-			caseSensitive(caseSensitive, head0.text());
+			node0.setName(caseSensitive(caseSensitive, head0.text()));
 			nodes.getZones().add(node0);
 			Document level1 = getPage(head0.absUrl("href"));
 			Elements lines1 = level1.select(".ut tr td a");
@@ -38,13 +38,13 @@ public class Tuttitalia extends Template {
 				Node node1 = new Node();
 				node1.setId(counter++);
 				node1.setLevel(1);
-				String name = caseSensitive(caseSensitive, head1.text());
-				String[] splittedName = name.split("Provincia di ");
+				String text = head1.text();
+				String[] splittedName = text.split("Provincia di ");
 				if (splittedName.length < 2)
-					splittedName = name.split("Provincia del");
+					splittedName = text.split("Provincia del");
 				if (splittedName.length < 2)
-					splittedName = name.split("Città Metropolitana di ");
-				node1.setName(splittedName[1]);
+					splittedName = text.split("Città Metropolitana di ");
+				node1.setName(caseSensitive(caseSensitive, splittedName[1]));
 				node0.getZones().add(node1);
 				Document level2 = getPage(head1.absUrl("href"));
 				Elements lines2 = level2.select(".at tr td a");

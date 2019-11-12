@@ -1,4 +1,4 @@
-package it.vige.cities.templates;
+package it.vige.cities.templates.it;
 
 import org.apache.commons.cli.CommandLine;
 import org.jsoup.nodes.Document;
@@ -31,7 +31,7 @@ public class ComuniItaliani extends Template {
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
-			caseSensitive(caseSensitive, head0.text());
+			node0.setName(caseSensitive(caseSensitive, head0.text()));
 			nodes.getZones().add(node0);
 			Document level1 = getPage(head0.absUrl("href"));
 			Elements lines1 = level1.select(".tabwrap").get(0).select("tr td a");
@@ -50,7 +50,7 @@ public class ComuniItaliani extends Template {
 					node2.setName(caseSensitive(caseSensitive, head2.text()));
 					node1.getZones().add(node2);
 				}
-			}	
+			}
 		}
 		logger.info(nodes + "");
 		writeFile(nodes);
