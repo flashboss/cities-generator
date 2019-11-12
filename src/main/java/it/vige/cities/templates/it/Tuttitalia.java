@@ -15,7 +15,7 @@ public class Tuttitalia extends Template {
 
 	private Logger logger = LoggerFactory.getLogger(Tuttitalia.class);
 
-	private final static String URL = "https://www.tuttitalia.it/";
+	private final static String URL = "https://www.tuttitalia.it/statistiche/nord-centro-mezzogiorno-italia";
 
 	private boolean caseSensitive;
 
@@ -37,7 +37,7 @@ public class Tuttitalia extends Template {
 				node0.setName(caseSensitive(caseSensitive, head0.text()));
 				nodes.getZones().add(node0);
 				Document level1 = getPage(head0.absUrl("href"));
-				Elements lines1 = level1.select(".ut tr td a");
+				Elements lines1 = level1.select("dl dt a");
 				for (Element head1 : lines1) {
 					Node node1 = new Node();
 					node1.setId(counter++);
@@ -51,13 +51,22 @@ public class Tuttitalia extends Template {
 					node1.setName(caseSensitive(caseSensitive, splittedName[1]));
 					node0.getZones().add(node1);
 					Document level2 = getPage(head1.absUrl("href"));
-					Elements lines2 = level2.select(".at tr td a");
+					Elements lines2 = level2.select(".ut tr td a");
 					for (Element head2 : lines2) {
 						Node node2 = new Node();
 						node2.setId(counter++);
 						node2.setLevel(2);
 						node2.setName(caseSensitive(caseSensitive, head2.text()));
 						node1.getZones().add(node2);
+						Document level3 = getPage(head2.absUrl("href"));
+						Elements lines3 = level3.select(".at tr td a");
+						for (Element head3 : lines3) {
+							Node node3 = new Node();
+							node3.setId(counter++);
+							node3.setLevel(3);
+							node3.setName(caseSensitive(caseSensitive, head3.text()));
+							node2.getZones().add(node3);
+						}
 					}
 				}
 			}

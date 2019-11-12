@@ -29,14 +29,18 @@ public class Generator extends Template {
 
 	private Logger logger = LoggerFactory.getLogger(Generator.class);
 
-	private String provider;
 	private String country;
 	private boolean caseSensitive;
+	private String provider;
 
-	public Generator(String country, String provider, boolean caseSensitive) {
-		this.provider = provider;
+	public Generator(String country, boolean caseSensitive) {
 		this.country = country;
 		this.caseSensitive = caseSensitive;
+	}
+
+	public Generator(String country, String provider, boolean caseSensitive) {
+		this(country, caseSensitive);
+		this.provider = provider;
 	}
 
 	private static CommandLine configureOptions(String[] args) throws ParseException {
@@ -67,10 +71,10 @@ public class Generator extends Template {
 
 		switch (Countries.valueOf(country)) {
 		case IT:
-			if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.TUTTITALIA.name())) {
+			if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 				templates.add(new ComuniItaliani(caseSensitive));
 				templates.add(new Tuttitalia(caseSensitive));
-			} else if (provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
+			} else if (provider.equals(it.vige.cities.templates.it.Providers.TUTTITALIA.name())) {
 				templates.add(new Tuttitalia(caseSensitive));
 				templates.add(new ComuniItaliani(caseSensitive));
 			}

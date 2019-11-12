@@ -15,7 +15,7 @@ public class ComuniItaliani extends Template {
 
 	private Logger logger = LoggerFactory.getLogger(ComuniItaliani.class);
 
-	private final static String URL = "http://www.comuni-italiani.it/";
+	private final static String URL = "http://www.comuni-italiani.it/zona";
 
 	private boolean caseSensitive;
 
@@ -27,7 +27,6 @@ public class ComuniItaliani extends Template {
 	public Result generate() {
 		try {
 			Document level0 = getPage(URL);
-			System.out.println(level0);
 			Elements lines0 = level0.select(".tabwrap").get(0).select("tr td a");
 			Nodes nodes = new Nodes();
 			int counter = 0;
@@ -46,13 +45,22 @@ public class ComuniItaliani extends Template {
 					node1.setName(caseSensitive(caseSensitive, head1.text()));
 					node0.getZones().add(node1);
 					Document level2 = getPage(head1.absUrl("href"));
-					Elements lines2 = level2.select(".tabwrap").get(2).select("tr td a");
+					Elements lines2 = level2.select(".tabwrap").get(0).select("tr td a");
 					for (Element head2 : lines2) {
 						Node node2 = new Node();
 						node2.setId(counter++);
 						node2.setLevel(2);
 						node2.setName(caseSensitive(caseSensitive, head2.text()));
 						node1.getZones().add(node2);
+						Document level3 = getPage(head2.absUrl("href"));
+						Elements lines3 = level3.select(".tabwrap").get(2).select("tr td a");
+						for (Element head3 : lines3) {
+							Node node3 = new Node();
+							node3.setId(counter++);
+							node3.setLevel(3);
+							node3.setName(caseSensitive(caseSensitive, head3.text()));
+							node2.getZones().add(node3);
+						}
 					}
 				}
 			}
