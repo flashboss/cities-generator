@@ -1,13 +1,11 @@
 package it.vige.cities.templates.it;
 
-import org.apache.commons.cli.CommandLine;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.vige.cities.Generator;
 import it.vige.cities.Result;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
@@ -19,11 +17,15 @@ public class Tuttitalia extends Template {
 
 	private final static String URL = "https://www.tuttitalia.it/";
 
-	@Override
-	public Result generate(CommandLine cmd) {
-		try {
-			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
+	private boolean caseSensitive;
 
+	public Tuttitalia(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
+
+	@Override
+	public Result generate() {
+		try {
 			Document level0 = getPage(URL);
 			Elements lines0 = level0.select("dl dt a");
 			Nodes nodes = new Nodes();

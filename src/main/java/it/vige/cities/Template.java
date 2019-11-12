@@ -2,7 +2,6 @@ package it.vige.cities;
 
 import java.io.File;
 
-import org.apache.commons.cli.CommandLine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -14,7 +13,7 @@ public abstract class Template {
 
 	private ObjectMapper mapper = new ObjectMapper();
 
-	protected abstract Result generate(CommandLine cmd);
+	protected abstract Result generate();
 
 	protected Document getPage(String url) throws Exception {
 		Document doc = Jsoup.connect(url).get();

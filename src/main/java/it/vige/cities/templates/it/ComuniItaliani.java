@@ -1,13 +1,11 @@
 package it.vige.cities.templates.it;
 
-import org.apache.commons.cli.CommandLine;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.vige.cities.Generator;
 import it.vige.cities.Result;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
@@ -19,11 +17,15 @@ public class ComuniItaliani extends Template {
 
 	private final static String URL = "http://www.comuni-italiani.it/";
 
-	@Override
-	public Result generate(CommandLine cmd) {
-		try {
-			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
+	private boolean caseSensitive;
 
+	public ComuniItaliani(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
+
+	@Override
+	public Result generate() {
+		try {
 			Document level0 = getPage(URL);
 			System.out.println(level0);
 			Elements lines0 = level0.select(".tabwrap").get(0).select("tr td a");

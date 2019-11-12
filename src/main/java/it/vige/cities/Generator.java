@@ -1,6 +1,8 @@
 package it.vige.cities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -16,7 +18,7 @@ import it.vige.cities.templates.en.CityPopulation;
 import it.vige.cities.templates.it.ComuniItaliani;
 import it.vige.cities.templates.it.Tuttitalia;
 
-public class Generator {
+public class Generator extends Template {
 
 	public final static String SINGLE_CASE_SENSITIVE = "s";
 	public final static String SINGLE_COUNTRY = "c";
@@ -27,7 +29,17 @@ public class Generator {
 
 	private Logger logger = LoggerFactory.getLogger(Generator.class);
 
-	private CommandLine configureOptions(String[] args) throws ParseException {
+	private String provider;
+	private String country;
+	private boolean caseSensitive;
+
+	public Generator(String country, String provider, boolean caseSensitive) {
+		this.provider = provider;
+		this.country = country;
+		this.caseSensitive = caseSensitive;
+	}
+
+	private static CommandLine configureOptions(String[] args) throws ParseException {
 		Options options = new Options();
 		options.addOption(Option.builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
 				.desc(MULTI_CASE_SENSITIVE).build());
@@ -48,52 +60,48 @@ public class Generator {
 		return cmd;
 	}
 
-	public Template getTemplate(String country, String provider) {
-		Template template = null;
+	public Result generate() {
+		logger.info("Start generation");
+		Result result = null;
+		List<Template> templates = new ArrayList<Template>();
+
 		switch (Countries.valueOf(country)) {
 		case IT:
-			switch (it.vige.cities.templates.it.Providers.valueOf(provider)) {
-			case TUTTITALIA:
-				template = new Tuttitalia();
-				break;
-			case COMUNI_ITALIANI:
-				template = new ComuniItaliani();
-				break;
-			default:
-				template = new Tuttitalia();
-				break;
+			if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.TUTTITALIA.name())) {
+				templates.add(new ComuniItaliani(caseSensitive));
+				templates.add(new Tuttitalia(caseSensitive));
+			} else if (provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
+				templates.add(new Tuttitalia(caseSensitive));
+				templates.add(new ComuniItaliani(caseSensitive));
 			}
+			result = templates.get(0).generate();
+			if (result == Result.KO)
+				templates.get(1).generate();
 			break;
 		case EN:
-			switch (it.vige.cities.templates.en.Providers.valueOf(provider)) {
-			case CITYMETRIC:
-				template = new CityMetric();
-				break;
-			case CITYPOPULATION:
-				template = new CityPopulation();
-				break;
-			default:
-				template = new CityMetric();
-				break;
+			if (provider.isEmpty() || provider.equals(it.vige.cities.templates.en.Providers.CITYMETRIC.name())) {
+				templates.add(new CityMetric(caseSensitive));
+				templates.add(new CityPopulation(caseSensitive));
+			} else if (provider.equals(it.vige.cities.templates.en.Providers.CITYPOPULATION.name())) {
+				templates.add(new CityPopulation(caseSensitive));
+				templates.add(new CityMetric(caseSensitive));
 			}
+			result = templates.get(0).generate();
+			if (result == Result.KO)
+				templates.get(1).generate();
 			break;
 		}
-		return template;
-	}
-
-	public void generate(String[] args) throws Exception {
-		logger.info("Start generation");
-		CommandLine cmd = configureOptions(args);
-		String country = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
-		String provider = cmd.getParsedOptionValue(SINGLE_PROVIDER) + "";
-
-		getTemplate(country, provider).generate(cmd);
-
+		return result;
 	}
 
 	public static void main(String[] args) throws Exception {
-		Generator generator = new Generator();
-		generator.generate(args);
+		CommandLine cmd = configureOptions(args);
+		String country = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
+		String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
+		boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
+
+		Generator generator = new Generator(country, provider, caseSensitive);
+		generator.generate();
 	}
 
 }
