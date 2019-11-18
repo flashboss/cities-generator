@@ -10,8 +10,8 @@ public class CityPopulationTest extends FileGenerator {
 
 	@Test
 	public void testCities() {
-		Generator generator = new Generator(Countries.EN.name(), Providers.CITYPOPULATION.name(), false);
-		generator.generate();
+		Generator generator = new Generator(Countries.EN.name(), Providers.CITYPOPULATION.name(), false, false);
+		generator.generateFile();
 	}
 
 }

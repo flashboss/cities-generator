@@ -15,8 +15,8 @@ public class TuttitaliaTest extends FileGenerator {
 
 	@Test
 	public void testCities() throws Exception {
-		Generator generator = new Generator(Countries.IT.name(), Providers.TUTTITALIA.name(), false);
-		Result result = generator.generate();
+		Generator generator = new Generator(Countries.IT.name(), Providers.TUTTITALIA.name(), false, false);
+		Result result = generator.generateFile();
 		Assertions.assertTrue(result == Result.OK);
 		Nodes nodes = readFile();
 		Assertions.assertNotNull(nodes);

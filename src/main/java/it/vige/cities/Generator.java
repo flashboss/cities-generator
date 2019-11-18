@@ -13,7 +13,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.vige.cities.templates.en.CityMetric;
+import it.vige.cities.result.Nodes;
+import it.vige.cities.templates.en.Britannica;
 import it.vige.cities.templates.en.CityPopulation;
 import it.vige.cities.templates.it.ComuniItaliani;
 import it.vige.cities.templates.it.Tuttitalia;
@@ -23,23 +24,27 @@ public class Generator extends Template {
 	public final static String SINGLE_CASE_SENSITIVE = "s";
 	public final static String SINGLE_COUNTRY = "c";
 	public final static String SINGLE_PROVIDER = "p";
+	public final static String SINGLE_DUPLICATED_NAMES = "d";
 	public final static String MULTI_CASE_SENSITIVE = "case_sensitive";
 	public final static String MULTI_COUNTRY = "country";
 	public final static String MULTI_PROVIDER = "provider";
+	public final static String MULTI_DUPLICATED_NAMES = "duplicated";
 
 	private Logger logger = LoggerFactory.getLogger(Generator.class);
 
 	private String country;
 	private boolean caseSensitive;
+	private boolean duplicatedNames;
 	private String provider;
 
-	public Generator(String country, boolean caseSensitive) {
+	public Generator(String country, boolean caseSensitive, boolean duplicatedNames) {
 		this.country = country;
 		this.caseSensitive = caseSensitive;
+		this.duplicatedNames = duplicatedNames;
 	}
 
-	public Generator(String country, String provider, boolean caseSensitive) {
-		this(country, caseSensitive);
+	public Generator(String country, String provider, boolean caseSensitive, boolean duplicatedNames) {
+		this(country, caseSensitive, duplicatedNames);
 		this.provider = provider;
 	}
 
@@ -51,6 +56,8 @@ public class Generator extends Template {
 				.numberOfArgs(1).desc(MULTI_COUNTRY).build());
 		options.addOption(Option.builder(SINGLE_PROVIDER).longOpt(MULTI_PROVIDER).type(String.class).hasArg()
 				.numberOfArgs(1).desc(MULTI_PROVIDER).build());
+		options.addOption(Option.builder(SINGLE_DUPLICATED_NAMES).longOpt(MULTI_DUPLICATED_NAMES).type(Boolean.class)
+				.desc(MULTI_DUPLICATED_NAMES).build());
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -64,37 +71,57 @@ public class Generator extends Template {
 		return cmd;
 	}
 
-	public Result generate() {
-		logger.info("Start generation");
-		Result result = null;
+	private List<Template> getTemplates() {
 		List<Template> templates = new ArrayList<Template>();
 
 		switch (Countries.valueOf(country)) {
 		case IT:
 			if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
-				templates.add(new ComuniItaliani(caseSensitive));
-				templates.add(new Tuttitalia(caseSensitive));
+				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
+				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
 			} else if (provider.equals(it.vige.cities.templates.it.Providers.TUTTITALIA.name())) {
-				templates.add(new Tuttitalia(caseSensitive));
-				templates.add(new ComuniItaliani(caseSensitive));
+				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
+				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 			}
-			result = templates.get(0).generate();
-			if (result == Result.KO)
-				templates.get(1).generate();
 			break;
 		case EN:
-			if (provider.isEmpty() || provider.equals(it.vige.cities.templates.en.Providers.CITYMETRIC.name())) {
-				templates.add(new CityMetric(caseSensitive));
-				templates.add(new CityPopulation(caseSensitive));
+			if (provider.isEmpty() || provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
+				templates.add(new Britannica(caseSensitive, duplicatedNames));
+				templates.add(new CityPopulation(caseSensitive, duplicatedNames));
 			} else if (provider.equals(it.vige.cities.templates.en.Providers.CITYPOPULATION.name())) {
-				templates.add(new CityPopulation(caseSensitive));
-				templates.add(new CityMetric(caseSensitive));
+				templates.add(new CityPopulation(caseSensitive, duplicatedNames));
+				templates.add(new Britannica(caseSensitive, duplicatedNames));
 			}
-			result = templates.get(0).generate();
-			if (result == Result.KO)
-				templates.get(1).generate();
 			break;
 		}
+		return templates;
+	}
+
+	@Override
+	public Nodes generate() {
+		logger.info("Start object generation");
+		Nodes result = null;
+		List<Template> templates = getTemplates();
+		try {
+			result = templates.get(0).generate();
+		} catch (Exception ex) {
+			try {
+				result = templates.get(1).generate();
+			} catch (Exception ex2) {
+				return null;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Result generateFile() {
+		logger.info("Start file generation");
+		Result result = null;
+		List<Template> templates = getTemplates();
+		result = templates.get(0).generateFile();
+		if (result == Result.KO)
+			templates.get(1).generateFile();
 		return result;
 	}
 
@@ -103,9 +130,10 @@ public class Generator extends Template {
 		String country = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
 		String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
 		boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
+		boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
 
-		Generator generator = new Generator(country, provider, caseSensitive);
-		generator.generate();
+		Generator generator = new Generator(country, provider, caseSensitive, duplicatedNames);
+		generator.generateFile();
 	}
 
 }

@@ -1,4 +1,4 @@
-package it.vige.cities.templates.it;
+package it.vige.cities.templates.en;
 
 import java.util.stream.Collectors;
 
@@ -12,16 +12,16 @@ import it.vige.cities.Template;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
-public class ComuniItaliani extends Template {
+public class Britannica extends Template {
 
-	private Logger logger = LoggerFactory.getLogger(ComuniItaliani.class);
+	private Logger logger = LoggerFactory.getLogger(Britannica.class);
 
-	private final static String URL = "http://www.comuni-italiani.it/zona";
+	private final static String URL = "https://www.britannica.com/topic/list-of-cities-and-towns-in-the-United-Kingdom-2034188";
 
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 
-	public ComuniItaliani(boolean caseSensitive, boolean duplicatedNames) {
+	public Britannica(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 	}
@@ -30,24 +30,25 @@ public class ComuniItaliani extends Template {
 	public Nodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		Document level0 = getPage(URL);
-		Elements lines0 = level0.select(".tabwrap").get(0).select("tr td a");
+		Elements lines0 = level0.select(".grid-sm section[data-level=1]:first-child a");
+		lines0.remove(0);
+		lines0.remove(lines0.last());
+		lines0.remove(lines0.last());
 		int counter = 0;
 		for (Element head0 : lines0) {
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
 			node0.setName(normalize(caseSensitive, duplicatedNames, head0.text(),
-					nodes.getZones().parallelStream().map(e -> e.getName()).collect(Collectors.toList())));
+					lines0.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 			nodes.getZones().add(node0);
-			Document level1 = getPage(head0.absUrl("href"));
-			Elements lines1 = level1.select(".tabwrap").get(0).select("tr td a");
+			Elements lines1 = level0.select(".grid-sm section[data-level=2]").get(counter).select("h2 a");
 			for (Element head1 : lines1) {
 				Node node1 = new Node();
 				node1.setId(counter++);
 				node1.setLevel(1);
 				node1.setName(normalize(caseSensitive, duplicatedNames, head1.text(),
-						nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
-								.map(e -> e.getName()).collect(Collectors.toList())));
+						lines1.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 				node0.getZones().add(node1);
 				Document level2 = getPage(head1.absUrl("href"));
 				Elements lines2 = level2.select(".tabwrap").get(0).select("tr td a");
@@ -56,9 +57,7 @@ public class ComuniItaliani extends Template {
 					node2.setId(counter++);
 					node2.setLevel(2);
 					node2.setName(normalize(caseSensitive, duplicatedNames, head2.text(),
-							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
-									.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
-									.collect(Collectors.toList())));
+							lines2.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 					node1.getZones().add(node2);
 					Document level3 = getPage(head2.absUrl("href"));
 					Elements lines3 = level3.select(".tabwrap").get(2).select("tr td a");
@@ -67,10 +66,7 @@ public class ComuniItaliani extends Template {
 						node3.setId(counter++);
 						node3.setLevel(3);
 						node3.setName(normalize(caseSensitive, duplicatedNames, head3.text(),
-								nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
-										.flatMap(e -> e.getZones().parallelStream())
-										.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
-										.collect(Collectors.toList())));
+								lines3.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 						node2.getZones().add(node3);
 					}
 				}
@@ -79,5 +75,4 @@ public class ComuniItaliani extends Template {
 		logger.info(nodes + "");
 		return nodes;
 	}
-
 }
