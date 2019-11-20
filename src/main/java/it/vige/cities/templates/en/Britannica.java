@@ -44,7 +44,7 @@ public class Britannica extends Template {
 			node0.setId(counter++);
 			node0.setLevel(0);
 			node0.setName(normalize(caseSensitive, duplicatedNames, head0.text(),
-					lines0.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
+					nodes.getZones().parallelStream().map(e -> e.getName()).collect(Collectors.toList())));
 			nodes.getZones().add(node0);
 			Elements lines1 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
 					.select("section[data-level=2] h2 a");
@@ -54,7 +54,8 @@ public class Britannica extends Template {
 				node1.setId(counter++);
 				node1.setLevel(1);
 				node1.setName(normalize(caseSensitive, duplicatedNames, head1.text(),
-						lines1.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
+						nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
+						.map(e -> e.getName()).collect(Collectors.toList())));
 				node0.getZones().add(node1);
 				Elements lines2 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
 						.select("section[data-level=2]:eq(" + counterLevel1 + ") ul li");
@@ -63,7 +64,9 @@ public class Britannica extends Template {
 					node2.setId(counter++);
 					node2.setLevel(2);
 					node2.setName(normalize(caseSensitive, duplicatedNames, head2.text(),
-							lines2.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
+							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
+							.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
+							.collect(Collectors.toList())));
 					node1.getZones().add(node2);
 					Elements lines3 = lines2.select("li:eq(" + counterLevel2 + ") ul li");
 					if (lines3.size() > 0)
@@ -73,7 +76,10 @@ public class Britannica extends Template {
 						node3.setId(counter++);
 						node3.setLevel(3);
 						node3.setName(normalize(caseSensitive, duplicatedNames, head3.text(),
-								lines3.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
+								nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
+								.flatMap(e -> e.getZones().parallelStream())
+								.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
+								.collect(Collectors.toList())));
 						node2.getZones().add(node3);
 					}
 				}
