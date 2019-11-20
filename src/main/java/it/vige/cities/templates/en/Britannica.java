@@ -35,23 +35,29 @@ public class Britannica extends Template {
 		lines0.remove(lines0.last());
 		lines0.remove(lines0.last());
 		int counter = 0;
+		int counterLevel0 = 0;
+		int counterLevel1 = 0;
+		int counterLevel2 = 0;
 		for (Element head0 : lines0) {
+			counterLevel0++;
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
 			node0.setName(normalize(caseSensitive, duplicatedNames, head0.text(),
 					lines0.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 			nodes.getZones().add(node0);
-			Elements lines1 = level0.select(".grid-sm section[data-level=2]").get(counter).select("h2 a");
+			Elements lines1 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
+					.select("section[data-level=2] h2 a");
 			for (Element head1 : lines1) {
+				counterLevel1++;
 				Node node1 = new Node();
 				node1.setId(counter++);
 				node1.setLevel(1);
 				node1.setName(normalize(caseSensitive, duplicatedNames, head1.text(),
 						lines1.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 				node0.getZones().add(node1);
-				Document level2 = getPage(head1.absUrl("href"));
-				Elements lines2 = level2.select(".tabwrap").get(0).select("tr td a");
+				Elements lines2 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
+						.select("section[data-level=2]:eq(" + counterLevel1 + ") ul li");
 				for (Element head2 : lines2) {
 					Node node2 = new Node();
 					node2.setId(counter++);
@@ -59,8 +65,9 @@ public class Britannica extends Template {
 					node2.setName(normalize(caseSensitive, duplicatedNames, head2.text(),
 							lines2.parallelStream().map(e -> e.text()).collect(Collectors.toList())));
 					node1.getZones().add(node2);
-					Document level3 = getPage(head2.absUrl("href"));
-					Elements lines3 = level3.select(".tabwrap").get(2).select("tr td a");
+					Elements lines3 = lines2.select("li:eq(" + counterLevel2 + ") ul li");
+					if (lines3.size() > 0)
+						counterLevel2++;
 					for (Element head3 : lines3) {
 						Node node3 = new Node();
 						node3.setId(counter++);
