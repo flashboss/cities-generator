@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.en.Britannica;
-import it.vige.cities.templates.en.CityPopulation;
 import it.vige.cities.templates.it.ComuniItaliani;
 import it.vige.cities.templates.it.Tuttitalia;
 
@@ -85,13 +84,7 @@ public class Generator extends Template {
 			}
 			break;
 		case EN:
-			if (provider.isEmpty() || provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
-				templates.add(new Britannica(caseSensitive, duplicatedNames));
-				templates.add(new CityPopulation(caseSensitive, duplicatedNames));
-			} else if (provider.equals(it.vige.cities.templates.en.Providers.CITYPOPULATION.name())) {
-				templates.add(new CityPopulation(caseSensitive, duplicatedNames));
-				templates.add(new Britannica(caseSensitive, duplicatedNames));
-			}
+			templates.add(new Britannica(caseSensitive, duplicatedNames));
 			break;
 		}
 		return templates;
