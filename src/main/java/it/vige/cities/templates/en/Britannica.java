@@ -58,12 +58,14 @@ public class Britannica extends Template {
 						.map(e -> e.getName()).collect(Collectors.toList())));
 				node0.getZones().add(node1);
 				Elements lines2 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
-						.select("section[data-level=2]:eq(" + counterLevel1 + ") ul li");
+						.select("section[data-level=2]:eq(" + counterLevel1 + ") ul");
+				if (lines2.size() > 0) 
+					lines2 = lines2.get(0).children();
 				for (Element head2 : lines2) {
 					Node node2 = new Node();
 					node2.setId(counter++);
 					node2.setLevel(2);
-					node2.setName(normalize(caseSensitive, duplicatedNames, head2.text(),
+					node2.setName(normalize(caseSensitive, duplicatedNames, head2.select("a").get(0).text(),
 							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 							.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
 							.collect(Collectors.toList())));
