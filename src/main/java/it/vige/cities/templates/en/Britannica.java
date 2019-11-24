@@ -70,7 +70,7 @@ public class Britannica extends Template {
 							.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
 							.collect(Collectors.toList())));
 					node1.getZones().add(node2);
-					Elements lines3 = lines2.select("li:eq(" + counterLevel2 + ") ul li");
+					Elements lines3 = head2.select("li:eq(" + counterLevel2 + ") ul li");
 					if (lines3.size() > 0)
 						counterLevel2++;
 					for (Element head3 : lines3) {
@@ -85,6 +85,7 @@ public class Britannica extends Template {
 						node2.getZones().add(node3);
 					}
 				}
+				counterLevel2 = 0;
 			}
 		}
 		logger.info(nodes + "");
