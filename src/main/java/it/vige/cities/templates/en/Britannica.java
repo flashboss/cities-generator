@@ -37,7 +37,6 @@ public class Britannica extends Template {
 		int counter = 0;
 		int counterLevel0 = 0;
 		int counterLevel1 = 0;
-		int counterLevel2 = 0;
 		for (Element head0 : lines0) {
 			counterLevel0++;
 			Node node0 = new Node();
@@ -47,7 +46,7 @@ public class Britannica extends Template {
 					nodes.getZones().parallelStream().map(e -> e.getName()).collect(Collectors.toList())));
 			nodes.getZones().add(node0);
 			Elements lines1 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
-					.select("section[data-level=2] h2 a");
+					.select("section[data-level=2] h2");
 			for (Element head1 : lines1) {
 				counterLevel1++;
 				Node node1 = new Node();
@@ -65,14 +64,12 @@ public class Britannica extends Template {
 					Node node2 = new Node();
 					node2.setId(counter++);
 					node2.setLevel(2);
-					node2.setName(normalize(caseSensitive, duplicatedNames, head2.select("a").get(0).text(),
+					node2.setName(normalize(caseSensitive, duplicatedNames, head2.text(),
 							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 							.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
 							.collect(Collectors.toList())));
 					node1.getZones().add(node2);
-					Elements lines3 = head2.select("li:eq(" + counterLevel2 + ") ul li");
-					if (lines3.size() > 0)
-						counterLevel2++;
+					Elements lines3 = head2.select("li li");
 					for (Element head3 : lines3) {
 						Node node3 = new Node();
 						node3.setId(counter++);
@@ -85,8 +82,8 @@ public class Britannica extends Template {
 						node2.getZones().add(node3);
 					}
 				}
-				counterLevel2 = 0;
 			}
+			counterLevel1 = 0;
 		}
 		logger.info(nodes + "");
 		return nodes;
