@@ -17,12 +17,22 @@ repositories {
 }
 
 dependencies {
-    implementation('org.slf4j:slf4j-simple:1.7.29')
-    implementation('org.jsoup:jsoup:1.12.1')
-    implementation('commons-cli:commons-cli:1.4')
-    implementation('org.apache.commons:commons-lang3:3.9')
-    implementation('com.fasterxml.jackson.core:jackson-annotations:2.10.0')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.10.0')
+    compile('org.slf4j:slf4j-simple:1.7.29')
+    compile('org.jsoup:jsoup:1.12.1')
+    compile('commons-cli:commons-cli:1.4')
+    compile('org.apache.commons:commons-lang3:3.9')
+    compile('com.fasterxml.jackson.core:jackson-annotations:2.10.0')
+    compile('com.fasterxml.jackson.core:jackson-databind:2.10.0')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.5.2')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.5.2')
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": "it.vige.cities.Generator")
+    }
+ 
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
