@@ -13,6 +13,7 @@ To generate the cities, you can choose between 3 modes:
 2 - Download the source and execute: ./gradlew build;cd build;java -jar build/libs/cities-generator-0.0.1-SNAPSHOT.jar
 
 3 - Through api java follow the instructions:
+	
 	1 - on maven add the following script in the pom.xml file:
 	```
 			<dependency>
@@ -25,6 +26,7 @@ To generate the cities, you can choose between 3 modes:
 	```
 		    compile('it.vige.cities:cities-generator:1.0.0')
 	```
+	
 	2 - execute the following java instructions:
 	```
 		import it.vige.cities.Generator;
