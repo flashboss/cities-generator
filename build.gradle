@@ -52,7 +52,6 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'my-library'
             from components.java
             versionMapping {
                 usage('java-api') {
@@ -67,8 +66,8 @@ publishing {
                 description = 'Generate a file with the cities of your country'
                 url = 'http://cities-generator.vige.it'
                 properties = [
-                    'maven.compiler.source': '12',
-                    'maven.compiler.target': '12'
+                    'maven.compiler.source': '13',
+                    'maven.compiler.target': '13'
                 ]
                 licenses {
                     license {
