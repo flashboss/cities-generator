@@ -42,10 +42,11 @@ jar {
     manifest {
         attributes("Main-Class": "it.vige.cities.Generator")
     }
- 
     from {
         sourceSets.main.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    exclude 'META-INF/*'
+    exclude 'module-info.class'
 }
 
 publishing {
