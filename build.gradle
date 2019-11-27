@@ -4,10 +4,14 @@ buildscript {
     }
 }
 
+plugins {
+    id 'maven-publish'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-group = 'it.vige'
+group = 'it.vige.cities'
 version = '1.0.0'
 
 sourceCompatibility = 12
