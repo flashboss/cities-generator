@@ -23,7 +23,7 @@ To generate the cities, you can choose between 3 modes:
 			</dependency>
 	```
 	
-	or on gradle in the build.gradle file:
+	  or on gradle in the build.gradle file:
 		
 	```
 		    compile('it.vige.cities:cities-generator:1.0.0')
