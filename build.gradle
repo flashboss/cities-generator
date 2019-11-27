@@ -63,12 +63,12 @@ publishing {
                 }
             }
             pom {
-                name = 'My Library'
-                description = 'A concise description of my library'
-                url = 'http://www.example.com/library'
+                name = 'Cities Generator'
+                description = 'Generate a file with the cities of your country'
+                url = 'http://cities-generator.vige.it'
                 properties = [
-                    myProp: "value",
-                    "prop.with.dots": "anotherValue"
+                    'maven.compiler.source': '12',
+                    'maven.compiler.target': '12'
                 ]
                 licenses {
                     license {
@@ -78,15 +78,19 @@ publishing {
                 }
                 developers {
                     developer {
-                        id = 'johnd'
-                        name = 'John Doe'
-                        email = 'john.doe@example.com'
+                        id = 'flashboss'
+                        name = 'Luca Stancapiano'
+                        email = 'luca.stancapiano@vige.it'
+                        organization = 'vige'
+                        organizationUrl = 'http://www.vige.it'
+                        url = 'http://www.vige.it'
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://example.com/my-library.git'
-                    developerConnection = 'scm:git:ssh://example.com/my-library.git'
-                    url = 'http://example.com/my-library/'
+                    connection = 'svn:git:https://github.com/flashboss/cities-generator.git'
+                    developerConnection = 'svn:git:https://github.com/flashboss/cities-generator.git'
+                    tag = '1.0.X-SNAPSHOT'
+                    url = 'svn:git:https://github.com/flashboss/cities-generator.git'
                 }
             }
         }

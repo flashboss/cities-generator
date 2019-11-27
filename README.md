@@ -1,4 +1,4 @@
-# Cities generator
+# Cities Generator
 Generates a descriptor file for the cities choosing:
 
 - **-c:** the country of the generated cities. Mandatory. Actually EN and IT are supported.
