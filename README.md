@@ -16,7 +16,7 @@ and follow the instructions. It will return a json file
 
 - Download the source and execute: 
 ```
-./gradlew build;cd build;java -jar build/libs/cities-generator-0.0.1-SNAPSHOT.jar
+./gradlew build;cd build;java -jar build/libs/cities-generator-1.0.0.jar
 ```
 
 - Through api java follow the instructions:
