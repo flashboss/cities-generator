@@ -8,9 +8,16 @@ Generates a descriptor file for the cities choosing:
 
 To generate the cities, you can choose between 3 modes:
 
-- By a command line shell digit: mvn archetype:generate -Dfilter=it.vige.cities-generator and follow the instructions. It will return a json file
+- By a command line shell digit: 
+```
+mvn archetype:generate -Dfilter=it.vige.cities-generator
+```
+and follow the instructions. It will return a json file
 
-- Download the source and execute: ./gradlew build;cd build;java -jar build/libs/cities-generator-0.0.1-SNAPSHOT.jar
+- Download the source and execute: 
+```
+./gradlew build;cd build;java -jar build/libs/cities-generator-0.0.1-SNAPSHOT.jar
+```
 
 - Through api java follow the instructions:
 	
