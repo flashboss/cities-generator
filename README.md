@@ -14,14 +14,19 @@ To generate the cities, you can choose between 3 modes:
 
 3 - Through api java follow the instructions:
 	1 - on maven add the following script in the pom.xml file:
+	```
 			<dependency>
 				<groupId>it.vige.cities</groupId>
 				<artifactId>cities-generator</artifactId>
 				<version>1.0.0</version>
 			</dependency>
+	```
 		or on gradle in the build.gradle file:
+	```
 		    compile('it.vige.cities:cities-generator:1.0.0')
-	2 - execute the following java instrctions:
+	```
+	2 - execute the following java instructions:
+	```
 		import it.vige.cities.Generator;
 		import it.vige.cities.Countries;
 		import it.vige.cities.result.Nodes;
@@ -29,3 +34,4 @@ To generate the cities, you can choose between 3 modes:
 		Generator generator = new Generator(Countries.IT.name(), false, false);
 		Nodes result = generator.generate();
 		System.out.println(result.getZones());
+	```
