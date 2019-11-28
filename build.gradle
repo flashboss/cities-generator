@@ -14,7 +14,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.0.X-SNAPSHOT'
+version = '1.0.0'
 
 sourceCompatibility = 13
 
@@ -107,7 +107,6 @@ publishing {
 signing {
     sign configurations.archives
 }
-
 
 javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
