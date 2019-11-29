@@ -7,6 +7,7 @@ buildscript {
 plugins {
 	id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
 
 apply plugin: 'java'
@@ -104,6 +105,11 @@ publishing {
             }
         }
     }
+}
+
+signing {
+	useGpgCmd()
+	sign publishing.publications.mavenJava
 }
 
 javadoc {
