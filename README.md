@@ -21,7 +21,7 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 
 - Through api java follow the instructions:
 	
-	1. On maven add the following script in the pom.xml file:
+  - On maven add the following script in the pom.xml file:
 ```
 	<dependency>
 		<groupId>it.vige.cities</groupId>
@@ -30,13 +30,13 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 	</dependency>
 ```
 	
-or on gradle in the build.gradle file:
+   or on gradle in the build.gradle file:
 		
 ```
 	compile('it.vige.cities:cities-generator:1.0.1')
 ```
 	
-	2. Execute the following java instructions:
+  - Execute the following java instructions:
 ```
 	import it.vige.cities.Generator;
 	import it.vige.cities.Countries;
