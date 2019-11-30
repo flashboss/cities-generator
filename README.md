@@ -30,7 +30,7 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 	</dependency>
 ```
 	
-or on gradle in the build.gradle file:
+   or on gradle in the build.gradle file:
 		
 ```
 	compile('it.vige.cities:cities-generator:1.0.1')
