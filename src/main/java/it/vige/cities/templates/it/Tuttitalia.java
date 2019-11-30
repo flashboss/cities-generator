@@ -9,17 +9,14 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import it.vige.cities.Countries;
 import it.vige.cities.Result;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 public class Tuttitalia extends Template {
-
-	private Logger logger = LoggerFactory.getLogger(Tuttitalia.class);
 
 	private final static String URL = "https://www.tuttitalia.it";
 
@@ -31,6 +28,7 @@ public class Tuttitalia extends Template {
 	public Tuttitalia(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
+		this.country = Countries.it;
 	}
 
 	@Override
@@ -78,7 +76,6 @@ public class Tuttitalia extends Template {
 				}
 			}
 		}
-		logger.info(nodes + "");
 		return nodes;
 	}
 

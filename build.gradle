@@ -7,13 +7,14 @@ buildscript {
 plugins {
 	id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.0.0'
+version = '1.0.1'
 
 sourceCompatibility = 13
 
@@ -87,7 +88,7 @@ publishing {
                 scm {
                     connection = 'svn:git:https://github.com/flashboss/cities-generator.git'
                     developerConnection = 'svn:git:https://github.com/flashboss/cities-generator.git'
-                    tag = '1.0.0'
+                    tag = '1.0.1'
                     url = 'svn:git:https://github.com/flashboss/cities-generator.git'
                 }
             }
@@ -104,6 +105,11 @@ publishing {
             }
         }
     }
+}
+
+signing {
+	useGpgCmd()
+	sign publishing.publications.mavenJava
 }
 
 javadoc {
