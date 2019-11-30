@@ -12,7 +12,7 @@ To generate the cities, you can choose between 3 modes:
 ```
 mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.0.1:jar -DoutputDirectory=. && java -jar cities-generator-1.0.1.jar -c en
 ```
-and follow the instructions. It will return a json file inside the ${user.home}/cities-generator dir
+It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
