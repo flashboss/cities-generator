@@ -21,23 +21,23 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 
 - Through api java follow the instructions:
 	
-	1. On maven add the following script in the pom.xml file:
-	```
+1. On maven add the following script in the pom.xml file:
+```
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
 		<version>1.0.1</version>
 	</dependency>
-	```
+```
 	
-	or on gradle in the build.gradle file:
+or on gradle in the build.gradle file:
 		
-	```
+```
 	compile('it.vige.cities:cities-generator:1.0.1')
-	```
+```
 	
-	2. Execute the following java instructions:
-	```
+2. Execute the following java instructions:
+```
 	import it.vige.cities.Generator;
 	import it.vige.cities.Countries;
 	import it.vige.cities.result.Nodes;
@@ -52,5 +52,5 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 	import it.vige.cities.Result;
 	...
 	Result result = generator.generateFile();
-	```
-	You will find the file output.json in the build directory
+```
+You will find the file output.json in the build directory
