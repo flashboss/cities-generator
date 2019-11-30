@@ -1,10 +1,10 @@
 # Cities Generator
 Generates a descriptor file for the cities choosing:
 
-- **-c:** the country of the generated cities. Mandatory. Actually en and it are supported.
+- **-c:** the country of the generated cities. Mandatory. Actually **en** and **it** are supported.
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false
-- **-p:** choose the first provider to create the file descriptor. You can choose for EN: BRITANNICA. For IT: COMUNIITALIANI or TUTTITALIA. Else start a default
+- **-p:** choose the first provider to create the file descriptor. You can choose for **en**: BRITANNICA. For **it**: COMUNIITALIANI or TUTTITALIA. Else start a default
 
 To generate the cities, you can choose between 3 modes:
 
@@ -21,7 +21,7 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 
 - Through api java follow the instructions:
 	
-1. On maven add the following script in the pom.xml file:
+	1. On maven add the following script in the pom.xml file:
 ```
 	<dependency>
 		<groupId>it.vige.cities</groupId>
@@ -36,7 +36,7 @@ or on gradle in the build.gradle file:
 	compile('it.vige.cities:cities-generator:1.0.1')
 ```
 	
-2. Execute the following java instructions:
+	2. Execute the following java instructions:
 ```
 	import it.vige.cities.Generator;
 	import it.vige.cities.Countries;
