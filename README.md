@@ -1,7 +1,7 @@
 # Cities Generator
 Generates a descriptor file for the cities choosing:
 
-- **-c:** the country of the generated cities. Mandatory. Actually EN and IT are supported.
+- **-c:** the country of the generated cities. Mandatory. Actually en and it are supported.
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false
 - **-p:** choose the first provider to create the file descriptor. You can choose for EN: BRITANNICA. For IT: COMUNIITALIANI or TUTTITALIA. Else start a default
@@ -10,13 +10,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.0.1:jar -DoutputDirectory=. && java -jar cities-generator-1.0.1.jar $[OPTIONS]
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.0.1:jar -DoutputDirectory=. && java -jar cities-generator-1.0.1.jar -c en
 ```
 and follow the instructions. It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-./gradlew build;java -jar build/libs/cities-generator-1.0.1.jar $[OPTIONS]
+./gradlew build;java -jar build/libs/cities-generator-1.0.1.jar -c it
 ```
 
 - Through api java follow the instructions:
