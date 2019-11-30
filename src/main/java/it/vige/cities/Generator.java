@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -29,7 +30,7 @@ public class Generator extends Template {
 	public final static String MULTI_PROVIDER = "provider";
 	public final static String MULTI_DUPLICATED_NAMES = "duplicated";
 
-	private Logger logger = LoggerFactory.getLogger(Generator.class);
+	private static Logger logger = LoggerFactory.getLogger(Generator.class);
 
 	private String country;
 	private boolean caseSensitive;
@@ -74,7 +75,7 @@ public class Generator extends Template {
 		List<Template> templates = new ArrayList<Template>();
 
 		switch (Countries.valueOf(country)) {
-		case IT:
+		case it:
 			if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
@@ -83,7 +84,7 @@ public class Generator extends Template {
 				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 			}
 			break;
-		case EN:
+		case en:
 			templates.add(new Britannica(caseSensitive, duplicatedNames));
 			break;
 		}
@@ -104,6 +105,7 @@ public class Generator extends Template {
 				return null;
 			}
 		}
+		logger.info("End object generation");
 		return result;
 	}
 
@@ -115,18 +117,24 @@ public class Generator extends Template {
 		result = templates.get(0).generateFile();
 		if (result == Result.KO)
 			templates.get(1).generateFile();
+		logger.info("End file generation");
 		return result;
 	}
 
 	public static void main(String[] args) throws Exception {
-		CommandLine cmd = configureOptions(args);
-		String country = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
-		String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
-		boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
-		boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
+		CommandLine cmd = null;
+		try {
+			cmd = configureOptions(args);
+			String country = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
+			String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
+			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
+			boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
 
-		Generator generator = new Generator(country, provider, caseSensitive, duplicatedNames);
-		generator.generateFile();
+			Generator generator = new Generator(country, provider, caseSensitive, duplicatedNames);
+			generator.generateFile();
+		} catch (MissingOptionException ex) {
+			logger.error(ex.getMessage());
+		}
 	}
 
 }

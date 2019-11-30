@@ -5,16 +5,13 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import it.vige.cities.Countries;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 public class ComuniItaliani extends Template {
-
-	private Logger logger = LoggerFactory.getLogger(ComuniItaliani.class);
 
 	private final static String URL = "http://www.comuni-italiani.it/zona";
 
@@ -24,6 +21,7 @@ public class ComuniItaliani extends Template {
 	public ComuniItaliani(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
+		this.country = Countries.it;
 	}
 
 	@Override
@@ -76,7 +74,6 @@ public class ComuniItaliani extends Template {
 				}
 			}
 		}
-		logger.info(nodes + "");
 		return nodes;
 	}
 

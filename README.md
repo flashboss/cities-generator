@@ -10,13 +10,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn archetype:generate -Dfilter=it.vige.cities-generator
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.0.1:jar -DoutputDirectory=. && java -jar cities-generator-1.0.1.jar $[OPTIONS]
 ```
-and follow the instructions. It will return a json file
+and follow the instructions. It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-./gradlew build;java -jar build/libs/cities-generator-1.0.0.jar
+./gradlew build;java -jar build/libs/cities-generator-1.0.1.jar $[OPTIONS]
 ```
 
 - Through api java follow the instructions:
@@ -26,14 +26,14 @@ and follow the instructions. It will return a json file
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 	```
 	
 	or on gradle in the build.gradle file:
 		
 	```
-	compile('it.vige.cities:cities-generator:1.0.0')
+	compile('it.vige.cities:cities-generator:1.0.1')
 	```
 	
 	2. Execute the following java instructions:

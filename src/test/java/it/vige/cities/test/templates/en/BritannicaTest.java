@@ -10,7 +10,7 @@ public class BritannicaTest extends FileGenerator {
 
 	@Test
 	public void testCities() {
-		Generator generator = new Generator(Countries.EN.name(), Providers.BRITANNICA.name(), false, false);
+		Generator generator = new Generator(Countries.en.name(), Providers.BRITANNICA.name(), false, false);
 		generator.generateFile();
 	}
 }

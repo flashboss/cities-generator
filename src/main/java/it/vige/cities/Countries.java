@@ -2,5 +2,5 @@ package it.vige.cities;
 
 public enum Countries {
 
-	IT, EN
+	it, en
 }
