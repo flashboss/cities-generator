@@ -21,20 +21,14 @@ and follow the instructions. It will return a json file inside the ${user.home}/
 
 - Through api java follow the instructions:
 	
-  - On maven add the following script in the pom.xml file:
-    ```
+  - On maven add the following script in the pom.xml file:```
    <dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
 		<version>1.0.1</version>
-   </dependency>
-    ```
+   </dependency>```
 	
-   or on gradle in the build.gradle file:
-		
-    ```
-   compile('it.vige.cities:cities-generator:1.0.1')
-    ```
+   or on gradle in the build.gradle file:```compile('it.vige.cities:cities-generator:1.0.1')```
 	
   - Execute the following java instructions:
     ```
