@@ -1,8 +1,8 @@
 package it.vige.cities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,10 +32,15 @@ public class Generator extends Template {
 
 	private static Logger logger = LoggerFactory.getLogger(Generator.class);
 
-	private String country;
+	private String country = Locale.getDefault().getCountry();
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String provider;
+
+	public Generator(boolean caseSensitive, boolean duplicatedNames) {
+		this.caseSensitive = caseSensitive;
+		this.duplicatedNames = duplicatedNames;
+	}
 
 	public Generator(String country, boolean caseSensitive, boolean duplicatedNames) {
 		this.country = country;
@@ -52,7 +57,7 @@ public class Generator extends Template {
 		Options options = new Options();
 		options.addOption(Option.builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
 				.desc(MULTI_CASE_SENSITIVE).build());
-		options.addOption(Option.builder(SINGLE_COUNTRY).longOpt(MULTI_COUNTRY).required().type(String.class).hasArg()
+		options.addOption(Option.builder(SINGLE_COUNTRY).longOpt(MULTI_COUNTRY).type(String.class).hasArg()
 				.numberOfArgs(1).desc(MULTI_COUNTRY).build());
 		options.addOption(Option.builder(SINGLE_PROVIDER).longOpt(MULTI_PROVIDER).type(String.class).hasArg()
 				.numberOfArgs(1).desc(MULTI_PROVIDER).build());
@@ -61,13 +66,6 @@ public class Generator extends Template {
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
-		String provider = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
-		try {
-			Countries.valueOf(provider);
-		} catch (IllegalArgumentException ex) {
-			throw new ParseException(provider + " provided with the " + SINGLE_COUNTRY
-					+ " argument is not in the list: " + Arrays.toString(Countries.values()));
-		}
 		return cmd;
 	}
 
@@ -117,7 +115,6 @@ public class Generator extends Template {
 		result = templates.get(0).generateFile();
 		if (result == Result.KO)
 			templates.get(1).generateFile();
-		logger.info("End file generation");
 		return result;
 	}
 
@@ -125,7 +122,12 @@ public class Generator extends Template {
 		CommandLine cmd = null;
 		try {
 			cmd = configureOptions(args);
-			String country = cmd.getParsedOptionValue(SINGLE_COUNTRY) + "";
+			String country = null;
+			Object fromCountry = cmd.getParsedOptionValue(SINGLE_COUNTRY);
+			if (fromCountry == null)
+				country = Locale.getDefault().getCountry().toLowerCase();
+			else
+				country = fromCountry + "";
 			String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
 			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
 			boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
