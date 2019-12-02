@@ -11,7 +11,7 @@ import it.vige.cities.result.Nodes;
 
 public class FileGenerator {
 
-	private final static String CITIES_HOME = System.getProperty("user.home") + "/cities-generator/";
+	public final static String CITIES_HOME = System.getProperty("user.home") + "/cities-generator/";
 
 	protected Countries country;
 
@@ -21,8 +21,10 @@ public class FileGenerator {
 
 	protected void writeFile(Nodes nodes) throws Exception {
 		new File(CITIES_HOME).mkdir();
-		mapper.writeValue(new File(CITIES_HOME + country + ".json"), nodes);
+		String name = CITIES_HOME + country + ".json";
+		mapper.writeValue(new File(name), nodes);
 		logger.info(mapper.writeValueAsString(nodes));
+		logger.info("File generated in " + name);
 	}
 
 	protected Nodes readFile() throws Exception {

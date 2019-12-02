@@ -1,7 +1,7 @@
 # Cities Generator
 Generates a descriptor file for the cities choosing:
 
-- **-c:** the country of the generated cities. Mandatory. Actually **en** and **it** are supported.
+- **-c:** the country of the generated cities. Actually **en** and **it** are supported. If not specified the default locale of the machine is used.
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false
 - **-p:** choose the first provider to create the file descriptor. You can choose for **en**: BRITANNICA. For **it**: COMUNIITALIANI or TUTTITALIA. Else start a default
