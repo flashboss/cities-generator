@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+	id 'java-library'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -24,8 +28,12 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
+}
+
 dependencies {
-    implementation('it.vige.cities:cities-generator:1.1.0')
+    implementation('it.vige.cities:cities-generator:1.0.1')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation("org.springframework.boot:spring-boot-starter-websocket")
