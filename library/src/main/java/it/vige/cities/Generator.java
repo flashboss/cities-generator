@@ -32,7 +32,7 @@ public class Generator extends Template {
 
 	private static Logger logger = LoggerFactory.getLogger(Generator.class);
 
-	private String country = Locale.getDefault().getCountry();
+	private String country = Locale.getDefault().getCountry().toLowerCase();
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String provider;
