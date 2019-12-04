@@ -5,6 +5,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.vige.cities.Generator;
@@ -15,12 +17,18 @@ import it.vige.cities.result.Nodes;
 @CrossOrigin(origins = "*")
 public class CitiesController {
 
-	private Nodes nodes;
+	public final static Nodes nodes = new Nodes();
 
 	@PostConstruct
 	public void init() {
 		Generator generator = new Generator(false, false);
-		nodes = generator.generate();
+		nodes.setZones(generator.generate().getZones());
+	}
+
+	public void init(Configuration configuration) {
+		Generator generator = new Generator(configuration.getCountry().name(), configuration.getProvider(),
+				configuration.isCaseSensitive(), configuration.isDuplicatedNames());
+		nodes.setZones(generator.generate().getZones());
 	}
 
 	private Node find(Node node, int id) {
@@ -48,9 +56,9 @@ public class CitiesController {
 		return nodes;
 	}
 
-	@GetMapping(value = "/update")
-	public void update() {
-		init();
+	@PostMapping(value = "/update")
+	public void update(@RequestBody Configuration configuration) {
+		init(configuration);
 	}
 
 }

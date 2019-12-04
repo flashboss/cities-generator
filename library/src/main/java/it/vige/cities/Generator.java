@@ -91,7 +91,8 @@ public class Generator extends Template {
 
 	@Override
 	public Nodes generate() {
-		logger.info("Start object generation");
+		logger.info("Start object generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
+				+ caseSensitive + ", duplicatedNames: " + duplicatedNames);
 		Nodes result = null;
 		List<Template> templates = getTemplates();
 		try {
@@ -109,13 +110,30 @@ public class Generator extends Template {
 
 	@Override
 	public Result generateFile() {
-		logger.info("Start file generation");
+		logger.info("Start file generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
+				+ caseSensitive + ", duplicatedNames: " + duplicatedNames);
 		Result result = null;
 		List<Template> templates = getTemplates();
 		result = templates.get(0).generateFile();
 		if (result == Result.KO)
 			templates.get(1).generateFile();
 		return result;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public boolean isCaseSensitive() {
+		return caseSensitive;
+	}
+
+	public boolean isDuplicatedNames() {
+		return duplicatedNames;
+	}
+
+	public String getProvider() {
+		return provider;
 	}
 
 	public static void main(String[] args) throws Exception {
