@@ -36,20 +36,24 @@ public class Generator extends Template {
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String provider;
+	private boolean overwrite;
 
-	public Generator(boolean caseSensitive, boolean duplicatedNames) {
+	public Generator(boolean caseSensitive, boolean duplicatedNames, boolean overwrite) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
+		this.overwrite = overwrite;
 	}
 
-	public Generator(String country, boolean caseSensitive, boolean duplicatedNames) {
+	public Generator(String country, boolean caseSensitive, boolean duplicatedNames, boolean overwrite) {
 		this.country = country;
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
+		this.overwrite = overwrite;
 	}
 
-	public Generator(String country, String provider, boolean caseSensitive, boolean duplicatedNames) {
-		this(country, caseSensitive, duplicatedNames);
+	public Generator(String country, String provider, boolean caseSensitive, boolean duplicatedNames,
+			boolean overwrite) {
+		this(country, caseSensitive, duplicatedNames, overwrite);
 		this.provider = provider;
 	}
 
@@ -92,20 +96,33 @@ public class Generator extends Template {
 	@Override
 	public Nodes generate() {
 		logger.info("Start object generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
-				+ caseSensitive + ", duplicatedNames: " + duplicatedNames);
+				+ caseSensitive + ", duplicatedNames: " + duplicatedNames + ", overwrite: " + overwrite);
 		Nodes result = null;
 		List<Template> templates = getTemplates();
-		try {
-			result = templates.get(0).generate();
-		} catch (Exception ex) {
+		if (overwrite)
 			try {
-				result = templates.get(1).generate();
-			} catch (Exception ex2) {
+				result = templates.get(0).generate();
+			} catch (Exception ex) {
+				try {
+					result = templates.get(1).generate();
+				} catch (Exception ex2) {
+					return null;
+				}
+			}
+		else if (exists())
+			try {
+				result = readFile();
+			} catch (Exception e) {
 				return null;
 			}
-		}
+		else
+			return null;
 		logger.info("End object generation");
 		return result;
+	}
+
+	public boolean isGenerated() {
+		return exists();
 	}
 
 	@Override
@@ -136,6 +153,14 @@ public class Generator extends Template {
 		return provider;
 	}
 
+	public boolean isOverwrite() {
+		return overwrite;
+	}
+
+	public void setOverwrite(boolean overwrite) {
+		this.overwrite = overwrite;
+	}
+
 	public static void main(String[] args) throws Exception {
 		CommandLine cmd = null;
 		try {
@@ -150,7 +175,7 @@ public class Generator extends Template {
 			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
 			boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
 
-			Generator generator = new Generator(country, provider, caseSensitive, duplicatedNames);
+			Generator generator = new Generator(country, provider, caseSensitive, duplicatedNames, true);
 			generator.generateFile();
 		} catch (MissingOptionException ex) {
 			logger.error(ex.getMessage());

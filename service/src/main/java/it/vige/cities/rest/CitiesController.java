@@ -21,14 +21,13 @@ public class CitiesController {
 
 	@PostConstruct
 	public void init() {
-		Generator generator = new Generator(false, false);
-		nodes.setZones(generator.generate().getZones());
-	}
-
-	public void init(Configuration configuration) {
-		Generator generator = new Generator(configuration.getCountry().name(), configuration.getProvider(),
-				configuration.isCaseSensitive(), configuration.isDuplicatedNames());
-		nodes.setZones(generator.generate().getZones());
+		Generator generator = new Generator(false, false, true);
+		if (!generator.isGenerated())
+			nodes.setZones(generator.generate().getZones());
+		else {
+			generator.setOverwrite(false);
+			nodes.setZones(generator.generate().getZones());
+		}
 	}
 
 	private Node find(Node node, int id) {
@@ -58,7 +57,9 @@ public class CitiesController {
 
 	@PostMapping(value = "/update")
 	public void update(@RequestBody Configuration configuration) {
-		init(configuration);
+		Generator generator = new Generator(configuration.getCountry().name(), configuration.getProvider(),
+				configuration.isCaseSensitive(), configuration.isDuplicatedNames(), true);
+		nodes.setZones(generator.generate().getZones());
 	}
 
 }

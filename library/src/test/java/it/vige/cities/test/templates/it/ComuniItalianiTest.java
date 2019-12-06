@@ -15,7 +15,7 @@ public class ComuniItalianiTest extends FileGenerator {
 
 	@Test
 	public void testCities() throws Exception {
-		Generator generator = new Generator(Countries.it.name(), Providers.COMUNI_ITALIANI.name(), false, false);
+		Generator generator = new Generator(Countries.it.name(), Providers.COMUNI_ITALIANI.name(), false, false, true);
 		Result result = generator.generateFile();
 		Assertions.assertTrue(result == Result.OK);
 		Nodes nodes = readFile();
