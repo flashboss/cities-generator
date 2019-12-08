@@ -16,7 +16,7 @@ It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-./gradlew build;java -jar build/libs/cities-generator-1.1.0.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.0.jar -c it
 ```
 
 - Through api java follow the instructions:
@@ -53,4 +53,11 @@ It will return a json file inside the ${user.home}/cities-generator dir
 	...
 	Result result = generator.generateFile();
 ```
-You will find the file output.json in the build directory
+You will find the file it.json in the ${user.home}/cities-generator directory
+
+## Docker
+
+There is an already docker image to start a REST service. This returns a json format with the cities of the used country according the roles seen over. Execute this command to start the service:
+```
+docker pull vige/cities-generator
+```

@@ -32,4 +32,8 @@ public class FileGenerator {
 		return mapper.readValue(new File(CITIES_HOME + country + ".json"), Nodes.class);
 	}
 
+	protected boolean exists() {
+		return new File(CITIES_HOME).exists() && new File(CITIES_HOME + country + ".json").exists();
+	}
+
 }

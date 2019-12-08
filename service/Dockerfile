@@ -30,9 +30,9 @@ COPY / /workspace/cgservice
 RUN sudo chown -R cguser:cguser /workspace
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
-	mv /workspace/cgservice/build/libs/voting*.jar /workspace/cgservice.jar && \
+	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	rm -Rf /workspace/cgservice && \
-    keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=cgservice-voting.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
+    keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=cities-generator-service.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
 
-CMD java -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat --spring.profiles.active=prod && \
+CMD java -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat && \
 	tail -f /dev/null

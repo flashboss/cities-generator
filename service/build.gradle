@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+	id 'java-library'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -21,7 +25,12 @@ version = '1.1.0'
 sourceCompatibility = 13
 
 repositories {
+	mavenLocal()
     mavenCentral()
+}
+
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
 }
 
 dependencies {
