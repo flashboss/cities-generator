@@ -1,5 +1,7 @@
 package it.vige.cities.rest;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,13 +35,12 @@ public class CitiesController {
 	private Node find(Node node, int id) {
 		if (node.getId() == id)
 			return node;
-		else {
-			Node found = null;
-			for (Node nodeToScan : node.getZones()) {
-				return find(nodeToScan, id);
-			}
-			return found;
+		List<Node> children = node.getZones();
+		Node res = null;
+		for (int i = 0; res == null && i < children.size(); i++) {
+			res = find(children.get(i), id);
 		}
+		return res;
 	}
 
 	@GetMapping(value = "/cities")
@@ -49,7 +50,12 @@ public class CitiesController {
 
 	@GetMapping(value = "/cities/{id}")
 	public Nodes getResult(@PathVariable("id") int id) {
-		Node found = nodes.getZones().parallelStream().filter(e -> find(e, id) != null).findFirst().get();
+		Node found = null;
+		for (Node node : nodes.getZones()) {
+			found = find(node, id);
+			if (found != null)
+				break;
+		}
 		Nodes nodes = new Nodes();
 		nodes.getZones().add(found);
 		return nodes;
