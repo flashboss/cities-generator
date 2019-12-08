@@ -63,8 +63,9 @@ docker pull vige/cities-generator
 ```
 To run the image use the command:
 ```
-docker run -d --name cities-generator -p8743:8443 vige/cities-generator
+docker run -d --name cities-generator -p8743:8443 -e COUNTRY=it vige/cities-generator
 ```
+Where it is the chosen country. Actually you can choose en or it.
 Add the following DNS in your /etc/hosts file:
 ```
 $IP_ADDRESS cities-generator.vige.it
