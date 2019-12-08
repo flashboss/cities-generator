@@ -61,4 +61,13 @@ There is an already docker image to start a REST service. This returns a json fo
 ```
 docker pull vige/cities-generator
 ```
-To use the service connect through browser to `https://localhost:8443/swagger-ui.html`
+To run the image use the command:
+```
+docker run -d --name cities-generator -p8743:8443 vige/cities-generator
+```
+Add the following DNS in your /etc/hosts file:
+```
+$IP_ADDRESS cities-generator.vige.it
+```
+where in $IP_ADDRESS you must choose the ip address where is located the server.
+To use the service connect through browser to `https://cities-generator.vige.it:8743/swagger-ui.html`
