@@ -61,3 +61,4 @@ There is an already docker image to start a REST service. This returns a json fo
 ```
 docker pull vige/cities-generator
 ```
+To use the service connect through browser to https://localhost:8443/swagger-ui.html
