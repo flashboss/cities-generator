@@ -68,7 +68,7 @@ docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it vige/cities-gener
 Where it is the chosen country. Actually you can choose en or it.
 Add the following DNS in your /etc/hosts file:
 ```
-$IP_ADDRESS cities-generator.vige.it
+$IP_ADDRESS cities-generator-service.vige.it
 ```
 where in $IP_ADDRESS you must choose the ip address where is located the server.
-To use the service connect through browser to `https://cities-generator.vige.it:8743/swagger-ui.html`
+To use the service connect through browser to `https://cities-generator-service.vige.it:8743/swagger-ui.html`
