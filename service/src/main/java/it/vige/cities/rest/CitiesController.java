@@ -27,7 +27,7 @@ public class CitiesController {
 	private Countries country;
 
 	@PostConstruct
-	public void init() {
+	public void init() throws Exception {
 		Generator generator = new Generator(country.name(), false, false, true);
 		if (!generator.isGenerated())
 			nodes.setZones(generator.generate().getZones());
@@ -67,7 +67,7 @@ public class CitiesController {
 	}
 
 	@PostMapping(value = "/update")
-	public void update(@RequestBody Configuration configuration) {
+	public void update(@RequestBody Configuration configuration) throws Exception {
 		Generator generator = new Generator(configuration.getCountry().name(), configuration.getProvider(),
 				configuration.isCaseSensitive(), configuration.isDuplicatedNames(), true);
 		nodes.setZones(generator.generate().getZones());
