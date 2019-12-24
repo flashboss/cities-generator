@@ -1,6 +1,7 @@
 package it.vige.cities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,8 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.vige.cities.result.Nodes;
+import it.vige.cities.templates.GeoNames;
 import it.vige.cities.templates.en.Britannica;
 import it.vige.cities.templates.it.ComuniItaliani;
+import it.vige.cities.templates.it.ExtraGeoNames;
 import it.vige.cities.templates.it.Tuttitalia;
 
 public class Generator extends Template {
@@ -25,36 +28,28 @@ public class Generator extends Template {
 	public final static String SINGLE_COUNTRY = "c";
 	public final static String SINGLE_PROVIDER = "p";
 	public final static String SINGLE_DUPLICATED_NAMES = "d";
+	public final static String SINGLE_USER = "u";
 	public final static String MULTI_CASE_SENSITIVE = "case_sensitive";
 	public final static String MULTI_COUNTRY = "country";
 	public final static String MULTI_PROVIDER = "provider";
 	public final static String MULTI_DUPLICATED_NAMES = "duplicated";
+	public final static String MULTI_USER = "user";
 
 	private static Logger logger = LoggerFactory.getLogger(Generator.class);
-
-	private String country = Locale.getDefault().getCountry().toLowerCase();
+	
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String provider;
+	private String username;
 	private boolean overwrite;
 
-	public Generator(boolean caseSensitive, boolean duplicatedNames, boolean overwrite) {
-		this.caseSensitive = caseSensitive;
-		this.duplicatedNames = duplicatedNames;
+	public Generator(Configuration configuration, boolean overwrite) {
+		this.caseSensitive = configuration.isCaseSensitive();
+		this.duplicatedNames = configuration.isDuplicatedNames();
+		this.provider = configuration.getProvider();
+		this.country = configuration.getCountry();
+		this.username = configuration.getUsername();
 		this.overwrite = overwrite;
-	}
-
-	public Generator(String country, boolean caseSensitive, boolean duplicatedNames, boolean overwrite) {
-		this.country = country;
-		this.caseSensitive = caseSensitive;
-		this.duplicatedNames = duplicatedNames;
-		this.overwrite = overwrite;
-	}
-
-	public Generator(String country, String provider, boolean caseSensitive, boolean duplicatedNames,
-			boolean overwrite) {
-		this(country, caseSensitive, duplicatedNames, overwrite);
-		this.provider = provider;
 	}
 
 	private static CommandLine configureOptions(String[] args) throws ParseException {
@@ -67,6 +62,8 @@ public class Generator extends Template {
 				.numberOfArgs(1).desc(MULTI_PROVIDER).build());
 		options.addOption(Option.builder(SINGLE_DUPLICATED_NAMES).longOpt(MULTI_DUPLICATED_NAMES).type(Boolean.class)
 				.desc(MULTI_DUPLICATED_NAMES).build());
+		options.addOption(Option.builder(SINGLE_USER).longOpt(MULTI_USER).type(String.class).hasArg().numberOfArgs(1)
+				.desc(MULTI_USER).build());
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
@@ -76,53 +73,74 @@ public class Generator extends Template {
 	private List<Template> getTemplates() {
 		List<Template> templates = new ArrayList<Template>();
 
-		switch (Countries.valueOf(country)) {
-		case it:
+		if (country.equals(Countries.it.name())) {
 			if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
+				templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+				templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
 			} else if (provider.equals(it.vige.cities.templates.it.Providers.TUTTITALIA.name())) {
 				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
 				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
+				templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+				templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+			} else if (provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
+				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
+				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
+				templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+				templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+			} else if (provider.equals(it.vige.cities.templates.it.Providers.EXTRA_GEONAMES.name())) {
+				templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+				templates.add(new Tuttitalia(caseSensitive, duplicatedNames));
+				templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
+				templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
 			}
-			break;
-		case en:
-			templates.add(new Britannica(caseSensitive, duplicatedNames));
-			break;
-		}
+		} else if (country.equals(Countries.uk.name())) {
+			if (provider == null || provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
+				templates.add(new Britannica(caseSensitive, duplicatedNames));
+				templates.add(new GeoNames(Countries.uk.name(), caseSensitive, duplicatedNames, username));
+			} else if (provider.equals(it.vige.cities.templates.en.Providers.GEONAMES.name())) {
+				templates.add(new GeoNames(Countries.uk.name(), caseSensitive, duplicatedNames, username));
+				templates.add(new Britannica(caseSensitive, duplicatedNames));
+			}
+		} else
+			templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username));
 		return templates;
+	}
+
+	private Nodes overwrite(List<Template> templates) {
+		Nodes result = null;
+		Iterator<Template> iterator = templates.iterator();
+		while (iterator.hasNext() && result == null) {
+			try {
+				result = iterator.next().generate();
+			} catch (Exception ex) {
+				result = null;
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public Nodes generate() {
-		logger.info("Start object generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
-				+ caseSensitive + ", duplicatedNames: " + duplicatedNames + ", overwrite: " + overwrite);
+		logger.info(
+				"Start object generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
+						+ caseSensitive + ", duplicatedNames: " + duplicatedNames + ", username: " + username,
+				", overwrite: " + overwrite);
 		Nodes result = null;
 		List<Template> templates = getTemplates();
 		if (overwrite)
-			try {
-				result = templates.get(0).generate();
-			} catch (Exception ex) {
-				try {
-					result = templates.get(1).generate();
-				} catch (Exception ex2) {
-					return null;
-				}
-			}
+			result = overwrite(templates);
 		else if (exists())
 			try {
 				result = readFile();
 			} catch (Exception e) {
-				return null;
+				result = null;
 			}
 		else
-			return null;
+			result = overwrite(templates);
 		logger.info("End object generation");
 		return result;
-	}
-
-	public boolean isGenerated() {
-		return exists();
 	}
 
 	@Override
@@ -175,7 +193,12 @@ public class Generator extends Template {
 			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
 			boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
 
-			Generator generator = new Generator(country, provider, caseSensitive, duplicatedNames, true);
+			Configuration configuration = new Configuration();
+			configuration.setCaseSensitive(caseSensitive);
+			configuration.setCountry(country);
+			configuration.setDuplicatedNames(duplicatedNames);
+			configuration.setProvider(provider);
+			Generator generator = new Generator(configuration, true);
 			generator.generateFile();
 		} catch (MissingOptionException ex) {
 			logger.error(ex.getMessage());
