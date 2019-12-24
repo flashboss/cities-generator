@@ -3,6 +3,7 @@ package it.vige.cities.test.templates.it;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import it.vige.cities.Configuration;
 import it.vige.cities.Countries;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
@@ -15,10 +16,15 @@ public class TuttitaliaTest extends FileGenerator {
 
 	@Test
 	public void testCities() throws Exception {
-		Generator generator = new Generator(Countries.it.name(), Providers.TUTTITALIA.name(), false, false, true);
+		Configuration configuration = new Configuration();
+		configuration.setCountry(Countries.it.name());
+		configuration.setProvider(Providers.TUTTITALIA.name());
+		configuration.setCaseSensitive(false);
+		configuration.setDuplicatedNames(false);
+		Generator generator = new Generator(configuration, true);
 		Result result = generator.generateFile();
 		Assertions.assertTrue(result == Result.OK);
-		Nodes nodes = readFile();
+		Nodes nodes = readFile(Countries.it.name());
 		Assertions.assertNotNull(nodes);
 		Node northWest = nodes.getZones().get(0);
 		Node liguria = northWest.getZones().get(0);

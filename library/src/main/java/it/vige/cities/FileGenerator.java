@@ -1,6 +1,7 @@
 package it.vige.cities;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ public class FileGenerator {
 
 	public final static String CITIES_HOME = System.getProperty("user.home") + "/cities-generator/";
 
-	protected Countries country;
+	protected String country = Locale.getDefault().getCountry().toLowerCase();
 
 	private Logger logger = LoggerFactory.getLogger(FileGenerator.class);
 
@@ -28,6 +29,12 @@ public class FileGenerator {
 	}
 
 	protected Nodes readFile() throws Exception {
+		readFile(country);
+		new File(CITIES_HOME).mkdir();
+		return mapper.readValue(new File(CITIES_HOME + country + ".json"), Nodes.class);
+	}
+
+	protected Nodes readFile(String country) throws Exception {
 		new File(CITIES_HOME).mkdir();
 		return mapper.readValue(new File(CITIES_HOME + country + ".json"), Nodes.class);
 	}

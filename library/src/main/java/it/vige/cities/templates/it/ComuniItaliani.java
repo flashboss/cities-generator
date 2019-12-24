@@ -7,11 +7,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import it.vige.cities.Countries;
-import it.vige.cities.Template;
+import it.vige.cities.HTMLTemplate;
+import it.vige.cities.Normalizer;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
-public class ComuniItaliani extends Template {
+public class ComuniItaliani extends HTMLTemplate {
 
 	private final static String URL = "http://www.comuni-italiani.it/zona";
 
@@ -21,7 +22,7 @@ public class ComuniItaliani extends Template {
 	public ComuniItaliani(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
-		this.country = Countries.it;
+		this.country = Countries.it.name();
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class ComuniItaliani extends Template {
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
-			node0.setName(normalize(caseSensitive, duplicatedNames, head0.text(),
+			node0.setName(Normalizer.execute(caseSensitive, duplicatedNames, head0.text(),
 					nodes.getZones().parallelStream().map(e -> e.getName()).collect(Collectors.toList())));
 			nodes.getZones().add(node0);
 			Document level1 = getPage(head0.absUrl("href"));
@@ -43,7 +44,7 @@ public class ComuniItaliani extends Template {
 				Node node1 = new Node();
 				node1.setId(counter++);
 				node1.setLevel(1);
-				node1.setName(normalize(caseSensitive, duplicatedNames, head1.text(),
+				node1.setName(Normalizer.execute(caseSensitive, duplicatedNames, head1.text(),
 						nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 								.map(e -> e.getName()).collect(Collectors.toList())));
 				node0.getZones().add(node1);
@@ -53,7 +54,7 @@ public class ComuniItaliani extends Template {
 					Node node2 = new Node();
 					node2.setId(counter++);
 					node2.setLevel(2);
-					node2.setName(normalize(caseSensitive, duplicatedNames, head2.text(),
+					node2.setName(Normalizer.execute(caseSensitive, duplicatedNames, head2.text(),
 							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 									.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
 									.collect(Collectors.toList())));
@@ -64,7 +65,7 @@ public class ComuniItaliani extends Template {
 						Node node3 = new Node();
 						node3.setId(counter++);
 						node3.setLevel(3);
-						node3.setName(normalize(caseSensitive, duplicatedNames, head3.text(),
+						node3.setName(Normalizer.execute(caseSensitive, duplicatedNames, head3.text(),
 								nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 										.flatMap(e -> e.getZones().parallelStream())
 										.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
