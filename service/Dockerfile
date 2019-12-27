@@ -27,7 +27,7 @@ ENV TERM xterm
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
 ENV CASESENSITIVE false
-ENV FIELDS -Dcountry=$COUNTRY -DduplicatedNames=$DUPLICATEDNAMES  
+ENV FIELDS -Dcountry=$COUNTRY -DduplicatedNames=$DUPLICATEDNAMES
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
@@ -37,8 +37,8 @@ RUN rm -Rf /home/cguser/.gradle && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	rm -Rf /workspace/cgservice && \
     keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=cities-generator-service.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
-RUN if [ "$PROVIDER" ] ; then FIELDS+= -Dprovider=$PROVIDER
-RUN if [ "$USERNAME" ] ; then FIELDS+= -Dusername=$USERNAME
 
-CMD java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat && \
+CMD if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
+    if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
+    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat && \
 	tail -f /dev/null
