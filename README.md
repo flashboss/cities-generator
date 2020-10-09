@@ -11,13 +11,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.1.1:jar -DoutputDirectory=. && java -jar cities-generator-1.1.1.jar -c uk
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.1.2:jar -DoutputDirectory=. && java -jar cities-generator-1.1.2.jar -c uk
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.1.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.2.jar -c it
 ```
 
 - Through api java follow the instructions:
@@ -27,14 +27,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.1.jar -c it
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 ```
 	
    or on gradle in the build.gradle file:
 		
    ```
-	compile('it.vige.cities:cities-generator:1.1.1')
+	compile('it.vige.cities:cities-generator:1.1.2')
    ```
 	
 2. Execute the following java instructions:
@@ -62,9 +62,20 @@ You will find the file it.json in the ${user.home}/cities-generator directory
 
 If you use GEONAMES or EXTRAGEONAMES, you use a default username. In the long run this default username may be inactive, so you will need a new username to specify in the configuration field seen above. To get the new username you must register through the site: https://www.geonames.org/login
 
+## REST Service
+
+A REST service can be installed in your machine. This returns a json format with the cities of the used country according the roles seen over. To install it download the source under /service folder and execute:
+```
+./gradlew clean build
+```
+And then start it through the command:
+```
+java -jar build/libs/cities-generator-service-1.1.2.jar --country=it --server.port=8380
+```
+
 ## Docker
 
-There is an already docker image to start a REST service. This returns a json format with the cities of the used country according the roles seen over. Execute this command to start the service:
+There is an already docker image to start the REST service. Execute this command to start the service:
 ```
 docker pull vige/cities-generator
 ```

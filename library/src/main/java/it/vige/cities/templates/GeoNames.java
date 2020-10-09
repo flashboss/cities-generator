@@ -16,18 +16,38 @@ import it.vige.cities.result.geonames.Countrynodes;
 import it.vige.cities.result.geonames.Geonode;
 import it.vige.cities.result.geonames.Geonodes;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         The geonames generator
+ */
 public class GeoNames extends Template {
 
 	private final static String URL_CHILDREN = "http://api.geonames.org/childrenJSON";
 	private final static String URL_COUNTRY = "http://api.geonames.org/countryInfoJSON";
 	private final static String DEFAULT_USERNAME = "vota";
 
+	/**
+	 * 
+	 */
 	protected boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String username;
+	
+	/**
+	 * 
+	 */
 	protected int firstLevel = 0;
 	private Client client;
 
+	/**
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames the duplicated names parameter
+	 * @param username        the user name
+	 */
 	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
@@ -38,6 +58,12 @@ public class GeoNames extends Template {
 			this.username = DEFAULT_USERNAME;
 	}
 
+	/**
+	 * 
+	 * @param country the country
+	 * @return the response
+	 * @throws Exception if there is a problem
+	 */
 	protected Response getPageCountry(String country) throws Exception {
 		client = ClientBuilder.newClient();
 		WebTarget target = client.target(URL_COUNTRY);
@@ -45,6 +71,12 @@ public class GeoNames extends Template {
 		return response;
 	}
 
+	/**
+	 * 
+	 * @param id the id
+	 * @return the response
+	 * @throws Exception if there is a problem
+	 */
 	protected Response getPageChildren(int id) throws Exception {
 		client = ClientBuilder.newClient();
 		WebTarget target = client.target(URL_CHILDREN);
@@ -52,6 +84,13 @@ public class GeoNames extends Template {
 		return response;
 	}
 
+	/**
+	 * 
+	 * @param zones       the zones
+	 * @param numberLevel the number level
+	 * @param id          the id
+	 * @throws Exception if there is a problem
+	 */
 	private void addNodes(List<Node> zones, int numberLevel, int id) throws Exception {
 		if (numberLevel <= MAX_LEVEL) {
 			Response level = getPageChildren(id);
@@ -70,6 +109,9 @@ public class GeoNames extends Template {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	protected Nodes generate() throws Exception {
 		Nodes nodes = new Nodes();

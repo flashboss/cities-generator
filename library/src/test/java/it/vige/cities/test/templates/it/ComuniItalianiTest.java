@@ -12,8 +12,18 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.it.Providers;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Comuni italiani tests
+ */
 public class ComuniItalianiTest extends FileGenerator {
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();

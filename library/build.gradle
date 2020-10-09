@@ -14,9 +14,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.1.1'
+version = '1.1.2'
 
-sourceCompatibility = 13
+sourceCompatibility = 15
 
 repositories {
     mavenCentral()
@@ -26,15 +26,15 @@ repositories {
 }
 
 dependencies {
-    api('org.slf4j:slf4j-simple:1.7.29')
-    api('org.jsoup:jsoup:1.12.1')
+    api('org.slf4j:slf4j-simple:1.7.30')
+    api('org.jsoup:jsoup:1.13.1')
     api('commons-cli:commons-cli:1.4')
-    api('org.apache.commons:commons-lang3:3.9')
-    api('org.jboss.resteasy:resteasy-jackson2-provider:4.4.2.Final')
-    api('org.jboss.resteasy:resteasy-client:4.4.2.Final')
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.5.2')
-    testImplementation('org.junit.jupiter:junit-jupiter-params:5.5.2')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.5.2')
+    api('org.apache.commons:commons-lang3:3.11')
+    api('org.jboss.resteasy:resteasy-jackson2-provider:4.5.8.Final')
+    api('org.jboss.resteasy:resteasy-client:4.5.8.Final')
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
+    testImplementation('org.junit.jupiter:junit-jupiter-params:5.7.0')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
 }
 
 java {
@@ -72,8 +72,8 @@ publishing {
                 description = 'Generate a file with the cities of your country'
                 url = 'http://cities-generator.vige.it'
                 properties = [
-                    'maven.compiler.source': '13',
-                    'maven.compiler.target': '13'
+                    'maven.compiler.source': '15',
+                    'maven.compiler.target': '15'
                 ]
                 licenses {
                     license {

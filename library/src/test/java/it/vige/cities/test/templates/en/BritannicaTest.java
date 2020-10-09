@@ -12,8 +12,18 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.en.Providers;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Britannica tests
+ */
 public class BritannicaTest extends FileGenerator {
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();

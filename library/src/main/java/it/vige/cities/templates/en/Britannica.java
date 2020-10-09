@@ -12,6 +12,12 @@ import it.vige.cities.Normalizer;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Britannica provider
+ */
 public class Britannica extends HTMLTemplate {
 
 	private final static String URL = "https://www.britannica.com/topic/list-of-cities-and-towns-in-the-United-Kingdom-2034188";
@@ -19,12 +25,20 @@ public class Britannica extends HTMLTemplate {
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 
+	/**
+	 * 
+	 * @param caseSensitive   the case sensitive parameter
+	 * @param duplicatedNames the duplicated names parameter
+	 */
 	public Britannica(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = Countries.uk.name();
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public Nodes generate() throws Exception {
 		Nodes nodes = new Nodes();

@@ -5,13 +5,29 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Extra configuration for italian geonames
+ */
 public class ExtraGeoNames extends GeoNames {
 
+	/**
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames true if it accepts duplicated names
+	 * @param username        the username
+	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
 		super(country, caseSensitive, duplicatedNames, username);
 		firstLevel = 1;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	protected Nodes generate() throws Exception {
 		Nodes nodes = new Nodes();
@@ -53,6 +69,11 @@ public class ExtraGeoNames extends GeoNames {
 		return nodes;
 	}
 
+	/**
+	 * 
+	 * @param nodes         the nodes
+	 * @param caseSensitive true if it is case sensitive
+	 */
 	private void addLevel0(Nodes nodes, boolean caseSensitive) {
 		int counter = 0;
 		Node northWest = new Node();
