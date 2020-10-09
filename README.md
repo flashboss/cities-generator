@@ -72,6 +72,7 @@ And then start it through the command:
 ```
 java -jar build/libs/cities-generator-service-1.1.2.jar --country=it --server.port=8380
 ```
+To use the service connect through browser to http://localhost:8380/swagger-ui/index.html
 
 ## Docker
 
@@ -97,4 +98,4 @@ Add the following DNS in your /etc/hosts file:
 $IP_ADDRESS cities-generator-service.vige.it
 ```
 where in $IP_ADDRESS you must choose the ip address where is located the server.
-To use the service connect through browser to https://cities-generator-service.vige.it:8743/swagger-ui.html
+To use the service connect through browser to https://cities-generator-service.vige.it:8743/swagger-ui/index.html
