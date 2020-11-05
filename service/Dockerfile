@@ -12,16 +12,10 @@
 
 FROM openjdk:15.0.1-jdk
 EXPOSE 8443
-RUN yum -y update && \
-	yum -y install sudo && \
-    echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    useradd -u 1000 -G users,wheel -d /home/cguser --shell /bin/bash -m cguser && \
-    echo "cguser:secret" | chpasswd && \
-    yum -y update && \
-    yum clean all && \
-    yum -y autoremove
+RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
+    echo "cguser:secret" | chpasswd
 
-USER cguser
+USER root
 
 ENV TERM xterm
 ENV COUNTRY it
@@ -31,14 +25,16 @@ ENV FIELDS -Dcountry=$COUNTRY -DduplicatedNames=$DUPLICATEDNAMES
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
-RUN sudo chown -R cguser:cguser /workspace
+RUN chown -R cguser:cguser /workspace
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
-	rm -Rf /workspace/cgservice && \
-    keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=cities-generator-service.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
+	cp /workspace/cgservice/application.keystore /workspace && \
+	rm -Rf /workspace/cgservice
+
+USER cguser
 
 CMD if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
-    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat && \
+    java $FIELDS -Djavax.net.ssl.trustStore=/workspace/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/workspace/application.keystore --server.ssl.trust-store-password=password && \
 	tail -f /dev/null

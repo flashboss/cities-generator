@@ -74,7 +74,7 @@ java -jar build/libs/cities-generator-service-1.1.2.jar --country=it --server.po
 ```
 To use the service connect through browser to http://localhost:8380/swagger-ui/index.html
 
-## Docker
+### Docker
 
 There is an already docker image to start the REST service. Execute this command to start the service:
 ```
@@ -99,3 +99,15 @@ $IP_ADDRESS cities-generator-service.vige.it
 ```
 where in $IP_ADDRESS you must choose the ip address where is located the server.
 To use the service connect through browser to https://cities-generator-service.vige.it:8743/swagger-ui/index.html
+
+#### certificates
+
+in a production environment we are using a default certificate but you could move a different ssl certificate and keys. Use this command to generate it:
+```
+keytool -genkey -alias cities-generator-service -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore ./application.keystore -validity 3650 -dname "CN=cities-generator-service.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass password -keypass password
+```
+You need to create a certificate and import it through the command:
+```
+keytool -v -export -file mytrustCA.cer -keystore ./application.keystore -alias cities-generator-service
+keytool -import -alias trustedCA -file mytrustCA.cer -keystore ./application.keystore -storepass password -keypass password
+```
