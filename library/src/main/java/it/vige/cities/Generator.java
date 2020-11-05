@@ -22,27 +22,77 @@ import it.vige.cities.templates.it.ComuniItaliani;
 import it.vige.cities.templates.it.ExtraGeoNames;
 import it.vige.cities.templates.it.Tuttitalia;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Generator of names
+ */
 public class Generator extends Template {
 
+	/**
+	 * 
+	 */
 	public final static String SINGLE_CASE_SENSITIVE = "s";
+
+	/**
+	 * 
+	 */
 	public final static String SINGLE_COUNTRY = "c";
+
+	/**
+	 * 
+	 */
 	public final static String SINGLE_PROVIDER = "p";
+
+	/**
+	 * 
+	 */
 	public final static String SINGLE_DUPLICATED_NAMES = "d";
+
+	/**
+	 * 
+	 */
 	public final static String SINGLE_USER = "u";
+
+	/**
+	 * 
+	 */
 	public final static String MULTI_CASE_SENSITIVE = "case_sensitive";
+
+	/**
+	 * 
+	 */
 	public final static String MULTI_COUNTRY = "country";
+
+	/**
+	 * 
+	 */
 	public final static String MULTI_PROVIDER = "provider";
+
+	/**
+	 * 
+	 */
 	public final static String MULTI_DUPLICATED_NAMES = "duplicated";
+
+	/**
+	 * 
+	 */
 	public final static String MULTI_USER = "user";
 
 	private static Logger logger = LoggerFactory.getLogger(Generator.class);
-	
+
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String provider;
 	private String username;
 	private boolean overwrite;
 
+	/**
+	 * 
+	 * @param configuration the configuration
+	 * @param overwrite     true if the result is to overwrite
+	 */
 	public Generator(Configuration configuration, boolean overwrite) {
 		this.caseSensitive = configuration.isCaseSensitive();
 		this.duplicatedNames = configuration.isDuplicatedNames();
@@ -52,6 +102,12 @@ public class Generator extends Template {
 		this.overwrite = overwrite;
 	}
 
+	/**
+	 * 
+	 * @param args the parameters
+	 * @return the command line
+	 * @throws ParseException
+	 */
 	private static CommandLine configureOptions(String[] args) throws ParseException {
 		Options options = new Options();
 		options.addOption(Option.builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
@@ -70,6 +126,10 @@ public class Generator extends Template {
 		return cmd;
 	}
 
+	/**
+	 * 
+	 * @return the list of templates
+	 */
 	private List<Template> getTemplates() {
 		List<Template> templates = new ArrayList<Template>();
 
@@ -108,6 +168,11 @@ public class Generator extends Template {
 		return templates;
 	}
 
+	/**
+	 * 
+	 * @param templates the list of templates
+	 * @return the generated nodes
+	 */
 	private Nodes overwrite(List<Template> templates) {
 		Nodes result = null;
 		Iterator<Template> iterator = templates.iterator();
@@ -121,6 +186,9 @@ public class Generator extends Template {
 		return result;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public Nodes generate() {
 		logger.info(
@@ -143,6 +211,9 @@ public class Generator extends Template {
 		return result;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public Result generateFile() {
 		logger.info("Start file generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
@@ -155,30 +226,59 @@ public class Generator extends Template {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return the country
+	 */
 	public String getCountry() {
 		return country;
 	}
 
+	/**
+	 * 
+	 * @return the case sensitive parameter
+	 */
 	public boolean isCaseSensitive() {
 		return caseSensitive;
 	}
 
+	/**
+	 * 
+	 * @return the duplicated names parameters
+	 */
 	public boolean isDuplicatedNames() {
 		return duplicatedNames;
 	}
 
+	/**
+	 * 
+	 * @return the provider
+	 */
 	public String getProvider() {
 		return provider;
 	}
 
+	/**
+	 * 
+	 * @return the overwrite parameter
+	 */
 	public boolean isOverwrite() {
 		return overwrite;
 	}
 
+	/**
+	 * 
+	 * @param overwrite the overwrite parameter
+	 */
 	public void setOverwrite(boolean overwrite) {
 		this.overwrite = overwrite;
 	}
 
+	/**
+	 * 
+	 * @param args the parameters to start the generator
+	 * @throws Exception if there is a problem
+	 */
 	public static void main(String[] args) throws Exception {
 		CommandLine cmd = null;
 		try {

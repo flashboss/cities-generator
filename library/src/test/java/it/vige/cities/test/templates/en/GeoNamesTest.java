@@ -12,8 +12,18 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.en.Providers;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Geonames tests
+ */
 public class GeoNamesTest extends FileGenerator {
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();

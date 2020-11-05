@@ -12,6 +12,12 @@ import it.vige.cities.Normalizer;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Comuni italiani provider
+ */
 public class ComuniItaliani extends HTMLTemplate {
 
 	private final static String URL = "http://www.comuni-italiani.it/zona";
@@ -19,12 +25,20 @@ public class ComuniItaliani extends HTMLTemplate {
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
 
+	/**
+	 * 
+	 * @param caseSensitive   the case sensitive parameter
+	 * @param duplicatedNames the duplicated names parameter
+	 */
 	public ComuniItaliani(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = Countries.it.name();
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public Nodes generate() throws Exception {
 		Nodes nodes = new Nodes();

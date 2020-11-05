@@ -12,8 +12,18 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.it.Providers;
 
+/**
+ * 
+ * @author lucastancapiano
+ *
+ *         Tuttitalia tests
+ */
 public class TuttitaliaTest extends FileGenerator {
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();
