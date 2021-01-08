@@ -1,14 +1,15 @@
 package it.vige.cities.templates;
 
+import static it.vige.cities.Normalizer.execute;
+import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.client.ClientBuilder.newClient;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import it.vige.cities.Normalizer;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -65,7 +66,7 @@ public class GeoNames extends Template {
 	 * @throws Exception if there is a problem
 	 */
 	protected Response getPageCountry(String country) throws Exception {
-		client = ClientBuilder.newClient();
+		client = newClient();
 		WebTarget target = client.target(URL_COUNTRY);
 		Response response = target.queryParam("country", country).queryParam("username", username).request().get();
 		return response;
@@ -78,7 +79,7 @@ public class GeoNames extends Template {
 	 * @throws Exception if there is a problem
 	 */
 	protected Response getPageChildren(int id) throws Exception {
-		client = ClientBuilder.newClient();
+		client = newClient();
 		WebTarget target = client.target(URL_CHILDREN);
 		Response response = target.queryParam("geonameId", id).queryParam("username", username).request().get();
 		return response;
@@ -101,8 +102,8 @@ public class GeoNames extends Template {
 					Node node = new Node();
 					node.setId(head.getGeonameId());
 					node.setLevel(numberLevel);
-					node.setName(Normalizer.execute(caseSensitive, duplicatedNames, head.getToponymName(),
-							zones.parallelStream().map(e -> e.getName()).collect(Collectors.toList())));
+					node.setName(execute(caseSensitive, duplicatedNames, head.getToponymName(),
+							zones.parallelStream().map(e -> e.getName()).collect(toList())));
 					zones.add(node);
 					addNodes(node.getZones(), numberLevel + 1, node.getId());
 				}

@@ -1,6 +1,7 @@
 package it.vige.cities.templates.it;
 
-import it.vige.cities.Normalizer;
+import static it.vige.cities.Normalizer.execute;
+
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
@@ -79,27 +80,27 @@ public class ExtraGeoNames extends GeoNames {
 		Node northWest = new Node();
 		northWest.setId(counter++);
 		northWest.setLevel(0);
-		northWest.setName(Normalizer.execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
+		northWest.setName(execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
 		nodes.getZones().add(northWest);
 		Node northEast = new Node();
 		northEast.setId(counter++);
 		northEast.setLevel(0);
-		northEast.setName(Normalizer.execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
+		northEast.setName(execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
 		nodes.getZones().add(northEast);
 		Node south = new Node();
 		south.setId(counter++);
 		south.setLevel(0);
-		south.setName(Normalizer.execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
+		south.setName(execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
 		nodes.getZones().add(south);
 		Node centre = new Node();
 		centre.setId(counter++);
 		centre.setLevel(0);
-		centre.setName(Normalizer.execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
+		centre.setName(execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
 		nodes.getZones().add(centre);
 		Node islands = new Node();
 		islands.setId(counter++);
 		islands.setLevel(0);
-		islands.setName(Normalizer.execute(caseSensitive, true, "V: ITALIA INSULARE", null));
+		islands.setName(execute(caseSensitive, true, "V: ITALIA INSULARE", null));
 		nodes.getZones().add(islands);
 	}
 

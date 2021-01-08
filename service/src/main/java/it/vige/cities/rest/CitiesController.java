@@ -1,11 +1,12 @@
 package it.vige.cities.rest;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ import it.vige.cities.result.Nodes;
 @CrossOrigin(origins = "*")
 public class CitiesController {
 
-	private Logger logger = LoggerFactory.getLogger(FileGenerator.class);
+	private Logger logger = getLogger(FileGenerator.class);
 
 	public final static Nodes nodes = new Nodes();
 

@@ -1,10 +1,12 @@
 package it.vige.cities;
 
+import static java.lang.System.getProperty;
+import static java.util.Locale.getDefault;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.File;
-import java.util.Locale;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,14 +23,14 @@ public class FileGenerator {
 	/**
 	 * 
 	 */
-	public final static String CITIES_HOME = System.getProperty("user.home") + "/cities-generator/";
+	public final static String CITIES_HOME = getProperty("user.home") + "/cities-generator/";
 
 	/**
 	 * 
 	 */
-	protected String country = Locale.getDefault().getCountry().toLowerCase();
+	protected String country = getDefault().getCountry().toLowerCase();
 
-	private Logger logger = LoggerFactory.getLogger(FileGenerator.class);
+	private Logger logger = getLogger(FileGenerator.class);
 
 	private ObjectMapper mapper = new ObjectMapper();
 

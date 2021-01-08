@@ -1,5 +1,8 @@
 package it.vige.cities;
 
+import static it.vige.cities.Result.KO;
+import static it.vige.cities.Result.OK;
+
 import it.vige.cities.result.Nodes;
 
 /**
@@ -30,8 +33,8 @@ public abstract class Template extends FileGenerator {
 		try {
 			writeFile(generate());
 		} catch (Exception ex) {
-			return Result.KO;
+			return KO;
 		}
-		return Result.OK;
+		return OK;
 	}
 }
