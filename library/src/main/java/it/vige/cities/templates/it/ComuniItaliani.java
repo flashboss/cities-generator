@@ -1,6 +1,7 @@
 package it.vige.cities.templates.it;
 
-import java.util.stream.Collectors;
+import static it.vige.cities.Normalizer.execute;
+import static java.util.stream.Collectors.toList;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,7 +9,6 @@ import org.jsoup.select.Elements;
 
 import it.vige.cities.Countries;
 import it.vige.cities.HTMLTemplate;
-import it.vige.cities.Normalizer;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
@@ -49,8 +49,8 @@ public class ComuniItaliani extends HTMLTemplate {
 			Node node0 = new Node();
 			node0.setId(counter++);
 			node0.setLevel(0);
-			node0.setName(Normalizer.execute(caseSensitive, duplicatedNames, head0.text(),
-					nodes.getZones().parallelStream().map(e -> e.getName()).collect(Collectors.toList())));
+			node0.setName(execute(caseSensitive, duplicatedNames, head0.text(),
+					nodes.getZones().parallelStream().map(e -> e.getName()).collect(toList())));
 			nodes.getZones().add(node0);
 			Document level1 = getPage(head0.absUrl("href"));
 			Elements lines1 = level1.select(".tabwrap").get(0).select("tr td a");
@@ -58,9 +58,8 @@ public class ComuniItaliani extends HTMLTemplate {
 				Node node1 = new Node();
 				node1.setId(counter++);
 				node1.setLevel(1);
-				node1.setName(Normalizer.execute(caseSensitive, duplicatedNames, head1.text(),
-						nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
-								.map(e -> e.getName()).collect(Collectors.toList())));
+				node1.setName(execute(caseSensitive, duplicatedNames, head1.text(), nodes.getZones().parallelStream()
+						.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName()).collect(toList())));
 				node0.getZones().add(node1);
 				Document level2 = getPage(head1.absUrl("href"));
 				Elements lines2 = level2.select(".tabwrap").get(0).select("tr td a");
@@ -68,10 +67,10 @@ public class ComuniItaliani extends HTMLTemplate {
 					Node node2 = new Node();
 					node2.setId(counter++);
 					node2.setLevel(2);
-					node2.setName(Normalizer.execute(caseSensitive, duplicatedNames, head2.text(),
+					node2.setName(execute(caseSensitive, duplicatedNames, head2.text(),
 							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 									.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
-									.collect(Collectors.toList())));
+									.collect(toList())));
 					node1.getZones().add(node2);
 					Document level3 = getPage(head2.absUrl("href"));
 					Elements lines3 = level3.select(".tabwrap").get(2).select("tr td a");
@@ -79,11 +78,11 @@ public class ComuniItaliani extends HTMLTemplate {
 						Node node3 = new Node();
 						node3.setId(counter++);
 						node3.setLevel(3);
-						node3.setName(Normalizer.execute(caseSensitive, duplicatedNames, head3.text(),
+						node3.setName(execute(caseSensitive, duplicatedNames, head3.text(),
 								nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
 										.flatMap(e -> e.getZones().parallelStream())
 										.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName())
-										.collect(Collectors.toList())));
+										.collect(toList())));
 						node2.getZones().add(node3);
 					}
 				}

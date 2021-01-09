@@ -1,6 +1,7 @@
 package it.vige.cities;
 
-import org.jsoup.Jsoup;
+import static org.jsoup.Jsoup.connect;
+
 import org.jsoup.nodes.Document;
 
 /**
@@ -18,7 +19,7 @@ public abstract class HTMLTemplate extends Template {
 	 * @throws Exception if there is a problem
 	 */
 	protected Document getPage(String url) throws Exception {
-		Document doc = Jsoup.connect(url).get();
+		Document doc = connect(url).get();
 		return doc;
 	}
 

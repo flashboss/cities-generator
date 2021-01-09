@@ -1,19 +1,20 @@
 package it.vige.cities;
 
+import static java.util.Locale.getDefault;
+import static org.apache.commons.cli.Option.builder;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.MissingOptionException;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
@@ -80,7 +81,7 @@ public class Generator extends Template {
 	 */
 	public final static String MULTI_USER = "user";
 
-	private static Logger logger = LoggerFactory.getLogger(Generator.class);
+	private static Logger logger = getLogger(Generator.class);
 
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
@@ -110,15 +111,15 @@ public class Generator extends Template {
 	 */
 	private static CommandLine configureOptions(String[] args) throws ParseException {
 		Options options = new Options();
-		options.addOption(Option.builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
+		options.addOption(builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
 				.desc(MULTI_CASE_SENSITIVE).build());
-		options.addOption(Option.builder(SINGLE_COUNTRY).longOpt(MULTI_COUNTRY).type(String.class).hasArg()
-				.numberOfArgs(1).desc(MULTI_COUNTRY).build());
-		options.addOption(Option.builder(SINGLE_PROVIDER).longOpt(MULTI_PROVIDER).type(String.class).hasArg()
-				.numberOfArgs(1).desc(MULTI_PROVIDER).build());
-		options.addOption(Option.builder(SINGLE_DUPLICATED_NAMES).longOpt(MULTI_DUPLICATED_NAMES).type(Boolean.class)
+		options.addOption(builder(SINGLE_COUNTRY).longOpt(MULTI_COUNTRY).type(String.class).hasArg().numberOfArgs(1)
+				.desc(MULTI_COUNTRY).build());
+		options.addOption(builder(SINGLE_PROVIDER).longOpt(MULTI_PROVIDER).type(String.class).hasArg().numberOfArgs(1)
+				.desc(MULTI_PROVIDER).build());
+		options.addOption(builder(SINGLE_DUPLICATED_NAMES).longOpt(MULTI_DUPLICATED_NAMES).type(Boolean.class)
 				.desc(MULTI_DUPLICATED_NAMES).build());
-		options.addOption(Option.builder(SINGLE_USER).longOpt(MULTI_USER).type(String.class).hasArg().numberOfArgs(1)
+		options.addOption(builder(SINGLE_USER).longOpt(MULTI_USER).type(String.class).hasArg().numberOfArgs(1)
 				.desc(MULTI_USER).build());
 
 		CommandLineParser parser = new DefaultParser();
@@ -286,12 +287,12 @@ public class Generator extends Template {
 			String country = null;
 			Object fromCountry = cmd.getParsedOptionValue(SINGLE_COUNTRY);
 			if (fromCountry == null)
-				country = Locale.getDefault().getCountry().toLowerCase();
+				country = getDefault().getCountry().toLowerCase();
 			else
 				country = fromCountry + "";
 			String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
-			boolean caseSensitive = cmd.hasOption(Generator.SINGLE_CASE_SENSITIVE);
-			boolean duplicatedNames = cmd.hasOption(Generator.SINGLE_DUPLICATED_NAMES);
+			boolean caseSensitive = cmd.hasOption(SINGLE_CASE_SENSITIVE);
+			boolean duplicatedNames = cmd.hasOption(SINGLE_DUPLICATED_NAMES);
 
 			Configuration configuration = new Configuration();
 			configuration.setCaseSensitive(caseSensitive);
