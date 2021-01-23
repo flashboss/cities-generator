@@ -18,13 +18,12 @@ RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
 USER root
 
 ENV TERM xterm
-ENV REALM keycloak_realm
-ENV AUTHURL https://localhost:8443/auth
-ENV RESOURCE citiesGenerator
+ENV REALM master
+ENV AUTHURL https://auth-ct.vige.it:8443/auth
+ENV RESOURCE admin-cli
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
 ENV CASESENSITIVE false
-ENV FIELDS -Dkeycloak.realm=$REALM -Dkeycloak.auth-server-url=$AUTHURL -Dkeycloak.resource=$RESOURCE -Dcountry=$COUNTRY -DduplicatedNames=$DUPLICATEDNAMES
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
@@ -37,7 +36,8 @@ RUN rm -Rf /home/cguser/.gradle && \
 
 USER cguser
 
-CMD if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
+CMD FIELDS="-Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
+	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
     java $FIELDS -Djavax.net.ssl.trustStore=/workspace/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/workspace/application.keystore --server.ssl.trust-store-password=password && \
 	tail -f /dev/null
