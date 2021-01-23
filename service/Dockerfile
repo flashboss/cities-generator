@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:15.0.1-jdk
+FROM openjdk:13.0.1-jdk
 EXPOSE 8443
 RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
@@ -18,10 +18,13 @@ RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
 USER root
 
 ENV TERM xterm
+ENV REALM keycloak_realm
+ENV AUTHURL https://localhost:8443/auth
+ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
 ENV CASESENSITIVE false
-ENV FIELDS -Dcountry=$COUNTRY -DduplicatedNames=$DUPLICATEDNAMES
+ENV FIELDS -Dkeycloak.realm=$REALM -Dkeycloak.auth-server-url=$AUTHURL -Dkeycloak.resource=$RESOURCE -Dcountry=$COUNTRY -DduplicatedNames=$DUPLICATEDNAMES
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
