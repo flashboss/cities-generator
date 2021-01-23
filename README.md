@@ -11,13 +11,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.1.3:jar -DoutputDirectory=. && java -jar cities-generator-1.1.3.jar -c uk
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.1.4:jar -DoutputDirectory=. && java -jar cities-generator-1.1.4.jar -c uk
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.3.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.4.jar -c it
 ```
 
 - Through api java follow the instructions:
@@ -27,14 +27,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.3.jar -c it
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.1.3</version>
+		<version>1.1.4</version>
 	</dependency>
 ```
 	
    or on gradle in the build.gradle file:
 		
    ```
-	compile('it.vige.cities:cities-generator:1.1.3')
+	compile('it.vige.cities:cities-generator:1.1.4')
    ```
 	
 2. Execute the following java instructions:
@@ -70,9 +70,9 @@ A REST service can be installed in your machine. This returns a json format with
 ```
 And then start it through the command:
 ```
-java -jar build/libs/cities-generator-service-1.1.3.jar --country=it --server.port=8380
+java -jar build/libs/cities-generator-service-1.1.4.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
-To use the service connect through browser to http://localhost:8380/swagger-ui/index.html
+Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to http://localhost:8380/swagger-ui/index.html
 
 ### Docker
 
@@ -82,11 +82,14 @@ docker pull vige/cities-generator
 ```
 To run the image use the command:
 ```
-docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it vige/cities-generator
+docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
 Where it is the chosen country. You can choose uk,it or other else country using the first two characters of the code.
 Over the country, optionally as for the library you can add the following param:
 
+- REALM
+- AUTHURL
+- RESOURCE
 - COUNTRY
 - PROVIDER
 - CASESENSITIVE
