@@ -96,9 +96,17 @@ Over the country, optionally as for the library you can add the following param:
 - DUPLICATEDNAMES
 - USERNAME
 
+This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the root folder of the project:
+```
+COUNTRY=${COUNTRY} docker-compose up
+```
+Where ${COUNTRY} is the choosen language, it or en. It will allow to download a keycloak instance where the server can be connected. 
+After started keycloak you need to configure it connecting to https://auth-ct.vige.it:8443/auth and configure the redirects in the admin-cli client.
+
 Add the following DNS in your /etc/hosts file:
 ```
 $IP_ADDRESS cities-generator-service.vige.it
+$IP_ADDRESS auth-ct.vige.it
 ```
 where in $IP_ADDRESS you must choose the ip address where is located the server.
 To use the service connect through browser to https://cities-generator-service.vige.it:8743/swagger-ui/index.html
