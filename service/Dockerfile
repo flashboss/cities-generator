@@ -18,9 +18,9 @@ RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
 USER root
 
 ENV TERM xterm
-ENV REALM master
+ENV REALM cities
 ENV AUTHURL https://auth-ct.vige.it:8443/auth
-ENV RESOURCE admin-cli
+ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
 ENV CASESENSITIVE false

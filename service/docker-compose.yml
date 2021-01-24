@@ -7,6 +7,9 @@ services:
     environment:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/workspace/cities-realm.json
+    volumes:
+      - ./migration:/workspace
   citiesgenerator:
     image: "vige/cities-generator"
     ports:
