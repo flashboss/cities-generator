@@ -105,7 +105,7 @@ This image starts without SSO server, so it is not complete. For a sample comple
 COUNTRY=${COUNTRY} docker-compose up
 ```
 Where ${COUNTRY} is the choosen language, it or en. It will allow to download a keycloak instance where the server can be connected. 
-After started keycloak you need to configure it connecting to https://auth-ct.vige.it:8443/auth and configure the redirects in the admin-cli client.
+After you can connect to keycloak through the url https://auth-ct.vige.it:8443/auth
 
 Add the following DNS in your /etc/hosts file:
 ```
