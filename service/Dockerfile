@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM openjdk:13.0.1-jdk
-EXPOSE 8443
+EXPOSE 8080
 RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
 
@@ -19,7 +19,7 @@ USER root
 
 ENV TERM xterm
 ENV REALM cities
-ENV AUTHURL https://auth-ct.vige.it:8443/auth
+ENV AUTHURL https://auth-ct.vige.it:8480/auth
 ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
@@ -31,7 +31,6 @@ RUN chown -R cguser:cguser /workspace
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
-	cp /workspace/cgservice/application.keystore /workspace && \
 	rm -Rf /workspace/cgservice
 
 USER cguser
@@ -39,5 +38,5 @@ USER cguser
 CMD FIELDS="-Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
 	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
-    java $FIELDS -Djavax.net.ssl.trustStore=/workspace/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/workspace/application.keystore --server.ssl.trust-store-password=password && \
+    java $FIELDS -jar /workspace/cgservice.jar --server.port=8080 && \
 	tail -f /dev/null
