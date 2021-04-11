@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.4.1'
+        springBootVersion = '2.4.4'
     }
     repositories {
         mavenCentral()
@@ -20,9 +20,9 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige.cities'
-version = '1.1.4'
+version = '1.1.5'
 
-sourceCompatibility = 13
+sourceCompatibility = 16
 
 repositories {
 	mavenLocal()
@@ -34,10 +34,11 @@ configurations {
 }
 
 dependencies {
-    implementation('it.vige.cities:cities-generator:1.1.4')
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-data-rest')
+	implementation('org.springframework.boot:spring-boot-starter-undertow')
+    implementation('it.vige.cities:cities-generator:1.1.5')
     implementation('io.springfox:springfox-boot-starter:3.0.0')
-    implementation('org.keycloak:keycloak-spring-boot-starter:12.0.2')
+    implementation('org.keycloak:keycloak-spring-boot-starter:12.0.4') {
+    	exclude module: 'spring-boot-starter-tomcat'
+    }
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
