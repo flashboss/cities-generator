@@ -40,21 +40,21 @@ public class BritannicaTest extends FileGenerator {
 		assertTrue(result == OK);
 		Nodes nodes = readFile(uk.name());
 		assertNotNull(nodes);
-		Node northWest = nodes.getZones().get(0);
-		Node liguria = northWest.getZones().get(0);
-		Node genova = liguria.getZones().get(0);
-		Node arenzano = genova.getZones().get(0);
-		assertEquals(northWest.getId(), 0);
-		assertEquals(northWest.getLevel(), 0);
-		assertEquals(northWest.getName(), "ITALIA NORD OCCIDENTALE");
-		assertEquals(liguria.getId(), 1);
-		assertEquals(liguria.getLevel(), 1);
-		assertEquals(liguria.getName(), "LIGURIA");
-		assertEquals(genova.getId(), 2);
-		assertEquals(genova.getLevel(), 2);
-		assertEquals(genova.getName(), "GENOVA");
-		assertEquals(arenzano.getId(), 3);
-		assertEquals(arenzano.getLevel(), 3);
-		assertEquals(arenzano.getName(), "ARENZANO");
+		Node england = nodes.getZones().get(0);
+		Node northIreland = nodes.getZones().get(1);
+		Node scotland = nodes.getZones().get(2);
+		Node wales = nodes.getZones().get(3);
+		assertEquals(england.getId(), 0);
+		assertEquals(england.getLevel(), 0);
+		assertEquals(england.getName(), "ENGLAND");
+		assertEquals(northIreland.getId(), 1);
+		assertEquals(northIreland.getLevel(), 0);
+		assertEquals(northIreland.getName(), "NORTHERN IRELAND");
+		assertEquals(scotland.getId(), 2);
+		assertEquals(scotland.getLevel(), 0);
+		assertEquals(scotland.getName(), "SCOTLAND");
+		assertEquals(wales.getId(), 3);
+		assertEquals(wales.getLevel(), 0);
+		assertEquals(wales.getName(), "WALES");
 	}
 }

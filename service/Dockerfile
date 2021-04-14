@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:13.0.1-jdk
+FROM openjdk:15-jdk
 EXPOSE 8080
 RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd

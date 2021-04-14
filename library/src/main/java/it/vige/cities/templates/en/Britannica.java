@@ -43,7 +43,7 @@ public class Britannica extends HTMLTemplate {
 	public Nodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		Document level0 = getPage(URL);
-		Elements lines0 = level0.select(".grid-sm section[data-level=1]:first-child a");
+		Elements lines0 = level0.select(".topic-paragraph:first-child a");
 		lines0.remove(0);
 		lines0.remove(lines0.last());
 		lines0.remove(lines0.last());
@@ -58,8 +58,7 @@ public class Britannica extends HTMLTemplate {
 			node0.setName(execute(caseSensitive, duplicatedNames, head0.text(),
 					nodes.getZones().parallelStream().map(e -> e.getName()).collect(toList())));
 			nodes.getZones().add(node0);
-			Elements lines1 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")")
-					.select("section[data-level=2] h2");
+			Elements lines1 = level0.select(".grid-sm section[data-level=1]:eq(" + counterLevel0 + ")");
 			for (Element head1 : lines1) {
 				counterLevel1++;
 				Node node1 = new Node();
