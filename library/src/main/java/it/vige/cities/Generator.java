@@ -157,12 +157,12 @@ public class Generator extends Template {
 				templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
 			}
 		} else if (country.equals(Countries.uk.name())) {
-			if (provider == null || provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
-				templates.add(new Britannica(caseSensitive, duplicatedNames));
-				templates.add(new GeoNames(Countries.uk.name(), caseSensitive, duplicatedNames, username));
-			} else if (provider.equals(it.vige.cities.templates.en.Providers.GEONAMES.name())) {
+			if (provider == null || provider.equals(it.vige.cities.templates.en.Providers.GEONAMES.name())) {
 				templates.add(new GeoNames(Countries.uk.name(), caseSensitive, duplicatedNames, username));
 				templates.add(new Britannica(caseSensitive, duplicatedNames));
+			} else if (provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
+				templates.add(new Britannica(caseSensitive, duplicatedNames));
+				templates.add(new GeoNames(Countries.uk.name(), caseSensitive, duplicatedNames, username));
 			}
 		} else
 			templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username));
