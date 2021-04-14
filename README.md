@@ -105,7 +105,7 @@ This image starts without SSO server, so it is not complete. For a sample comple
 COUNTRY=${COUNTRY} docker-compose up
 ```
 Where ${COUNTRY} is the choosen language, it or en. It will allow to download a keycloak instance where the server can be connected. 
-After you can connect to keycloak through the url https://auth-ct.vige.it:8443/auth
+After you can connect to keycloak through the url http://auth-ct.vige.it:8080/auth
 
 Add the following DNS in your /etc/hosts file:
 ```
@@ -113,7 +113,7 @@ $IP_ADDRESS cities-generator-service.vige.it
 $IP_ADDRESS auth-ct.vige.it
 ```
 where in $IP_ADDRESS you must choose the ip address where is located the server.
-To use the service connect through browser to https://cities-generator-service.vige.it:8743/swagger-ui/index.html
+To use the service connect through browser to http://cities-generator-service.vige.it:8380/swagger-ui/index.html
 
 #### certificates
 

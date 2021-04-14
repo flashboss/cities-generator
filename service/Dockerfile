@@ -19,7 +19,7 @@ USER root
 
 ENV TERM xterm
 ENV REALM cities
-ENV AUTHURL https://auth-ct.vige.it:8480/auth
+ENV AUTHURL http://auth-ct.vige.it:8080/auth
 ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false

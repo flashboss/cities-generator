@@ -1,22 +1,24 @@
 package it.vige.cities;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.TestPropertySource;
 
 import it.vige.cities.rest.CitiesController;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class GenerateTest {
+@SpringBootTest(webEnvironment = DEFINED_PORT)
+@TestPropertySource(locations="classpath:application-test.properties")
+public class GenerateITTest {
 
-	private Logger logger = LoggerFactory.getLogger(GenerateTest.class);
+	private Logger logger = getLogger(GenerateITTest.class);
 
 	@Autowired
 	private CitiesController citiesController;
