@@ -11,13 +11,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.1.6:jar -DoutputDirectory=. && java -jar cities-generator-1.1.6.jar -c uk
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.1.7:jar -DoutputDirectory=. && java -jar cities-generator-1.1.7.jar -c uk
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.6.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.7.jar -c it
 ```
 
 - Through api java follow the instructions:
@@ -27,14 +27,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.6.jar -c it
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.1.6</version>
+		<version>1.1.7</version>
 	</dependency>
 ```
 	
    or on gradle in the build.gradle file:
 		
    ```
-	compile('it.vige.cities:cities-generator:1.1.6')
+	compile('it.vige.cities:cities-generator:1.1.7')
    ```
 	
 2. Execute the following java instructions:
@@ -70,12 +70,12 @@ A REST service can be installed in your machine. This returns a json format with
 ```
 And then start it through the command:
 ```
-java -jar build/libs/cities-generator-service-1.1.6.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.1.7.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to http://localhost:8380/swagger-ui/index.html
 In a production environment you could use https so:
 ```
-java -Djavax.net.ssl.trustStore=./application.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.1.6.jar --server.ssl.key-store=./application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./application.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.1.7.jar --server.ssl.key-store=./application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 ### Docker
