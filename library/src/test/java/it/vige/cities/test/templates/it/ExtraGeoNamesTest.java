@@ -44,7 +44,7 @@ public class ExtraGeoNamesTest extends FileGenerator {
 		Node regioneAutonomaValleDaosta = northWest.getZones().get(0);
 		Node valleDaosta = regioneAutonomaValleDaosta.getZones().get(0);
 		Node allein = valleDaosta.getZones().get(0);
-		assertEquals(northWest.getId(), 0);
+		assertEquals(northWest.getId(), 1);
 		assertEquals(northWest.getLevel(), 0);
 		assertEquals(northWest.getName(), "I: ITALIA NORD-OCCIDENTALE");
 		assertEquals(regioneAutonomaValleDaosta.getId(), 3164857);

@@ -20,7 +20,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige.cities'
-version = '1.1.6'
+version = '1.1.7'
 
 sourceCompatibility = 15
 
@@ -36,7 +36,7 @@ configurations {
 }
 
 dependencies {
-    implementation('it.vige.cities:cities-generator:1.1.6')
+    implementation('it.vige.cities:cities-generator:1.1.7')
 	implementation('org.springframework.boot:spring-boot-starter-undertow')
     implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.keycloak:keycloak-spring-boot-starter:12.0.4')

@@ -44,16 +44,16 @@ public class BritannicaTest extends FileGenerator {
 		Node northIreland = nodes.getZones().get(1);
 		Node scotland = nodes.getZones().get(2);
 		Node wales = nodes.getZones().get(3);
-		assertEquals(england.getId(), 0);
+		assertEquals(england.getId(), 1);
 		assertEquals(england.getLevel(), 0);
 		assertEquals(england.getName(), "ENGLAND");
-		assertEquals(northIreland.getId(), 1);
+		assertEquals(northIreland.getId(), 2);
 		assertEquals(northIreland.getLevel(), 0);
 		assertEquals(northIreland.getName(), "NORTHERN IRELAND");
-		assertEquals(scotland.getId(), 2);
+		assertEquals(scotland.getId(), 3);
 		assertEquals(scotland.getLevel(), 0);
 		assertEquals(scotland.getName(), "SCOTLAND");
-		assertEquals(wales.getId(), 3);
+		assertEquals(wales.getId(), 4);
 		assertEquals(wales.getLevel(), 0);
 		assertEquals(wales.getName(), "WALES");
 	}

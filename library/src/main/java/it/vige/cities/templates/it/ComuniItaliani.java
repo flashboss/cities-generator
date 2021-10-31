@@ -44,7 +44,7 @@ public class ComuniItaliani extends HTMLTemplate {
 		Nodes nodes = new Nodes();
 		Document level0 = getPage(URL);
 		Elements lines0 = level0.select(".tabwrap").get(0).select("tr td a");
-		int counter = 0;
+		int counter = 1;
 		for (Element head0 : lines0) {
 			Node node0 = new Node();
 			node0.setId(counter++);
