@@ -47,7 +47,7 @@ public class Britannica extends HTMLTemplate {
 		lines0.remove(0);
 		lines0.remove(lines0.last());
 		lines0.remove(lines0.last());
-		int counter = 0;
+		int counter = 1;
 		int counterLevel0 = 0;
 		int counterLevel1 = 0;
 		for (Element head0 : lines0) {

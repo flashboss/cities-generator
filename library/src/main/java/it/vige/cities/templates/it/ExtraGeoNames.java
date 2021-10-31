@@ -76,7 +76,7 @@ public class ExtraGeoNames extends GeoNames {
 	 * @param caseSensitive true if it is case sensitive
 	 */
 	private void addLevel0(Nodes nodes, boolean caseSensitive) {
-		int counter = 0;
+		int counter = 1;
 		Node northWest = new Node();
 		northWest.setId(counter++);
 		northWest.setLevel(0);

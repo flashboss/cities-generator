@@ -118,7 +118,7 @@ public class Tuttitalia extends HTMLTemplate {
 	 * @return the number of level 0 nodes
 	 */
 	private int addLevel0(Nodes nodes, boolean caseSensitive, Map<Node, List<String>> associations) {
-		int counter = 0;
+		int counter = 1;
 		Node northWest = new Node();
 		northWest.setId(counter++);
 		northWest.setLevel(0);
