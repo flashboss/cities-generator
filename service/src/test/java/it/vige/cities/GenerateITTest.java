@@ -1,5 +1,6 @@
 package it.vige.cities;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
@@ -15,7 +16,7 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 @SpringBootTest(webEnvironment = DEFINED_PORT)
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class GenerateITTest {
 
 	private Logger logger = getLogger(GenerateITTest.class);
@@ -32,10 +33,21 @@ public class GenerateITTest {
 		assertNotNull(firstNode);
 
 		int id = firstNode.getId();
-		nodes = citiesController.getResult(id);
+		nodes = citiesController.getResult(id, null);
 		assertNotNull(nodes);
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
+
+		nodes = citiesController.getResult(112, "all");
+		assertNotNull(nodes);
+		firstNode = nodes.getZones().get(0);
+		assertEquals(1, firstNode.getId());
+		Node secondNode = firstNode.getZones().get(0);
+		assertEquals(2, secondNode.getId());
+		Node thirdNode = secondNode.getZones().get(0);
+		assertEquals(71, thirdNode.getId());
+		Node forthNode = thirdNode.getZones().get(0);
+		assertEquals(112, forthNode.getId());
 	}
 
 }
