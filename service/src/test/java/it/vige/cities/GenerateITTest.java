@@ -32,14 +32,22 @@ public class GenerateITTest {
 		Node firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		int id = firstNode.getId();
+		String id = firstNode.getId() + "";
 		nodes = citiesController.getResult(id, null);
 		assertNotNull(nodes);
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		nodes = citiesController.getResult(112, "all");
+		nodes = citiesController.getResult("112,3", null);
 		assertNotNull(nodes);
+		assertEquals(1, nodes.getZones().size());
+		firstNode = nodes.getZones().get(0);
+		assertNotNull(firstNode);
+		assertEquals(112, firstNode.getId());
+
+		nodes = citiesController.getResult("112,3", "all");
+		assertNotNull(nodes);
+		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
 		assertEquals(1, firstNode.getId());
 		Node secondNode = firstNode.getZones().get(0);
@@ -47,6 +55,20 @@ public class GenerateITTest {
 		Node thirdNode = secondNode.getZones().get(0);
 		assertEquals(71, thirdNode.getId());
 		Node forthNode = thirdNode.getZones().get(0);
+		assertEquals(112, forthNode.getId());
+		Node fifthNode = secondNode.getZones().get(1);
+		assertEquals(3, fifthNode.getId());
+
+		nodes = citiesController.getResult("112,2", "all");
+		assertNotNull(nodes);
+		assertEquals(1, nodes.getZones().size());
+		firstNode = nodes.getZones().get(0);
+		assertEquals(1, firstNode.getId());
+		secondNode = firstNode.getZones().get(0);
+		assertEquals(2, secondNode.getId());
+		thirdNode = secondNode.getZones().get(0);
+		assertEquals(71, thirdNode.getId());
+		forthNode = thirdNode.getZones().get(0);
 		assertEquals(112, forthNode.getId());
 	}
 

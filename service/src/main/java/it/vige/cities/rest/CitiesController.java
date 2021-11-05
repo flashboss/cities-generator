@@ -1,5 +1,6 @@
 package it.vige.cities.rest;
 
+import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.ArrayList;
@@ -89,33 +90,64 @@ public class CitiesController {
 		return null;
 	}
 
+	private List<Integer> getIds(String ids) {
+		List<Integer> result = new ArrayList<Integer>();
+		String[] splittedIds = ids.split(",");
+		for (String splittedId : splittedIds)
+			result.add(parseInt(splittedId));
+		return result;
+	}
+
+	private void merge(List<Node> allFound, Node found) {
+		if (allFound.isEmpty())
+			allFound.add(found);
+		else
+			for (Node node : allFound)
+				if (node.getId() == found.getId())
+					for (Node found1 : found.getZones())
+						merge(node.getZones(), found1);
+				else {
+					allFound.add(found);
+					break;
+				}
+	}
+
 	@GetMapping(value = "/cities")
 	public Nodes getResult() {
 		return nodes;
 	}
 
-	@GetMapping(value = "/cities/{id}")
-	public Nodes getResult(@PathVariable("id") int id, @RequestParam(required = false) String all) {
-		Node found = null;
-		for (Node node : nodes.getZones()) {
-			if (all == null)
-				found = find(node, id);
-			else {
-				List<Node> newNodes = new ArrayList<Node>();
-				newNodes.add(node);
-				filter(newNodes, node, id);
-				for (int i = 0; i < newNodes.size() - 1; i++) {
-					newNodes.get(i).getZones().clear();
-					newNodes.get(i).getZones().add(newNodes.get(i + 1));
-				}
-				newNodes.get(newNodes.size() - 1).getZones().clear();
-				found = newNodes.get(0);
-			}
-			if (found != null)
+	@GetMapping(value = "/cities/{ids}")
+	public Nodes getResult(@PathVariable("ids") String ids, @RequestParam(required = false) String all) {
+		List<Integer> iIds = getIds(ids);
+		List<Node> allFound = new ArrayList<Node>();
+		for (int j = 0; j < iIds.size(); j++) {
+			int id = iIds.get(j);
+			if (all == null && j > 0)
 				break;
+			Node found = null;
+			for (Node originalNode : nodes.getZones()) {
+				Node node = (Node) originalNode.clone();
+				if (all == null) {
+					found = find(node, id);
+				} else {
+					List<Node> newNodes = new ArrayList<Node>();
+					newNodes.add(node);
+					filter(newNodes, node, id);
+					for (int i = 0; i < newNodes.size() - 1; i++) {
+						newNodes.get(i).getZones().clear();
+						newNodes.get(i).getZones().add(newNodes.get(i + 1));
+					}
+					newNodes.get(newNodes.size() - 1).getZones().clear();
+					found = newNodes.get(0);
+				}
+				merge(allFound, found);
+				if (found != null)
+					break;
+			}
 		}
 		Nodes nodes = new Nodes();
-		nodes.getZones().add(found);
+		nodes.getZones().addAll(allFound);
 		return nodes;
 	}
 

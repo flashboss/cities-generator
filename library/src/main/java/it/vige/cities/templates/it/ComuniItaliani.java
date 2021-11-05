@@ -1,6 +1,7 @@
 package it.vige.cities.templates.it;
 
 import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.util.stream.Collectors.toList;
 
 import org.jsoup.nodes.Document;
@@ -47,7 +48,7 @@ public class ComuniItaliani extends HTMLTemplate {
 		int counter = 1;
 		for (Element head0 : lines0) {
 			Node node0 = new Node();
-			node0.setId(counter++);
+			node0.setId("" + counter++);
 			node0.setLevel(0);
 			node0.setName(execute(caseSensitive, duplicatedNames, head0.text(),
 					nodes.getZones().parallelStream().map(e -> e.getName()).collect(toList())));
@@ -56,7 +57,7 @@ public class ComuniItaliani extends HTMLTemplate {
 			Elements lines1 = level1.select(".tabwrap").get(0).select("tr td a");
 			for (Element head1 : lines1) {
 				Node node1 = new Node();
-				node1.setId(counter++);
+				node1.setId(node0.getId() + ID_SEPARATOR + counter++);
 				node1.setLevel(1);
 				node1.setName(execute(caseSensitive, duplicatedNames, head1.text(), nodes.getZones().parallelStream()
 						.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName()).collect(toList())));
@@ -65,7 +66,7 @@ public class ComuniItaliani extends HTMLTemplate {
 				Elements lines2 = level2.select(".tabwrap").get(0).select("tr td a");
 				for (Element head2 : lines2) {
 					Node node2 = new Node();
-					node2.setId(counter++);
+					node2.setId(node1.getId() + ID_SEPARATOR + counter++);
 					node2.setLevel(2);
 					node2.setName(execute(caseSensitive, duplicatedNames, head2.text(),
 							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
@@ -76,7 +77,7 @@ public class ComuniItaliani extends HTMLTemplate {
 					Elements lines3 = level3.select(".tabwrap").get(2).select("tr td a");
 					for (Element head3 : lines3) {
 						Node node3 = new Node();
-						node3.setId(counter++);
+						node3.setId(node2.getId() + ID_SEPARATOR + counter++);
 						node3.setLevel(3);
 						node3.setName(execute(caseSensitive, duplicatedNames, head3.text(),
 								nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())

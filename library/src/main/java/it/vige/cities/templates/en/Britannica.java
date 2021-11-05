@@ -2,6 +2,7 @@ package it.vige.cities.templates.en;
 
 import static it.vige.cities.Countries.uk;
 import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.util.stream.Collectors.toList;
 
 import org.jsoup.nodes.Document;
@@ -50,10 +51,11 @@ public class Britannica extends HTMLTemplate {
 		int counter = 1;
 		int counterLevel0 = 0;
 		int counterLevel1 = 0;
+		int counterLevel2 = 0;
 		for (Element head0 : lines0) {
 			counterLevel0++;
 			Node node0 = new Node();
-			node0.setId(counter++);
+			node0.setId("" + counter++);
 			node0.setLevel(0);
 			node0.setName(execute(caseSensitive, duplicatedNames, head0.text(),
 					nodes.getZones().parallelStream().map(e -> e.getName()).collect(toList())));
@@ -62,7 +64,7 @@ public class Britannica extends HTMLTemplate {
 			for (Element head1 : lines1) {
 				counterLevel1++;
 				Node node1 = new Node();
-				node1.setId(counter++);
+				node1.setId(counterLevel0 + ID_SEPARATOR + counter++);
 				node1.setLevel(1);
 				node1.setName(execute(caseSensitive, duplicatedNames, head1.text(), nodes.getZones().parallelStream()
 						.flatMap(e -> e.getZones().parallelStream()).map(e -> e.getName()).collect(toList())));
@@ -72,8 +74,9 @@ public class Britannica extends HTMLTemplate {
 				if (lines2.size() > 0)
 					lines2 = lines2.get(0).children();
 				for (Element head2 : lines2) {
+					counterLevel2++;
 					Node node2 = new Node();
-					node2.setId(counter++);
+					node2.setId(counterLevel0 + ID_SEPARATOR + counterLevel1 + ID_SEPARATOR + counter++);
 					node2.setLevel(2);
 					node2.setName(execute(caseSensitive, duplicatedNames, head2.select("a").text(),
 							nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())
@@ -83,7 +86,8 @@ public class Britannica extends HTMLTemplate {
 					Elements lines3 = head2.select("li li");
 					for (Element head3 : lines3) {
 						Node node3 = new Node();
-						node3.setId(counter++);
+						node3.setId(counterLevel0 + ID_SEPARATOR + counterLevel1 + ID_SEPARATOR + counterLevel2
+								+ ID_SEPARATOR + counter++);
 						node3.setLevel(3);
 						node3.setName(execute(caseSensitive, duplicatedNames, head3.text(),
 								nodes.getZones().parallelStream().flatMap(e -> e.getZones().parallelStream())

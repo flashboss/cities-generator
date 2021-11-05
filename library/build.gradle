@@ -14,7 +14,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.1.7'
+version = '1.1.8'
 
 sourceCompatibility = 15
 

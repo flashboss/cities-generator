@@ -1,6 +1,8 @@
 package it.vige.cities.templates;
 
 import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
+import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.client.ClientBuilder.newClient;
 
@@ -35,7 +37,7 @@ public class GeoNames extends Template {
 	protected boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String username;
-	
+
 	/**
 	 * 
 	 */
@@ -92,15 +94,20 @@ public class GeoNames extends Template {
 	 * @param id          the id
 	 * @throws Exception if there is a problem
 	 */
-	private void addNodes(List<Node> zones, int numberLevel, int id) throws Exception {
+	private void addNodes(List<Node> zones, int numberLevel, String idStr) throws Exception {
 		if (numberLevel <= MAX_LEVEL) {
+			String[] splittedIds = idStr.split("-");
+			int id = parseInt(splittedIds[splittedIds.length - 1]);
 			Response level = getPageChildren(id);
 			List<Geonode> lines = level.readEntity(Geonodes.class).getGeonames();
 			client.close();
 			if (lines != null && !lines.isEmpty())
 				for (Geonode head : lines) {
+					String noFirstLevelId = "";
+					if (numberLevel > 0)
+						noFirstLevelId = idStr + ID_SEPARATOR;
 					Node node = new Node();
-					node.setId(head.getGeonameId());
+					node.setId(noFirstLevelId + head.getGeonameId());
 					node.setLevel(numberLevel);
 					node.setName(execute(caseSensitive, duplicatedNames, head.getToponymName(),
 							zones.parallelStream().map(e -> e.getName()).collect(toList())));
@@ -118,7 +125,7 @@ public class GeoNames extends Template {
 		Nodes nodes = new Nodes();
 		Response response = getPageCountry(country);
 		Countrynodes countries = response.readEntity(Countrynodes.class);
-		addNodes(nodes.getZones(), firstLevel, countries.getGeonames().get(0).getGeonameId());
+		addNodes(nodes.getZones(), firstLevel, countries.getGeonames().get(0).getGeonameId() + "");
 		return nodes;
 	}
 

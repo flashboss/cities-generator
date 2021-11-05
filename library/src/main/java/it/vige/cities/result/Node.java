@@ -10,7 +10,7 @@ public class Node extends Nodes {
 
 	private int level;
 	private String name;
-	private int id;
+	private String id;
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class Node extends Nodes {
 	 * 
 	 * @return the id
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -56,7 +56,13 @@ public class Node extends Nodes {
 	 * 
 	 * @param id the id
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public Object clone() {
+		Node node = (Node) super.clone();
+		return node;
 	}
 }
