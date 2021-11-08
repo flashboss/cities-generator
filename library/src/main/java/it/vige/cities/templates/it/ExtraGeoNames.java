@@ -1,6 +1,7 @@
 package it.vige.cities.templates.it;
 
 import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -66,8 +67,21 @@ public class ExtraGeoNames extends GeoNames {
 								&& node0.getName().equalsIgnoreCase("V: ITALIA INSULARE"))))
 					node0.getZones().add(node1);
 			}
+			changeIds(node0);
 		}
 		return nodes;
+	}
+
+	private void changeIds(Node node) {
+		node.getZones().parallelStream().forEach(x -> {
+			String prefix = node.getId();
+			String suffix = x.getId();
+			if (prefix.indexOf('-') > 0)
+				prefix = prefix.substring(0, prefix.indexOf(ID_SEPARATOR));
+			suffix = suffix.substring(suffix.indexOf('-'));
+			x.setId(prefix + suffix);
+			changeIds(x);
+		});
 	}
 
 	/**
