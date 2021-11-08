@@ -32,44 +32,46 @@ public class GenerateITTest {
 		Node firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		String id = firstNode.getId() + "";
+		String id = firstNode.getId();
 		nodes = citiesController.getResult(id, null);
 		assertNotNull(nodes);
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		nodes = citiesController.getResult("112,3", null);
+		nodes = citiesController.getResult("5-2523119-2523918-6540050,5-2523119-2523918-6537748", null);
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
-		assertEquals(112, firstNode.getId());
+		assertEquals("5-2523119-2523918-6540050", firstNode.getId());
 
-		nodes = citiesController.getResult("112,3", "all");
+		nodes = citiesController.getResult("5-2523119-2523918-6540050,5-2523119-2523918", "all");
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
-		assertEquals(1, firstNode.getId());
+		assertEquals("5", firstNode.getId());
 		Node secondNode = firstNode.getZones().get(0);
-		assertEquals(2, secondNode.getId());
+		assertEquals("5-2523119", secondNode.getId());
 		Node thirdNode = secondNode.getZones().get(0);
-		assertEquals(71, thirdNode.getId());
+		assertEquals(1, thirdNode.getZones().size());
+		assertEquals("5-2523119-2523918", thirdNode.getId());
 		Node forthNode = thirdNode.getZones().get(0);
-		assertEquals(112, forthNode.getId());
-		Node fifthNode = secondNode.getZones().get(1);
-		assertEquals(3, fifthNode.getId());
+		assertEquals("5-2523119-2523918-6540050", forthNode.getId());
 
-		nodes = citiesController.getResult("112,2", "all");
+		nodes = citiesController.getResult("5-2523119-2523918-6540050,5-2523119-2523918-6541327", "all");
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
-		assertEquals(1, firstNode.getId());
+		assertEquals("5", firstNode.getId());
 		secondNode = firstNode.getZones().get(0);
-		assertEquals(2, secondNode.getId());
+		assertEquals("5-2523119", secondNode.getId());
 		thirdNode = secondNode.getZones().get(0);
-		assertEquals(71, thirdNode.getId());
+		assertEquals("5-2523119-2523918", thirdNode.getId());
+		assertEquals(2, thirdNode.getZones().size());
 		forthNode = thirdNode.getZones().get(0);
-		assertEquals(112, forthNode.getId());
+		assertEquals("5-2523119-2523918-6540050", forthNode.getId());
+		Node fifthNode = thirdNode.getZones().get(1);
+		assertEquals("5-2523119-2523918-6541327", fifthNode.getId());
 	}
 
 }
