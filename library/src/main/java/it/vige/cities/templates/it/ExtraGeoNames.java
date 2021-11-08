@@ -1,6 +1,7 @@
 package it.vige.cities.templates.it;
 
 import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -66,8 +67,21 @@ public class ExtraGeoNames extends GeoNames {
 								&& node0.getName().equalsIgnoreCase("V: ITALIA INSULARE"))))
 					node0.getZones().add(node1);
 			}
+			changeIds(node0);
 		}
 		return nodes;
+	}
+
+	private void changeIds(Node node) {
+		node.getZones().parallelStream().forEach(x -> {
+			String prefix = node.getId();
+			String suffix = x.getId();
+			if (prefix.indexOf('-') > 0)
+				prefix = prefix.substring(0, prefix.indexOf(ID_SEPARATOR));
+			suffix = suffix.substring(suffix.indexOf('-'));
+			x.setId(prefix + suffix);
+			changeIds(x);
+		});
 	}
 
 	/**
@@ -78,27 +92,27 @@ public class ExtraGeoNames extends GeoNames {
 	private void addLevel0(Nodes nodes, boolean caseSensitive) {
 		int counter = 1;
 		Node northWest = new Node();
-		northWest.setId(counter++);
+		northWest.setId("" + counter++);
 		northWest.setLevel(0);
 		northWest.setName(execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
 		nodes.getZones().add(northWest);
 		Node northEast = new Node();
-		northEast.setId(counter++);
+		northEast.setId("" + counter++);
 		northEast.setLevel(0);
 		northEast.setName(execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
 		nodes.getZones().add(northEast);
 		Node south = new Node();
-		south.setId(counter++);
+		south.setId("" + counter++);
 		south.setLevel(0);
 		south.setName(execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
 		nodes.getZones().add(south);
 		Node centre = new Node();
-		centre.setId(counter++);
+		centre.setId("" + counter++);
 		centre.setLevel(0);
 		centre.setName(execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
 		nodes.getZones().add(centre);
 		Node islands = new Node();
-		islands.setId(counter++);
+		islands.setId("" + counter++);
 		islands.setLevel(0);
 		islands.setName(execute(caseSensitive, true, "V: ITALIA INSULARE", null));
 		nodes.getZones().add(islands);

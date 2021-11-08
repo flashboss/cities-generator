@@ -44,16 +44,16 @@ public class TuttitaliaTest extends FileGenerator {
 		Node liguria = northWest.getZones().get(0);
 		Node genova = liguria.getZones().get(0);
 		Node arenzano = genova.getZones().get(0);
-		assertEquals(northWest.getId(), 1);
+		assertEquals(northWest.getId(), "1");
 		assertEquals(northWest.getLevel(), 0);
 		assertEquals(northWest.getName(), "ITALIA NORD OCCIDENTALE");
-		assertEquals(liguria.getId(), 2);
+		assertEquals(liguria.getId(), "1-2");
 		assertEquals(liguria.getLevel(), 1);
 		assertEquals(liguria.getName(), "LIGURIA");
-		assertEquals(genova.getId(), 3);
+		assertEquals(genova.getId(), "1-2-3");
 		assertEquals(genova.getLevel(), 2);
 		assertEquals(genova.getName(), "GENOVA");
-		assertEquals(arenzano.getId(), 4);
+		assertEquals(arenzano.getId(), "1-2-3-4");
 		assertEquals(arenzano.getLevel(), 3);
 		assertEquals(arenzano.getName(), "ARENZANO");
 	}

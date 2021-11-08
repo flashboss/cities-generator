@@ -4,6 +4,7 @@ import static it.vige.cities.Countries.it;
 import static it.vige.cities.Normalizer.execute;
 import static it.vige.cities.Result.KO;
 import static it.vige.cities.Result.OK;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -60,7 +61,7 @@ public class Tuttitalia extends HTMLTemplate {
 				String name = head1.text();
 				if (associations.get(node0).contains(name)) {
 					Node node1 = new Node();
-					node1.setId(counter++);
+					node1.setId(node0.getId() + ID_SEPARATOR + counter++);
 					node1.setLevel(1);
 					node1.setName(execute(caseSensitive, duplicatedNames, name,
 							lines1.parallelStream().map(e -> e.text()).collect(toList())));
@@ -69,7 +70,7 @@ public class Tuttitalia extends HTMLTemplate {
 					Elements lines2 = level2.select(".ut tr td a");
 					for (Element head2 : lines2) {
 						Node node2 = new Node();
-						node2.setId(counter++);
+						node2.setId(node1.getId() + ID_SEPARATOR + counter++);
 						node2.setLevel(2);
 						String text = head2.text();
 						String[] splittedName = text.split("Provincia di ");
@@ -84,7 +85,7 @@ public class Tuttitalia extends HTMLTemplate {
 						Elements lines3 = level3.select(".at tr td a");
 						for (Element head3 : lines3) {
 							Node node3 = new Node();
-							node3.setId(counter++);
+							node3.setId(node2.getId() + ID_SEPARATOR + counter++);
 							node3.setLevel(3);
 							node3.setName(execute(caseSensitive, duplicatedNames, head3.text(),
 									lines3.parallelStream().map(e -> e.text()).collect(toList())));
@@ -120,33 +121,33 @@ public class Tuttitalia extends HTMLTemplate {
 	private int addLevel0(Nodes nodes, boolean caseSensitive, Map<Node, List<String>> associations) {
 		int counter = 1;
 		Node northWest = new Node();
-		northWest.setId(counter++);
+		northWest.setId("" + counter++);
 		northWest.setLevel(0);
 		northWest.setName(execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
 		nodes.getZones().add(northWest);
 		associations.put(northWest, asList(new String[] { "Piemonte", "Liguria", "Valle d'Aosta", "Lombardia" }));
 		Node northEast = new Node();
-		northEast.setId(counter++);
+		northEast.setId("" + counter++);
 		northEast.setLevel(0);
 		northEast.setName(execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
 		nodes.getZones().add(northEast);
 		associations.put(northEast,
 				asList(new String[] { "Emilia Romagna", "Veneto", "Trentino Alto Adige", "Friuli Venezia Giulia" }));
 		Node south = new Node();
-		south.setId(counter++);
+		south.setId("" + counter++);
 		south.setLevel(0);
 		south.setName(execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
 		nodes.getZones().add(south);
 		associations.put(south, asList(new String[] { "Lazio", "Marche", "Umbria", "Toscana" }));
 		Node centre = new Node();
-		centre.setId(counter++);
+		centre.setId("" + counter++);
 		centre.setLevel(0);
 		centre.setName(execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
 		nodes.getZones().add(centre);
 		associations.put(centre,
 				asList(new String[] { "Abruzzo", "Campania", "Basilicata", "Molise", "Calabria", "Puglia" }));
 		Node islands = new Node();
-		islands.setId(counter++);
+		islands.setId("" + counter++);
 		islands.setLevel(0);
 		islands.setName(execute(caseSensitive, true, "V: ITALIA INSULARE", null));
 		nodes.getZones().add(islands);
