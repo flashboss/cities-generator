@@ -13,7 +13,11 @@ import java.util.List;
  */
 public class Nodes implements Cloneable {
 
+	/**
+	 * Separator for id node
+	 */
 	public final static String ID_SEPARATOR = "-";
+	
 	private List<Node> zones = new ArrayList<Node>();
 
 	/**
