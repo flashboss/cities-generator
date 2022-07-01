@@ -1,20 +1,18 @@
 package it.vige.cities;
 
 /**
- * 
+ * The countries actually supported
  * @author lucastancapiano
- *
- *         The countries actually supported
  */
 public enum Countries {
 
 	/**
-	 * 
+	 * IT
 	 */
 	it,
 
 	/**
-	 * 
+	 * UK
 	 */
 	uk
 }

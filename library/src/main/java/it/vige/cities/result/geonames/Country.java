@@ -1,10 +1,8 @@
 package it.vige.cities.result.geonames;
 
 /**
- * 
+ * The geoname country
  * @author lucastancapiano
- *
- *         The geoname country
  */
 public class Country {
 
@@ -28,7 +26,7 @@ public class Country {
 	private String postalCodeFormat;
 
 	/**
-	 * 
+	 * Country code
 	 * @return the country code
 	 */
 	public String getCountryCode() {
@@ -36,7 +34,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Country code
 	 * @param countryCode the country code
 	 */
 	public void setCountryCode(String countryCode) {
@@ -44,7 +42,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Country name
 	 * @return the country name
 	 */
 	public String getCountryName() {
@@ -52,7 +50,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Country name
 	 * @param countryName the country name
 	 */
 	public void setCountryName(String countryName) {
@@ -60,7 +58,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Iso numeric
 	 * @return the iso numeric
 	 */
 	public String getIsoNumeric() {
@@ -68,7 +66,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Iso numeric
 	 * @param isoNumeric the iso numeric
 	 */
 	public void setIsoNumeric(String isoNumeric) {
@@ -76,7 +74,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Iso alpha3
 	 * @return the iso alpha3
 	 */
 	public String getIsoAlpha3() {
@@ -84,7 +82,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Iso alpha3
 	 * @param isoAlpha3 the iso alpha3
 	 */
 	public void setIsoAlpha3(String isoAlpha3) {
@@ -92,7 +90,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Fips code
 	 * @return the fips code
 	 */
 	public String getFipsCode() {
@@ -100,7 +98,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Fips code
 	 * @param fipsCode the fips code
 	 */
 	public void setFipsCode(String fipsCode) {
@@ -108,7 +106,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Continent
 	 * @return the continent
 	 */
 	public String getContinent() {
@@ -116,7 +114,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Continent
 	 * @param continent the continent
 	 */
 	public void setContinent(String continent) {
@@ -124,7 +122,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Continent name
 	 * @return the continent name
 	 */
 	public String getContinentName() {
@@ -132,7 +130,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Continent name
 	 * @param continentName the continent name
 	 */
 	public void setContinentName(String continentName) {
@@ -140,7 +138,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Capital
 	 * @return the capital
 	 */
 	public String getCapital() {
@@ -148,7 +146,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Capital
 	 * @param capital the capital
 	 */
 	public void setCapital(String capital) {
@@ -156,7 +154,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Area in sqKm
 	 * @return the area in sqkm
 	 */
 	public String getAreaInSqKm() {
@@ -164,7 +162,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Area in sqKm
 	 * @param areaInSqKm the area in sqkm
 	 */
 	public void setAreaInSqKm(String areaInSqKm) {
@@ -172,7 +170,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Population
 	 * @return the population
 	 */
 	public String getPopulation() {
@@ -180,7 +178,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Population
 	 * @param population the population
 	 */
 	public void setPopulation(String population) {
@@ -188,7 +186,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Currency code
 	 * @return the currency code
 	 */
 	public String getCurrencyCode() {
@@ -196,7 +194,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Currency code
 	 * @param currencyCode the currency code
 	 */
 	public void setCurrencyCode(String currencyCode) {
@@ -204,7 +202,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Languages
 	 * @return the languages
 	 */
 	public String getLanguages() {
@@ -212,7 +210,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Languages
 	 * @param languages the languages
 	 */
 	public void setLanguages(String languages) {
@@ -220,7 +218,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Geoname id
 	 * @return the geoname id
 	 */
 	public int getGeonameId() {
@@ -228,7 +226,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Geoname id
 	 * @param geonameId the geoname id
 	 */
 	public void setGeonameId(int geonameId) {
@@ -236,7 +234,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * West coordinate
 	 * @return the west coordinate
 	 */
 	public float getWest() {
@@ -244,7 +242,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * West
 	 * @param west coordinate the west coordinate
 	 */
 	public void setWest(float west) {
@@ -252,7 +250,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * North
 	 * @return the north coordinate
 	 */
 	public float getNorth() {
@@ -260,7 +258,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * North
 	 * @param north the north coordinate
 	 */
 	public void setNorth(float north) {
@@ -268,7 +266,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * East
 	 * @return the east coordinate
 	 */
 	public float getEast() {
@@ -276,7 +274,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * East
 	 * @param east the east coordinate
 	 */
 	public void setEast(float east) {
@@ -284,7 +282,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * South
 	 * @return the south coordinate
 	 */
 	public float getSouth() {
@@ -292,7 +290,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * South
 	 * @param south the south coordinate
 	 */
 	public void setSouth(float south) {
@@ -300,7 +298,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Postal code format
 	 * @return the postal code format
 	 */
 	public String getPostalCodeFormat() {
@@ -308,7 +306,7 @@ public class Country {
 	}
 
 	/**
-	 * 
+	 * Postal code format
 	 * @param postalCodeFormat the postal code format
 	 */
 	public void setPostalCodeFormat(String postalCodeFormat) {

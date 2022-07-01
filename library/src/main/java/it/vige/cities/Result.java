@@ -1,20 +1,18 @@
 package it.vige.cities;
 
 /**
- * 
+ * the state of the query
  * @author lucastancapiano
- *
- *         the state of the query
  */
 public enum Result {
 	
 	/**
-	 * 
+	 * OK
 	 */
 	OK, 
 	
 	/**
-	 * 
+	 * KO
 	 */
 	KO
 }

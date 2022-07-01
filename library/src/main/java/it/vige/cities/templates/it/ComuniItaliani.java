@@ -14,10 +14,8 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Comuni italiani provider
  * @author lucastancapiano
- *
- *         Comuni italiani provider
  */
 public class ComuniItaliani extends HTMLTemplate {
 
@@ -27,7 +25,7 @@ public class ComuniItaliani extends HTMLTemplate {
 	private boolean duplicatedNames;
 
 	/**
-	 * 
+	 * ComuniItaliani
 	 * @param caseSensitive   the case sensitive parameter
 	 * @param duplicatedNames the duplicated names parameter
 	 */
@@ -38,7 +36,7 @@ public class ComuniItaliani extends HTMLTemplate {
 	}
 
 	/**
-	 * 
+	 * Generate
 	 */
 	@Override
 	public Nodes generate() throws Exception {

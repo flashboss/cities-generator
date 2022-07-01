@@ -17,15 +17,13 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Tuttitalia tests
  * @author lucastancapiano
- *
- *         Tuttitalia tests
  */
 public class TuttitaliaTest extends FileGenerator {
 
 	/**
-	 * 
+	 * Cities
 	 * @throws Exception
 	 */
 	@Test

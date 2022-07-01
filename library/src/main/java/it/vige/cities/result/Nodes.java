@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * Nodes containing the informations of the cities from the providers
  * @author lucastancapiano
- *
- *         A set of nodes
  */
 public class Nodes implements Cloneable {
 
@@ -21,7 +19,7 @@ public class Nodes implements Cloneable {
 	private List<Node> zones = new ArrayList<Node>();
 
 	/**
-	 * 
+	 * Zones
 	 * @return the list of nodes
 	 */
 	public List<Node> getZones() {
@@ -29,7 +27,7 @@ public class Nodes implements Cloneable {
 	}
 
 	/**
-	 * 
+	 * Zones
 	 * @param zones the list of zones
 	 */
 	public void setZones(List<Node> zones) {

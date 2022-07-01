@@ -17,15 +17,13 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Britannica tests
  * @author lucastancapiano
- *
- *         Britannica tests
  */
 public class BritannicaTest extends FileGenerator {
 
 	/**
-	 * 
+	 * Cities
 	 * @throws Exception
 	 */
 	@Test

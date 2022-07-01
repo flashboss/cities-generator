@@ -27,14 +27,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.1.9.jar -c it
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.1.9</version>
+		<version>1.2.0</version>
 	</dependency>
 ```
 	
    or on gradle in the build.gradle file:
 		
    ```
-	compile('it.vige.cities:cities-generator:1.1.9')
+	compile('it.vige.cities:cities-generator:1.2.0')
    ```
 	
 2. Execute the following java instructions:

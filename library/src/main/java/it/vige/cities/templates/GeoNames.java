@@ -4,13 +4,13 @@ import static it.vige.cities.Normalizer.execute;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.client.ClientBuilder.newClient;
+import static jakarta.ws.rs.client.ClientBuilder.newClient;
 
 import java.util.List;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
@@ -20,10 +20,8 @@ import it.vige.cities.result.geonames.Geonode;
 import it.vige.cities.result.geonames.Geonodes;
 
 /**
- * 
+ * The geonames generator
  * @author lucastancapiano
- *
- *         The geonames generator
  */
 public class GeoNames extends Template {
 
@@ -32,20 +30,20 @@ public class GeoNames extends Template {
 	private final static String DEFAULT_USERNAME = "vota";
 
 	/**
-	 * 
+	 * Case sensitive
 	 */
 	protected boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String username;
 
 	/**
-	 * 
+	 * First level
 	 */
 	protected int firstLevel = 0;
 	private Client client;
 
 	/**
-	 * 
+	 * GeoNames
 	 * @param country         the country
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames the duplicated names parameter
@@ -62,7 +60,7 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * 
+	 * Page country
 	 * @param country the country
 	 * @return the response
 	 * @throws Exception if there is a problem
@@ -75,7 +73,7 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * 
+	 * Page children
 	 * @param id the id
 	 * @return the response
 	 * @throws Exception if there is a problem
@@ -88,7 +86,7 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * 
+	 * Nodes
 	 * @param zones       the zones
 	 * @param numberLevel the number level
 	 * @param id          the id
@@ -118,7 +116,7 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * 
+	 * Generate
 	 */
 	@Override
 	protected Nodes generate() throws Exception {

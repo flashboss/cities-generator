@@ -1,10 +1,8 @@
 package it.vige.cities;
 
 /**
- * 
+ * All the configuration parameters are here
  * @author lucastancapiano
- *
- *         All the configuration parameters are here
  */
 public class Configuration {
 
@@ -19,7 +17,7 @@ public class Configuration {
 	private String username;
 
 	/**
-	 * 
+	 * Country
 	 * @return the country
 	 */
 	public String getCountry() {
@@ -27,7 +25,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Country
 	 * @param country the country
 	 */
 	public void setCountry(String country) {
@@ -35,7 +33,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Case sensistive
 	 * @return the case sensitive configuration
 	 */
 	public boolean isCaseSensitive() {
@@ -43,7 +41,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Case sensistive
 	 * @param caseSensitive true if it is case sensitive
 	 */
 	public void setCaseSensitive(boolean caseSensitive) {
@@ -51,7 +49,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Duplicated names
 	 * @return the duplicated names
 	 */
 	public boolean isDuplicatedNames() {
@@ -59,7 +57,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Duplicated names
 	 * @param duplicatedNames the duplicated names
 	 */
 	public void setDuplicatedNames(boolean duplicatedNames) {
@@ -67,7 +65,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Provider
 	 * @return the provider
 	 */
 	public String getProvider() {
@@ -75,7 +73,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Provider
 	 * @param provider the name of the provider
 	 */
 	public void setProvider(String provider) {
@@ -83,7 +81,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Username
 	 * @return the user name
 	 */
 	public String getUsername() {
@@ -91,7 +89,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * Username
 	 * @param username the user name
 	 */
 	public void setUsername(String username) {

@@ -8,15 +8,13 @@ import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
 
 /**
- * 
+ * Extra configuration for italian geonames
  * @author lucastancapiano
- *
- *         Extra configuration for italian geonames
  */
 public class ExtraGeoNames extends GeoNames {
 
 	/**
-	 * 
+	 * ExtraGeoNames
 	 * @param country         the country
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames true if it accepts duplicated names
@@ -28,7 +26,7 @@ public class ExtraGeoNames extends GeoNames {
 	}
 
 	/**
-	 * 
+	 * Generate
 	 */
 	@Override
 	protected Nodes generate() throws Exception {

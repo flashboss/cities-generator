@@ -1,19 +1,17 @@
 package it.vige.cities.templates.en;
 
 /**
- * 
+ * The english providers actually supported
  * @author lucastancapiano
- *
- *         The english providers actually supported
  */
 public enum Providers {
 	/**
-	 * 
+	 * BRITANNICA
 	 */
 	BRITANNICA, 
 	
 	/**
-	 * 
+	 * GEONAMES
 	 */
 	GEONAMES
 }
