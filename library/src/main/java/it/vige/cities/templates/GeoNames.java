@@ -4,13 +4,13 @@ import static it.vige.cities.Normalizer.execute;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.toList;
-import static jakarta.ws.rs.client.ClientBuilder.newClient;
+import static javax.ws.rs.client.ClientBuilder.newClient;
 
 import java.util.List;
 
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
