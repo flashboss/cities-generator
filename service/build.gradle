@@ -39,6 +39,6 @@ dependencies {
     implementation('it.vige.cities:cities-generator:1.2.0')
 	implementation('org.springframework.boot:spring-boot-starter-undertow')
     implementation('io.springfox:springfox-boot-starter:3.0.0')
-    implementation('org.keycloak:keycloak-spring-boot-starter:15.1.1')
+    implementation('org.keycloak:keycloak-spring-boot-starter:16.1.1')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
