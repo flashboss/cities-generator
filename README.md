@@ -115,6 +115,12 @@ $IP_ADDRESS auth-ct.vige.it
 where in $IP_ADDRESS you must choose the ip address where is located the server.
 To use the service connect through browser to http://cities-generator-service.vige.it:8380/swagger-ui/index.html
 
+If you need to make write operations you can log through:
+```
+user: root  
+pass: gtn
+```
+
 #### certificates
 
 in a production environment we are using a default certificate but you could move a different ssl certificate and keys. Use this command to generate it:

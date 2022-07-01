@@ -30,6 +30,7 @@ COPY / /workspace/cgservice
 RUN chown -R cguser:cguser /workspace
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
+	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	rm -Rf /workspace/cgservice
 
