@@ -3,16 +3,14 @@ package it.vige.cities;
 import java.util.List;
 
 /**
- * 
+ * Normalizer for the names of the cities. According the configuration
+ * they will be formatted
  * @author lucastancapiano
- *
- *         Normalizer for the names of the cities. According the configuration
- *         they will be formatted
  */
 public class Normalizer {
 
 	/**
-	 * 
+	 * Execute
 	 * @param caseSensitive case sensitive parameter
 	 * @param duplicatedNames duplicated names parameter
 	 * @param text text

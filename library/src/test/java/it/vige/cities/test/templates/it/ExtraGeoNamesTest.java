@@ -17,15 +17,13 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Extra geonames tests
  * @author lucastancapiano
- *
- *         Extra geonames tests
  */
 public class ExtraGeoNamesTest extends FileGenerator {
 
 	/**
-	 * 
+	 * Cities
 	 * @throws Exception
 	 */
 	@Test

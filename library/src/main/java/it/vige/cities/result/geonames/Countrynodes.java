@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ * A set of geonames nodes
  * @author lucastancapiano
- *
- *         A set of geonames nodes
  */
 public class Countrynodes {
 
@@ -16,7 +14,7 @@ public class Countrynodes {
 	private Map<String, String> status;
 
 	/**
-	 * 
+	 * Geonames
 	 * @return the list of countries
 	 */
 	public List<Country> getGeonames() {
@@ -24,7 +22,7 @@ public class Countrynodes {
 	}
 
 	/**
-	 * 
+	 * Geonames
 	 * @param geonames the list of countries
 	 */
 	public void setGeonames(List<Country> geonames) {
@@ -32,7 +30,7 @@ public class Countrynodes {
 	}
 
 	/**
-	 * 
+	 * Status
 	 * @return the status
 	 */
 	public Map<String, String> getStatus() {
@@ -40,7 +38,7 @@ public class Countrynodes {
 	}
 
 	/**
-	 * 
+	 * Status
 	 * @param status the status
 	 */
 	public void setStatus(Map<String, String> status) {

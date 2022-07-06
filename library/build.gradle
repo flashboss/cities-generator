@@ -14,9 +14,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.1.9'
+version = '1.2.0'
 
-sourceCompatibility = 17
+sourceCompatibility = 18
 
 repositories {
     mavenCentral()
@@ -26,12 +26,12 @@ repositories {
 }
 
 dependencies {
-    api('org.slf4j:slf4j-simple:1.7.32')
-    api('org.jsoup:jsoup:1.14.3')
+    api('org.slf4j:slf4j-simple:1.7.36')
+    api('org.jsoup:jsoup:1.15.1')
     api('commons-cli:commons-cli:1.5.0')
     api('org.apache.commons:commons-lang3:3.12.0')
-    api('org.jboss.resteasy:resteasy-jackson2-provider:4.6.0.Final')
-    api('org.jboss.resteasy:resteasy-client:4.6.0.Final')
+    api('org.jboss.resteasy:resteasy-jackson2-provider:5.0.3.Final')
+    api('org.jboss.resteasy:resteasy-client:5.0.3.Final')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
     testImplementation('org.junit.jupiter:junit-jupiter-params:5.8.2')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.8.2')
@@ -47,6 +47,7 @@ jar {
         attributes("Main-Class": "it.vige.cities.Generator")
     }
     from {
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         sourceSets.main.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     exclude 'META-INF/*'
@@ -72,8 +73,8 @@ publishing {
                 description = 'Generate a file with the cities of your country'
                 url = 'http://cities-generator.vige.it'
                 properties = [
-                    'maven.compiler.source': '17',
-                    'maven.compiler.target': '17'
+                    'maven.compiler.source': '18',
+                    'maven.compiler.target': '18'
                 ]
                 licenses {
                     license {

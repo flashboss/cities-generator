@@ -5,15 +5,13 @@ import static org.jsoup.Jsoup.connect;
 import org.jsoup.nodes.Document;
 
 /**
- * 
+ * The HTML template for the format of the names
  * @author lucastancapiano
- *
- *         The HTML template for the format of the names
  */
 public abstract class HTMLTemplate extends Template {
 
 	/**
-	 * 
+	 * Page
 	 * @param url the url of the page
 	 * @return the document
 	 * @throws Exception if there is a problem

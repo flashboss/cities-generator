@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *  A set of geonames nodes
  * @author lucastancapiano
- *
- *         A set of geonames nodes
  */
 public class Geonodes {
 
@@ -16,7 +14,7 @@ public class Geonodes {
 	private Map<String, String> status;
 
 	/**
-	 * 
+	 * Total result count
 	 * @return the total result count
 	 */
 	public int getTotalResultsCount() {
@@ -24,7 +22,7 @@ public class Geonodes {
 	}
 
 	/**
-	 * 
+	 * Total result count
 	 * @param totalResultsCount the total result count
 	 */
 	public void setTotalResultsCount(int totalResultsCount) {
@@ -32,7 +30,7 @@ public class Geonodes {
 	}
 
 	/**
-	 * 
+	 * Geonames
 	 * @return the geonames list
 	 */
 	public List<Geonode> getGeonames() {
@@ -40,7 +38,7 @@ public class Geonodes {
 	}
 
 	/**
-	 * 
+	 * Geonames
 	 * @param geonames the geonames list
 	 */
 	public void setGeonames(List<Geonode> geonames) {
@@ -48,7 +46,7 @@ public class Geonodes {
 	}
 
 	/**
-	 * 
+	 * Status
 	 * @return the status
 	 */
 	public Map<String, String> getStatus() {
@@ -56,7 +54,7 @@ public class Geonodes {
 	}
 
 	/**
-	 * 
+	 * Status
 	 * @param status the status
 	 */
 	public void setStatus(Map<String, String> status) {

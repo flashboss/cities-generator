@@ -1,10 +1,8 @@
 package it.vige.cities.result;
 
 /**
- * 
+ * The node of the location
  * @author lucastancapiano
- *
- *         The node of the location
  */
 public class Node extends Nodes {
 
@@ -13,7 +11,7 @@ public class Node extends Nodes {
 	private String id;
 
 	/**
-	 * 
+	 * Level
 	 * @return the level
 	 */
 	public int getLevel() {
@@ -21,7 +19,7 @@ public class Node extends Nodes {
 	}
 
 	/**
-	 * 
+	 * Level
 	 * @param level the level
 	 */
 	public void setLevel(int level) {
@@ -29,7 +27,7 @@ public class Node extends Nodes {
 	}
 
 	/**
-	 * 
+	 * Name
 	 * @return the name
 	 */
 	public String getName() {
@@ -37,7 +35,7 @@ public class Node extends Nodes {
 	}
 
 	/**
-	 * 
+	 * Name
 	 * @param name the name
 	 */
 	public void setName(String name) {
@@ -45,7 +43,7 @@ public class Node extends Nodes {
 	}
 
 	/**
-	 * 
+	 * Id
 	 * @return the id
 	 */
 	public String getId() {
@@ -53,7 +51,7 @@ public class Node extends Nodes {
 	}
 
 	/**
-	 * 
+	 * Id
 	 * @param id the id
 	 */
 	public void setId(String id) {

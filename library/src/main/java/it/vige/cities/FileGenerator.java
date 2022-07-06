@@ -13,20 +13,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Generator through file
  * @author lucastancapiano
- *
- *         Generator through file
  */
 public class FileGenerator {
 
 	/**
-	 * 
+	 * Folder home
 	 */
 	public final static String CITIES_HOME = getProperty("user.home") + "/cities-generator/";
 
 	/**
-	 * 
+	 * Country
 	 */
 	protected String country = getDefault().getCountry().toLowerCase();
 
@@ -35,7 +33,7 @@ public class FileGenerator {
 	private ObjectMapper mapper = new ObjectMapper();
 
 	/**
-	 * 
+	 * Write file
 	 * @param nodes the nodes to write
 	 * @throws Exception if there is a problem
 	 */
@@ -48,7 +46,7 @@ public class FileGenerator {
 	}
 
 	/**
-	 * 
+	 * Read file
 	 * @return the read nodes
 	 * @throws Exception if there is a problem
 	 */
@@ -59,7 +57,7 @@ public class FileGenerator {
 	}
 
 	/**
-	 * 
+	 * Read file
 	 * @param country the country
 	 * @return the nodes of the country
 	 * @throws Exception if there is a problem
@@ -70,7 +68,7 @@ public class FileGenerator {
 	}
 
 	/**
-	 * 
+	 * Exists
 	 * @return true if the file exists
 	 */
 	protected boolean exists() {

@@ -17,15 +17,13 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Comuni italiani tests
  * @author lucastancapiano
- *
- *         Comuni italiani tests
  */
 public class ComuniItalianiTest extends FileGenerator {
 
 	/**
-	 * 
+	 * Cities
 	 * @throws Exception
 	 */
 	@Test

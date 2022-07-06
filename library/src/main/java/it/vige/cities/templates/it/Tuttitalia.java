@@ -22,10 +22,8 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Tuttitalia provider
  * @author lucastancapiano
- *
- *         Tuttitalia provider
  */
 public class Tuttitalia extends HTMLTemplate {
 
@@ -37,7 +35,7 @@ public class Tuttitalia extends HTMLTemplate {
 	private Map<Node, List<String>> associations = new HashMap<Node, List<String>>();
 
 	/**
-	 * 
+	 * Tuttitalia
 	 * @param caseSensitive   the case sensitive parameter
 	 * @param duplicatedNames the duplicated names parameter
 	 */
@@ -48,7 +46,7 @@ public class Tuttitalia extends HTMLTemplate {
 	}
 
 	/**
-	 * 
+	 * Generate
 	 */
 	@Override
 	public Nodes generate() throws Exception {
@@ -99,7 +97,7 @@ public class Tuttitalia extends HTMLTemplate {
 	}
 
 	/**
-	 * 
+	 * Generate File
 	 */
 	@Override
 	public Result generateFile() {
@@ -112,7 +110,7 @@ public class Tuttitalia extends HTMLTemplate {
 	}
 
 	/**
-	 * 
+	 * Level0
 	 * @param nodes         the nodes
 	 * @param caseSensitive true if it is case sensitive
 	 * @param associations  the associations

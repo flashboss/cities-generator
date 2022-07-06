@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ * The node according the scheme of geonames
  * @author lucastancapiano
- *
- *         The node according the scheme of geonames
  */
 public class Geonode {
 
@@ -30,7 +28,7 @@ public class Geonode {
 	private List<Geonode> geonames;
 
 	/**
-	 * 
+	 * Admin code 1
 	 * @return the admin code 1
 	 */
 	public String getAdminCode1() {
@@ -38,7 +36,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Admin code 1
 	 * @param adminCode1 the admin code 1
 	 */
 	public void setAdminCode1(String adminCode1) {
@@ -46,7 +44,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Lng
 	 * @return the lng
 	 */
 	public double getLng() {
@@ -54,7 +52,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Lng
 	 * @param lng the lng
 	 */
 	public void setLng(double lng) {
@@ -62,7 +60,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Geoname id
 	 * @return the geoname id
 	 */
 	public int getGeonameId() {
@@ -70,7 +68,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Geoname id
 	 * @param geonameId the geoname id
 	 */
 	public void setGeonameId(int geonameId) {
@@ -78,7 +76,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Toponomy name
 	 * @return the toponomy name
 	 */
 	public String getToponymName() {
@@ -86,7 +84,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Toponomy name
 	 * @param toponymName the toponomy name
 	 */
 	public void setToponymName(String toponymName) {
@@ -94,7 +92,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Country id
 	 * @return the country id
 	 */
 	public int getCountryId() {
@@ -102,7 +100,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Country id
 	 * @param countryId the country id
 	 */
 	public void setCountryId(int countryId) {
@@ -110,7 +108,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcl
 	 * @return the fcl
 	 */
 	public String getFcl() {
@@ -118,7 +116,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcl
 	 * @param fcl the fcl
 	 */
 	public void setFcl(String fcl) {
@@ -126,7 +124,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Population
 	 * @return the population
 	 */
 	public int getPopulation() {
@@ -134,7 +132,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Population
 	 * @param population the population
 	 */
 	public void setPopulation(int population) {
@@ -142,7 +140,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Country code
 	 * @return the country code
 	 */
 	public String getCountryCode() {
@@ -150,7 +148,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Country code
 	 * @param countryCode the country code
 	 */
 	public void setCountryCode(String countryCode) {
@@ -158,7 +156,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Names
 	 * @return the name
 	 */
 	public String getName() {
@@ -166,7 +164,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Names
 	 * @param name the name
 	 */
 	public void setName(String name) {
@@ -174,7 +172,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcl name
 	 * @return the fcl name
 	 */
 	public String getFclName() {
@@ -182,7 +180,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcl name
 	 * @param fclName the fcl name
 	 */
 	public void setFclName(String fclName) {
@@ -190,7 +188,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Admin codes 1
 	 * @return the admin codes 1
 	 */
 	public Map<String, String> getAdminCodes1() {
@@ -198,7 +196,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Admin codes 1
 	 * @param adminCodes1 the admin codes 1
 	 */
 	public void setAdminCodes1(Map<String, String> adminCodes1) {
@@ -206,7 +204,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Country name
 	 * @return the country name
 	 */
 	public String getCountryName() {
@@ -214,7 +212,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Country name
 	 * @param countryName the country name
 	 */
 	public void setCountryName(String countryName) {
@@ -222,7 +220,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcode name
 	 * @return the fcode name
 	 */
 	public String getFcodeName() {
@@ -230,7 +228,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcode name
 	 * @param fcodeName the fcode name
 	 */
 	public void setFcodeName(String fcodeName) {
@@ -238,7 +236,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Admin name 1
 	 * @return the admin name 1
 	 */
 	public String getAdminName1() {
@@ -246,7 +244,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Admin name 1
 	 * @param adminName1 the admin name 1
 	 */
 	public void setAdminName1(String adminName1) {
@@ -254,7 +252,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Lat
 	 * @return the lat
 	 */
 	public double getLat() {
@@ -262,7 +260,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Lat
 	 * @param lat the lat
 	 */
 	public void setLat(double lat) {
@@ -270,7 +268,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcode
 	 * @return the fcode
 	 */
 	public String getFcode() {
@@ -278,7 +276,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Fcode
 	 * @param fcode the fcode
 	 */
 	public void setFcode(String fcode) {
@@ -286,7 +284,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Geonames
 	 * @return the geonames list
 	 */
 	public List<Geonode> getGeonames() {
@@ -294,7 +292,7 @@ public class Geonode {
 	}
 
 	/**
-	 * 
+	 * Geonames
 	 * @param geonames the geonames list
 	 */
 	public void setGeonames(List<Geonode> geonames) {

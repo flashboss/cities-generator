@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:17-jdk
+FROM openjdk:18-jdk
 EXPOSE 8080
 RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
@@ -30,6 +30,7 @@ COPY / /workspace/cgservice
 RUN chown -R cguser:cguser /workspace
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
+	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	rm -Rf /workspace/cgservice
 

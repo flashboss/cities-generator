@@ -14,10 +14,8 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * 
+ * Britannica provider
  * @author lucastancapiano
- *
- *         Britannica provider
  */
 public class Britannica extends HTMLTemplate {
 
@@ -27,7 +25,7 @@ public class Britannica extends HTMLTemplate {
 	private boolean duplicatedNames;
 
 	/**
-	 * 
+	 * Britannica
 	 * @param caseSensitive   the case sensitive parameter
 	 * @param duplicatedNames the duplicated names parameter
 	 */
@@ -38,7 +36,7 @@ public class Britannica extends HTMLTemplate {
 	}
 
 	/**
-	 * 
+	 * Generate
 	 */
 	@Override
 	public Nodes generate() throws Exception {

@@ -24,60 +24,58 @@ import it.vige.cities.templates.it.ExtraGeoNames;
 import it.vige.cities.templates.it.Tuttitalia;
 
 /**
- * 
+ * Generator of names
  * @author lucastancapiano
- *
- *         Generator of names
  */
 public class Generator extends Template {
 
 	/**
-	 * 
+	 * Single case sensitive
 	 */
 	public final static String SINGLE_CASE_SENSITIVE = "s";
 
 	/**
-	 * 
+	 * Single country
 	 */
 	public final static String SINGLE_COUNTRY = "c";
 
 	/**
-	 * 
+	 * Singlw provider
 	 */
 	public final static String SINGLE_PROVIDER = "p";
 
 	/**
-	 * 
+	 * Single duplicated names
 	 */
 	public final static String SINGLE_DUPLICATED_NAMES = "d";
 
 	/**
-	 * 
+	 * Single user
 	 */
 	public final static String SINGLE_USER = "u";
 
 	/**
-	 * 
+	 * Multi case sensitive
 	 */
 	public final static String MULTI_CASE_SENSITIVE = "case_sensitive";
 
 	/**
-	 * 
+	 * Multi country
 	 */
 	public final static String MULTI_COUNTRY = "country";
 
 	/**
-	 * 
+	 * Multi provider
 	 */
 	public final static String MULTI_PROVIDER = "provider";
 
 	/**
-	 * 
+	 * Multi duplicated names
 	 */
 	public final static String MULTI_DUPLICATED_NAMES = "duplicated";
 
 	/**
-	 * 
+	 * Multi user
 	 */
 	public final static String MULTI_USER = "user";
 
@@ -90,7 +88,7 @@ public class Generator extends Template {
 	private boolean overwrite;
 
 	/**
-	 * 
+	 * Generator
 	 * @param configuration the configuration
 	 * @param overwrite     true if the result is to overwrite
 	 */
@@ -104,7 +102,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Configure options
 	 * @param args the parameters
 	 * @return the command line
 	 * @throws ParseException
@@ -128,7 +126,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Templates
 	 * @return the list of templates
 	 */
 	private List<Template> getTemplates() {
@@ -170,7 +168,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Overwrite
 	 * @param templates the list of templates
 	 * @return the generated nodes
 	 */
@@ -188,7 +186,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Generate
 	 */
 	@Override
 	public Nodes generate() {
@@ -213,7 +211,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Generate file
 	 */
 	@Override
 	public Result generateFile() {
@@ -228,7 +226,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Country
 	 * @return the country
 	 */
 	public String getCountry() {
@@ -236,7 +234,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Case sensitive
 	 * @return the case sensitive parameter
 	 */
 	public boolean isCaseSensitive() {
@@ -244,7 +242,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Duplicated names
 	 * @return the duplicated names parameters
 	 */
 	public boolean isDuplicatedNames() {
@@ -252,7 +250,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Provider
 	 * @return the provider
 	 */
 	public String getProvider() {
@@ -260,7 +258,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Overwrite
 	 * @return the overwrite parameter
 	 */
 	public boolean isOverwrite() {
@@ -268,7 +266,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Overwrite
 	 * @param overwrite the overwrite parameter
 	 */
 	public void setOverwrite(boolean overwrite) {
@@ -276,7 +274,7 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * 
+	 * Main
 	 * @param args the parameters to start the generator
 	 * @throws Exception if there is a problem
 	 */
