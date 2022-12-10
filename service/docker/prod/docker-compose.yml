@@ -1,15 +1,17 @@
 version: '3'
 services:
   auth-ct.vige.it:
-    image: "quay.io/keycloak/keycloak:16.1.1"
+    image: "quay.io/keycloak/keycloak:20.0.1"
     ports:
       - "8443:8443"
     environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
       - KEYCLOAK_IMPORT=/workspace/cities-realm.json
+    command:
+      - start --import-realm
     volumes:
-      - ./migration:/workspace
+      - ./migration:/opt/keycloak/data/import
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:

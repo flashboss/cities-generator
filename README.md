@@ -100,7 +100,7 @@ Over the country, optionally as for the library you can add the following param:
 - DUPLICATEDNAMES
 - USERNAME
 
-This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the root folder of the project:
+This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/dev folder of the project:
 ```
 COUNTRY=${COUNTRY} docker-compose up
 ```
@@ -143,7 +143,7 @@ Over the country, optionally as for the library you can add the following param:
 - DUPLICATEDNAMES
 - USERNAME
 
-This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the root folder of the project:
+This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/prod folder of the project:
 ```
 COUNTRY=${COUNTRY} docker-compose up
 ```
