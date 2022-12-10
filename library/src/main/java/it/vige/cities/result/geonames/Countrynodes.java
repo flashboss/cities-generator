@@ -12,6 +12,13 @@ public class Countrynodes {
 
 	private List<Country> geonames;
 	private Map<String, String> status;
+	
+	/**
+	 * Default countrynodes
+	 */
+	public Countrynodes() {
+		
+	}
 
 	/**
 	 * Geonames

@@ -11,13 +11,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.2.0:jar -DoutputDirectory=. && java -jar cities-generator-1.2.0.jar -c uk
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.0.2:copy -Dartifact=it.vige.cities:cities-generator:1.2.1:jar -DoutputDirectory=. && java -jar cities-generator-1.2.1.jar -c uk
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.0.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.1.jar -c it
 ```
 
 - Through api java follow the instructions:
@@ -27,14 +27,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.0.jar -c it
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</dependency>
 ```
 	
    or on gradle in the build.gradle file:
 		
    ```
-	compile('it.vige.cities:cities-generator:1.2.0')
+	compile('it.vige.cities:cities-generator:1.2.1')
    ```
 	
 2. Execute the following java instructions:
@@ -70,15 +70,15 @@ A REST service can be installed in your machine. This returns a json format with
 ```
 And then start it through the command:
 ```
-java -jar build/libs/cities-generator-service-1.2.0.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.2.1.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to http://localhost:8380/swagger-ui/index.html
 In a production environment you could use https so:
 ```
-java -Djavax.net.ssl.trustStore=./application.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.0.jar --server.ssl.key-store=./application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./application.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.1.jar --server.ssl.key-store=./application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
-### Docker
+### Docker development image
 
 There is an already docker image to start the REST service. Execute this command to start the service:
 ```
@@ -86,7 +86,7 @@ docker pull vige/cities-generator
 ```
 To run the image use the command:
 ```
-docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
+docker run -d --name cities-generator -p8380:8080 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
 Where it is the chosen country. You can choose uk,it or other else country using the first two characters of the code.
 Over the country, optionally as for the library you can add the following param:
@@ -114,6 +114,49 @@ $IP_ADDRESS auth-ct.vige.it
 ```
 where in $IP_ADDRESS you must choose the ip address where is located the server.
 To use the service connect through browser to http://cities-generator-service.vige.it:8380/swagger-ui/index.html
+
+If you need to make write operations you can log through:
+```
+user: root  
+pass: gtn
+```
+
+### Docker production image
+
+There is an already docker image to start the REST service. Execute this command to start the service:
+```
+docker pull vige/cities-generator
+```
+To run the image use the command:
+```
+docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
+```
+Where it is the chosen country. You can choose uk,it or other else country using the first two characters of the code.
+Over the country, optionally as for the library you can add the following param:
+
+- REALM
+- AUTHURL
+- RESOURCE
+- COUNTRY
+- PROVIDER
+- CASESENSITIVE
+- DUPLICATEDNAMES
+- USERNAME
+
+This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the root folder of the project:
+```
+COUNTRY=${COUNTRY} docker-compose up
+```
+Where ${COUNTRY} is the choosen language, it or en. It will allow to download a keycloak instance where the server can be connected. 
+After you can connect to keycloak through the url https://auth-ct.vige.it:8443/auth
+
+Add the following DNS in your /etc/hosts file:
+```
+$IP_ADDRESS cities-generator-service.vige.it
+$IP_ADDRESS auth-ct.vige.it
+```
+where in $IP_ADDRESS you must choose the ip address where is located the server.
+To use the service connect through browser to https://cities-generator-service.vige.it:8743/swagger-ui/index.html
 
 If you need to make write operations you can log through:
 ```

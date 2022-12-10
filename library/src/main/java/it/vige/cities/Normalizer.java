@@ -10,6 +10,13 @@ import java.util.List;
 public class Normalizer {
 
 	/**
+	 * default Normalizer
+	 */
+	public Normalizer() {
+		
+	}
+	
+	/**
 	 * Execute
 	 * @param caseSensitive case sensitive parameter
 	 * @param duplicatedNames duplicated names parameter
