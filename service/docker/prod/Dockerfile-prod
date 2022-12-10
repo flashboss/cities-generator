@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:18-jdk
+FROM arm64v8/eclipse-temurin:19-jdk
 EXPOSE 8443
 RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
