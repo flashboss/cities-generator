@@ -12,7 +12,7 @@
 
 FROM arm64v8/eclipse-temurin:19-jdk
 EXPOSE 8080
-RUN adduser -u 1000 -G adm -d /home/cguser --shell /bin/bash cguser && \
+RUN adduser --uid 1000 --ingroup adm --home /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
 
 USER root
@@ -27,7 +27,7 @@ ENV CASESENSITIVE false
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
-RUN chown -R cguser:cguser /workspace
+RUN chown -R cguser:adm /workspace
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
