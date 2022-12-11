@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM arm64v8/eclipse-temurin:19-jdk
-EXPOSE 8080
+EXPOSE 8080 8000
 RUN adduser --uid 1000 --ingroup adm --home /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
 
@@ -27,16 +27,17 @@ ENV CASESENSITIVE false
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
-RUN chown -R cguser:adm /workspace
+COPY /docker/dev/volume/cities-generator /home/cguser/cities-generator
+RUN chown -R cguser:adm /workspace && \
+	chown -R cguser:adm /home/cguser/cities-generator
 RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	rm -Rf /workspace/cgservice
-
 USER cguser
 
-CMD FIELDS="-Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
+CMD FIELDS="-Xrunjdwp:transport=dt_socket,address=0.0.0.0:8000,server=y,suspend=n -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
 	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
     java $FIELDS -jar /workspace/cgservice.jar --server.port=8080 && \

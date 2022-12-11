@@ -12,10 +12,10 @@ services:
       - start-dev --import-realm
     volumes:
       - ./volume/import:/opt/keycloak/data/import
-      - ./volume/cities-generator:/home/cguser/cities-generator
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:
       - "8380:8080"
+      - "8300:8000"
     environment:
       - COUNTRY=${COUNTRY}

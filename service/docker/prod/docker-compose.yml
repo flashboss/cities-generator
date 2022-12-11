@@ -12,10 +12,13 @@ services:
       - start --import-realm
     volumes:
       - ./volume/import:/opt/keycloak/data/import
-      - /home/cguser/cities-generator
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:
       - "8743:8443"
     environment:
       - COUNTRY=${COUNTRY}
+    volumes:
+      - cities-generator-volume:/home/cguser/cities-generator
+volumes:
+  cities-generator-volume:
