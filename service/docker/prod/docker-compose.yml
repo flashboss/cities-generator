@@ -11,7 +11,7 @@ services:
     command:
       - start --import-realm
     volumes:
-      - ./migration/import:/opt/keycloak/data/import
+      - ./volume/import:/opt/keycloak/data/import
       - /home/cguser/cities-generator
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
