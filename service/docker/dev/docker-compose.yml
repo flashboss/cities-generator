@@ -19,3 +19,7 @@ services:
       - "8300:8000"
     environment:
       - COUNTRY=${COUNTRY}
+    volumes:
+      - cities-generator-volume:/root/cities-generator
+volumes:
+  cities-generator-volume:

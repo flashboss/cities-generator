@@ -12,8 +12,6 @@
 
 FROM arm64v8/eclipse-temurin:19-jdk
 EXPOSE 8443
-RUN adduser --uid 1000 --ingroup adm --home /home/cguser --shell /bin/bash cguser && \
-    echo "cguser:secret" | chpasswd
 
 USER root
 
@@ -27,15 +25,12 @@ ENV CASESENSITIVE false
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
-RUN chown -R cguser:adm /workspace
-RUN cd cgservice && ./gradlew build -x test
-RUN rm -Rf /home/cguser/.gradle && \
+RUN cd cgservice && ./gradlew build -x test && \
+    rm -Rf /root/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	mv /workspace/cgservice/application.keystore /workspace/application.keystore && \
 	rm -Rf /workspace/cgservice
-
-USER cguser
 
 CMD FIELDS="-Djavax.net.ssl.trustStore=/workspace/application.keystore -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
 	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \

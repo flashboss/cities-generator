@@ -19,6 +19,6 @@ services:
     environment:
       - COUNTRY=${COUNTRY}
     volumes:
-      - cities-generator-volume:/home/cguser/cities-generator
+      - cities-generator-volume:/root/cities-generator
 volumes:
   cities-generator-volume:
