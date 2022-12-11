@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM arm64v8/eclipse-temurin:19-jdk
-EXPOSE 8080
+EXPOSE 8443
 RUN adduser --uid 1000 --ingroup adm --home /home/cguser --shell /bin/bash cguser && \
     echo "cguser:secret" | chpasswd
 
@@ -19,7 +19,7 @@ USER root
 
 ENV TERM xterm
 ENV REALM cities
-ENV AUTHURL http://auth-ct.vige.it:8080/auth
+ENV AUTHURL https://auth-ct.vige.it:8443
 ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
@@ -32,12 +32,13 @@ RUN cd cgservice && ./gradlew build -x test
 RUN rm -Rf /home/cguser/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
+	mv /workspace/cgservice/application.keystore /workspace/application.keystore && \
 	rm -Rf /workspace/cgservice
 
 USER cguser
 
-CMD FIELDS="-Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
+CMD FIELDS="-Djavax.net.ssl.trustStore=/workspace/application.keystore -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
 	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
-    java $FIELDS -jar /workspace/cgservice.jar --server.port=8080 && \
+    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password && \
 	tail -f /dev/null
