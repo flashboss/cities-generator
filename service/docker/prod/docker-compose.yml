@@ -7,9 +7,8 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-      - KEYCLOAK_IMPORT=/workspace/cities-realm.json
     command:
-      - start --import-realm
+      - start --hostname=auth-ct.vige.it --https-key-store-file=/Users/lucastancapiano/git/cities-generator/service/docker/prod/application.keystore --import-realm
     volumes:
       - ./volume/import:/opt/keycloak/data/import
   cities-generator-service.vige.it:

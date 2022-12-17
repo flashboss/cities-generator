@@ -7,7 +7,6 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-      - KEYCLOAK_IMPORT=/workspace/cities-realm.json
     command:
       - start-dev --import-realm
     volumes:
