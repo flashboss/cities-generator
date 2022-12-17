@@ -8,9 +8,10 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
     command:
-      - start --hostname=auth-ct.vige.it --https-key-store-file=/Users/lucastancapiano/git/cities-generator/service/docker/prod/application.keystore --import-realm
+      - start --hostname=auth-ct.vige.it --https-key-store-file=/opt/keycloak/conf/cert/application.keystore --import-realm
     volumes:
       - ./volume/import:/opt/keycloak/data/import
+      - ./volume/cert:/opt/keycloak/conf/cert
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:
