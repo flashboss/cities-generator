@@ -24,6 +24,13 @@ public class Country {
 	private float east;
 	private float south;
 	private String postalCodeFormat;
+	
+	/**
+	 * Default country
+	 */
+	public Country() {
+		
+	}
 
 	/**
 	 * Country code

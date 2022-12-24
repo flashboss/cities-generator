@@ -12,6 +12,13 @@ public class Geonodes {
 	private int totalResultsCount;
 	private List<Geonode> geonames;
 	private Map<String, String> status;
+	
+	/**
+	 * default geonodes
+	 */
+	public Geonodes() {
+		
+	}
 
 	/**
 	 * Total result count

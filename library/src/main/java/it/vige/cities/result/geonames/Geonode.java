@@ -26,6 +26,13 @@ public class Geonode {
 	private double lat;
 	private String fcode;
 	private List<Geonode> geonames;
+	
+	/**
+	 * default geonode
+	 */
+	public Geonode() {
+		
+	}
 
 	/**
 	 * Admin code 1

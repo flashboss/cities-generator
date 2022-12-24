@@ -15,6 +15,13 @@ public class Configuration {
 	private String provider;
 
 	private String username;
+	
+	/**
+	 * Default configuration
+	 */
+	public Configuration() {
+		
+	}
 
 	/**
 	 * Country
