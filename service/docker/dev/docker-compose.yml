@@ -9,8 +9,6 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
     command:
       - start-dev --import-realm
-    volumes:
-      - ./volume/import:/opt/keycloak/data/import
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:
@@ -18,7 +16,3 @@ services:
       - "8300:8000"
     environment:
       - COUNTRY=${COUNTRY}
-    volumes:
-      - cities-generator-volume:/root/cities-generator
-volumes:
-  cities-generator-volume:

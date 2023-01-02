@@ -1,7 +1,7 @@
 version: '3'
 services:
   auth-ct.vige.it:
-    image: "quay.io/keycloak/keycloak:20.0.2"
+    image: "vige/cities-generator-auth"
     ports:
       - "8443:8443"
     environment:
@@ -9,16 +9,9 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
     command:
       - start --hostname=auth-ct.vige.it --https-key-store-file=/opt/keycloak/conf/cert/application.keystore --import-realm
-    volumes:
-      - ./volume/import:/opt/keycloak/data/import
-      - ./volume/cert:/opt/keycloak/conf/cert
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:
       - "8743:8443"
     environment:
       - COUNTRY=${COUNTRY}
-    volumes:
-      - cities-generator-volume:/root/cities-generator
-volumes:
-  cities-generator-volume:

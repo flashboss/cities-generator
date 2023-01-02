@@ -102,10 +102,11 @@ Over the country, optionally as for the library you can add the following param:
 
 This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/dev folder of the project:
 ```
-COUNTRY=${COUNTRY} docker-compose up
+COUNTRY=${COUNTRY} AUTHURL=${AUTHURL} docker-compose up
 ```
-Where ${COUNTRY} is the choosen language, it or en. It will allow to download a keycloak instance where the server can be connected. 
-After you can connect to keycloak through the url http://auth-ct.vige.it:8080/auth
+Where ${COUNTRY} is the choosen language, it or en. While ${AUTHRUL} is the external keycloak url, for example http://auth-ct.vige.it:8080
+It will allow to download a keycloak instance where the server can be connected. 
+After you can connect to keycloak through the url http://auth-ct.vige.it:8080
 
 Add the following DNS in your /etc/hosts file:
 ```
@@ -145,10 +146,11 @@ Over the country, optionally as for the library you can add the following param:
 
 This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/prod folder of the project:
 ```
-COUNTRY=${COUNTRY} docker-compose up
+COUNTRY=${COUNTRY} AUTHURL=${AUTHURL} docker-compose up
 ```
-Where ${COUNTRY} is the choosen language, it or en. It will allow to download a keycloak instance where the server can be connected. 
-After you can connect to keycloak through the url https://auth-ct.vige.it:8443/auth
+Where ${COUNTRY} is the choosen language, it or en. While ${AUTHRUL} is the external keycloak url, for example https://auth-ct.vige.it:8443
+It will allow to download a keycloak instance where the server can be connected. 
+After you can connect to keycloak through the url https://auth-ct.vige.it:8443
 
 Add the following DNS in your /etc/hosts file:
 ```
