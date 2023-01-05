@@ -7,8 +7,7 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-    command:
-      - start-dev --import-realm
+      - REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS}
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:

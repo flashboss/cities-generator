@@ -22,21 +22,21 @@ ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
 ENV CASESENSITIVE false
-VOLUME /root/cert /root/cities-generator
+VOLUME /root/cities-generator
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
 RUN cd cgservice && ./gradlew build -x test && \
 	mkdir /root/cities-generator && \
-	mkdir /root/cert && \
+	mkdir /root/cities-generator/cert && \
     rm -Rf /root/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
-	mv /workspace/cgservice/docker/prod/volume/cert/application.keystore /root/cert/application.keystore && \
+	mv /workspace/cgservice/docker/prod/volume/cert/application.keystore /root/cities-generator/cert/application.keystore && \
 	rm -Rf /workspace/cgservice
 
 CMD FIELDS="-Djavax.net.ssl.trustStore=/workspace/application.keystore -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
 	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
-    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/root/cert/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/root/cert/application.keystore --server.ssl.trust-store-password=password && \
+    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/root/cities-generator/cert/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/root/cities-generator/cert/application.keystore --server.ssl.trust-store-password=password && \
 	tail -f /dev/null
