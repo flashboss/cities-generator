@@ -15,4 +15,4 @@ services:
       - "8300:8000"
     environment:
       - COUNTRY=${COUNTRY}
-      - AUTH_URL=${AUTH_URL}
+      - AUTHURL=${AUTHURL}
