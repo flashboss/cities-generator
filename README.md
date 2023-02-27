@@ -149,7 +149,7 @@ This image starts without SSO server, so it is not complete. For a sample comple
 ```
 COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} HOST_NAME=${HOST_NAME} AUTHURL=${AUTHURL} docker-compose up
 ```
-Where ${COUNTRY} is the choosen language, it or en. While ${HOST_NAME} is the external keycloak url, for example https://auth-ct.vige.it:8443 .
+Where ${COUNTRY} is the choosen language, it or en. While ${HOST_NAME} is the external keycloak url, for example auth-ct.vige.it .
 ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8743
 ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8443
 It will allow to download a keycloak instance where the server can be connected. 
