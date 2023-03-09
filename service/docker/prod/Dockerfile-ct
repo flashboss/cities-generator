@@ -32,7 +32,7 @@ RUN cd cgservice && ./gradlew build -x test && \
     rm -Rf /root/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
-	mv /workspace/cgservice/docker/prod/volume/cert/application.keystore /root/cities-generator/cert/application.keystore && \
+	mv /workspace/cgservice/docker/prod/volume/cert/application-ct.keystore /root/cities-generator/cert/application.keystore && \
 	rm -Rf /workspace/cgservice
 
 CMD FIELDS="-Djavax.net.ssl.trustStore=/workspace/application.keystore -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \

@@ -44,7 +44,7 @@ EXPOSE 8443
 ENV REPLACER_CLIENT_ADDRESS cities-generator-service.vige.it:8743
 ENV HOST_NAME auth-ct.vige.it
 VOLUME /opt/keycloak/data
-COPY /docker/prod/volume/cert /opt/keycloak/data/cert
+COPY /docker/prod/volume/cert/application-auth.keystore /opt/keycloak/data/cert/application.keystore
 COPY /docker/prod/volume/import /opt/keycloak/data/import
 
 CMD sed -i "s/REPLACER_CLIENT_ADDRESS/"$REPLACER_CLIENT_ADDRESS"/g" /opt/keycloak/data/import/cities-realm.json && \
