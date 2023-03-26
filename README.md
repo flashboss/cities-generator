@@ -109,6 +109,9 @@ ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8443
 It will allow to download a keycloak instance where the server can be connected. 
 After you can connect to keycloak through the url http://auth-ct.vige.it:8080
 
+Here a sample:
+COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=https://auth-ct.vige.it:8443 docker-compose up
+
 Add the following DNS in your /etc/hosts file:
 ```
 $IP_ADDRESS cities-generator-service.vige.it
@@ -154,6 +157,9 @@ ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for ex
 ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8443
 It will allow to download a keycloak instance where the server can be connected. 
 After you can connect to keycloak through the url https://auth-ct.vige.it:8443
+
+Here a sample:
+COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8743 HOST_NAME=auth-ct.vige.it AUTHURL=https://auth-ct.vige.it:8443 docker-compose up
 
 Add the following DNS in your /etc/hosts file:
 ```
