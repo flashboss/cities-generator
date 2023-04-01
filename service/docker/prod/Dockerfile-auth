@@ -13,6 +13,7 @@
 FROM registry.access.redhat.com/ubi8-minimal AS build-env
 
 ENV KEYCLOAK_VERSION 20.0.2
+ENV PASSWORD_STORE password
 ARG KEYCLOAK_DIST=https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz
 
 RUN microdnf install -y tar gzip
@@ -48,4 +49,4 @@ COPY /docker/prod/volume/cert/application-auth.keystore /opt/keycloak/data/cert/
 COPY /docker/prod/volume/import /opt/keycloak/data/import
 
 CMD sed -i "s/REPLACER_CLIENT_ADDRESS/"$REPLACER_CLIENT_ADDRESS"/g" /opt/keycloak/data/import/cities-realm.json && \
-    /opt/keycloak/bin/kc.sh start --hostname=$HOST_NAME --https-key-store-file=/opt/keycloak/data/cert/application.keystore --import-realm
+    /opt/keycloak/bin/kc.sh start --hostname=$HOST_NAME --https-key-store-file=/opt/keycloak/data/cert/application.keystore --https-key-store-password=$PASSWORD_STORE --import-realm
