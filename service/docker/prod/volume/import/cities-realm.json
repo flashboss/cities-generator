@@ -43,13 +43,13 @@
 		{
 			"id": "c338b2be-dj73-571c-9bb0-77ad52e1f88h",
 			"clientId": "citiesGenerator",
-			"rootUrl": "https://cities-generator-service.vige.it:8743",
+			"rootUrl": "https://REPLACER_CLIENT_ADDRESS",
 			"enabled": true,
 			"redirectUris": [
-				"https://cities-generator-service.vige.it:8743/swagger-ui/*"
+				"https://REPLACER_CLIENT_ADDRESS/swagger-ui/*"
 			],
 			"webOrigins": [
-				"https://cities-generator-service.vige.it:8743"
+				"https://REPLACER_CLIENT_ADDRESS"
 			],
 			"publicClient": false,
 			"secret": "bce5816d-98c4-404f-a18d-bcc5cb005c79",

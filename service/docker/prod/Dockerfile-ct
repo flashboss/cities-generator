@@ -22,18 +22,22 @@ ENV RESOURCE citiesGenerator
 ENV COUNTRY it
 ENV DUPLICATEDNAMES false
 ENV CASESENSITIVE false
+ENV PASSWORD_STORE password
+VOLUME /root/cities-generator
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
 RUN cd cgservice && ./gradlew build -x test && \
+	mkdir /root/cities-generator && \
+	mkdir /root/cities-generator/cert && \
     rm -Rf /root/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
-	mv /workspace/cgservice/docker/prod/volume/cert/application.keystore /workspace/application.keystore && \
+	mv /workspace/cgservice/docker/prod/volume/cert/application-ct.keystore /root/cities-generator/cert/application.keystore && \
 	rm -Rf /workspace/cgservice
 
-CMD FIELDS="-Djavax.net.ssl.trustStore=/workspace/application.keystore -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
+CMD FIELDS="-Djavax.net.ssl.trustStore=/root/cities-generator/cert/application.keystore -Djavax.net.ssl.trustStorePassword=$PASSWORD_STORE -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
 	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
     if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
-    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password && \
+    java $FIELDS -jar /workspace/cgservice.jar --server.port=8443 --server.ssl.key-store=/root/cities-generator/cert/application.keystore --server.ssl.key-store-password=$PASSWORD_STORE --server.ssl.trust-store=/root/cities-generator/cert/application.keystore --server.ssl.trust-store-password=$PASSWORD_STORE && \
 	tail -f /dev/null
