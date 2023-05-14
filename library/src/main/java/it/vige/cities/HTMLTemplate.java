@@ -11,13 +11,6 @@ import org.jsoup.nodes.Document;
 public abstract class HTMLTemplate extends Template {
 
 	/**
-	 * default HTMLTemplate
-	 */
-	public HTMLTemplate() {
-		
-	}
-	
-	/**
 	 * Page
 	 * @param url the url of the page
 	 * @return the document

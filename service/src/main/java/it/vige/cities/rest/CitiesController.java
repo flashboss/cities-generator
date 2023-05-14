@@ -5,6 +5,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,20 +46,20 @@ public class CitiesController {
 	@Value("${username:#{null}}")
 	private String username;
 
+	@PostConstruct
 	public void init() {
-		if (nodes.getZones().isEmpty())
-			try {
-				Configuration configuration = new Configuration();
-				configuration.setCountry(country);
-				configuration.setCaseSensitive(caseSensitive);
-				configuration.setDuplicatedNames(duplicatedNames);
-				configuration.setProvider(provider);
-				configuration.setUsername(username);
-				Generator generator = new Generator(configuration, false);
-				nodes.setZones(generator.generate().getZones());
-			} catch (Exception ex) {
-				logger.warn(ex.getMessage());
-			}
+		try {
+			Configuration configuration = new Configuration();
+			configuration.setCountry(country);
+			configuration.setCaseSensitive(caseSensitive);
+			configuration.setDuplicatedNames(duplicatedNames);
+			configuration.setProvider(provider);
+			configuration.setUsername(username);
+			Generator generator = new Generator(configuration, false);
+			nodes.setZones(generator.generate().getZones());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+		}
 	}
 
 	private Node find(Node node, String id) {
@@ -112,13 +114,11 @@ public class CitiesController {
 
 	@GetMapping(value = "/cities")
 	public Nodes getResult() {
-		init();
 		return nodes;
 	}
 
 	@GetMapping(value = "/cities/{ids}")
 	public Nodes getResult(@PathVariable("ids") String ids, @RequestParam(required = false) String all) {
-		init();
 		List<String> iIds = getIds(ids);
 		List<Node> allFound = new ArrayList<Node>();
 		for (int j = 0; j < iIds.size(); j++) {

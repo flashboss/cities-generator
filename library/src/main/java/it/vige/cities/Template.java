@@ -22,13 +22,6 @@ public abstract class Template extends FileGenerator {
 	 * @throws Exception if there is a problem
 	 */
 	protected abstract Nodes generate() throws Exception;
-	
-	/**
-	 * default template
-	 */
-	public Template() {
-		
-	}
 
 	/**
 	 * Generate file

@@ -31,13 +31,6 @@ public class FileGenerator {
 	private Logger logger = getLogger(FileGenerator.class);
 
 	private ObjectMapper mapper = new ObjectMapper();
-	
-	/**
-	 * default fileGenerator
-	 */
-	public FileGenerator() {
-		
-	}
 
 	/**
 	 * Write file

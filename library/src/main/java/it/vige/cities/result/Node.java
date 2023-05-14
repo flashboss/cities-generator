@@ -9,13 +9,6 @@ public class Node extends Nodes {
 	private int level;
 	private String name;
 	private String id;
-	
-	/**
-	 * default node
-	 */
-	public Node() {
-		
-	}
 
 	/**
 	 * Level

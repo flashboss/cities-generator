@@ -17,13 +17,6 @@ public class Nodes implements Cloneable {
 	public final static String ID_SEPARATOR = "-";
 	
 	private List<Node> zones = new ArrayList<Node>();
-	
-	/**
-	 * default nodes
-	 */
-	public Nodes() {
-		
-	}
 
 	/**
 	 * Zones
