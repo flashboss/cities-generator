@@ -12,7 +12,7 @@
 
 FROM registry.access.redhat.com/ubi8-minimal AS build-env
 
-ENV KEYCLOAK_VERSION 20.0.2
+ENV KEYCLOAK_VERSION 21.1.1
 ENV PASSWORD_STORE password
 ARG KEYCLOAK_DIST=https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz
 
