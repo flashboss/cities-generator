@@ -73,8 +73,8 @@ publishing {
                 description = 'Generate a file with the cities of your country'
                 url = 'http://cities-generator.vige.it'
                 properties = [
-                    'maven.compiler.source': '18',
-                    'maven.compiler.target': '18'
+                    'maven.compiler.source': '20',
+                    'maven.compiler.target': '20'
                 ]
                 licenses {
                     license {
