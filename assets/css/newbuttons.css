@@ -32,11 +32,11 @@
         display: block;
         position: absolute;
         top: 0;
-        right: 289px;
+        right: 547px;
         z-index: 10;
         padding: 10px 50px 10px 10px;
-        color: red;
-        background: url("../images/youtube.png") #0090ff no-repeat 97% 50%;
+        color: #fff;
+        background: url("../images/youtube.png") red no-repeat 97% 50%;
         background-size: 40px;
         font-weight: 700;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
