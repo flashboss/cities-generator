@@ -24,7 +24,7 @@ public class OpenApiConfig {
 	@Value("${keycloak.resource}")
 	private String resource;
 
-	private static final String OAUTH_SCHEME_NAME = "my_oAuth_security_schema";
+	private static final String OAUTH_SCHEME_NAME = "Cities Generator Auth";
 
 	@Bean
 	public OpenAPI openAPI() {
