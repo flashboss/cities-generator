@@ -29,8 +29,8 @@ public class OpenApiConfig {
 	@Bean
 	public OpenAPI openAPI() {
 		return new OpenAPI().components(new Components().addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
-				.addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME)).info(new Info()
-						.title("Todos Management Service").description("A service providing todos.").version("1.0"));
+				.addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME))
+				.info(new Info().title("Cities Generator").description("Web console").version("1.0"));
 	}
 
 	private SecurityScheme createOAuthScheme() {
