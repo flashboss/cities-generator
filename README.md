@@ -105,12 +105,12 @@ This image starts without SSO server, so it is not complete. For a sample comple
 COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} AUTHURL=${AUTHURL} docker-compose up
 ```
 Where ${COUNTRY} is the choosen language, it or en. While ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8380 .
-${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8443
+${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8080
 It will allow to download a keycloak instance where the server can be connected. 
 After you can connect to keycloak through the url http://auth-ct.vige.it:8080
 
 Here a sample:
-COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=https://auth-ct.vige.it:8443 docker-compose up
+COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=https://auth-ct.vige.it:8080 docker-compose up
 
 Add the following DNS in your /etc/hosts file:
 ```

@@ -10,9 +10,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM registry.access.redhat.com/ubi8-minimal AS build-env
+FROM registry.access.redhat.com/ubi9-minimal AS build-env
 
-ENV KEYCLOAK_VERSION 21.1.1
+ENV KEYCLOAK_VERSION 22.0.1
 ARG KEYCLOAK_DIST=https://github.com/keycloak/keycloak/releases/download/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz
 
 RUN microdnf install -y tar gzip
@@ -29,7 +29,7 @@ RUN mv /tmp/keycloak/keycloak-* /opt/keycloak && mkdir -p /opt/keycloak/data
 
 RUN chmod -R g+rwX /opt/keycloak
 
-FROM registry.access.redhat.com/ubi8-minimal
+FROM registry.access.redhat.com/ubi9-minimal
 ENV LANG en_US.UTF-8
 
 COPY --from=build-env --chown=1000:0 /opt/keycloak /opt/keycloak
@@ -39,7 +39,7 @@ RUN microdnf update -y && \
     echo "keycloak:x:0:root" >> /etc/group && \
     echo "keycloak:x:1000:0:keycloak user:/opt/keycloak:/sbin/nologin" >> /etc/passwd
 
-EXPOSE 8443
+EXPOSE 8080
 
 ENV REPLACER_CLIENT_ADDRESS cities-generator-service.vige.it:8380
 ENV HOST_NAME auth-ct.vige.it
