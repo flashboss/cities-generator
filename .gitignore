@@ -4,3 +4,4 @@ build
 .classpath
 .settings
 .gradle
+.DS_Store
