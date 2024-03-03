@@ -14,9 +14,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.2.3'
+version = '1.2.4'
 
-sourceCompatibility = 20
+sourceCompatibility = 21
 
 repositories {
     mavenCentral()
@@ -73,8 +73,8 @@ publishing {
                 description = 'Generate a file with the cities of your country'
                 url = 'http://cities-generator.vige.it'
                 properties = [
-                    'maven.compiler.source': '20',
-                    'maven.compiler.target': '20'
+                    'maven.compiler.source': '21',
+                    'maven.compiler.target': '21'
                 ]
                 licenses {
                     license {

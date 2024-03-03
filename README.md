@@ -11,13 +11,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.3:jar -DoutputDirectory=. && java -jar cities-generator-1.2.3.jar -c uk
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.4:jar -DoutputDirectory=. && java -jar cities-generator-1.2.4.jar -c uk
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.3.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.4.jar -c it
 ```
 
 - Through api java follow the instructions:
@@ -27,14 +27,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.3.jar -c it
 	<dependency>
 		<groupId>it.vige.cities</groupId>
 		<artifactId>cities-generator</artifactId>
-		<version>1.2.3</version>
+		<version>1.2.4</version>
 	</dependency>
 ```
 	
    or on gradle in the build.gradle file:
 		
    ```
-	compile('it.vige.cities:cities-generator:1.2.3')
+	compile('it.vige.cities:cities-generator:1.2.4')
    ```
 	
 2. Execute the following java instructions:
@@ -70,12 +70,12 @@ A REST service can be installed in your machine. This returns a json format with
 ```
 And then start it through the command:
 ```
-java -jar build/libs/cities-generator-service-1.2.3.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.2.4.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to http://cities-generator-service.vige.it:8380/swagger-ui/index.html
 In a production environment you could use https so:
 ```
-java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.3.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.4.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 ### Docker development image
@@ -102,7 +102,7 @@ Over the country, optionally as for the library you can add the following param:
 
 This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/dev folder of the project:
 ```
-COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} AUTHURL=${AUTHURL} docker-compose up
+COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} AUTHURL=${AUTHURL} docker compose up
 ```
 Where ${COUNTRY} is the choosen language, it or en. While ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8380 .
 ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8080
@@ -110,7 +110,7 @@ It will allow to download a keycloak instance where the server can be connected.
 After you can connect to keycloak through the url http://auth-ct.vige.it:8080
 
 Here a sample:
-COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=http://auth-ct.vige.it:8080 docker-compose up
+COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=http://auth-ct.vige.it:8080 docker compose up
 
 Add the following DNS in your /etc/hosts file:
 ```
@@ -150,7 +150,7 @@ Over the country, optionally as for the library you can add the following param:
 
 This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/prod folder of the project:
 ```
-COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} HOST_NAME=${HOST_NAME} AUTHURL=${AUTHURL} docker-compose up
+COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} HOST_NAME=${HOST_NAME} AUTHURL=${AUTHURL} docker compose up
 ```
 Where ${COUNTRY} is the choosen language, it or en. While ${HOST_NAME} is the external keycloak url, for example auth-ct.vige.it .
 ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8743
@@ -159,7 +159,7 @@ It will allow to download a keycloak instance where the server can be connected.
 After you can connect to keycloak through the url https://auth-ct.vige.it:8443
 
 Here a sample:
-COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8743 HOST_NAME=auth-ct.vige.it AUTHURL=https://auth-ct.vige.it:8443 docker-compose up
+COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8743 HOST_NAME=auth-ct.vige.it AUTHURL=https://auth-ct.vige.it:8443 docker compose up
 
 Add the following DNS in your /etc/hosts file:
 ```
