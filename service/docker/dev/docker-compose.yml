@@ -8,3 +8,11 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS}
+  cities-generator-service.vige.it:
+    image: "vige/cities-generator"
+    ports:
+      - "8380:8080"
+      - "8300:8000"
+    environment:
+      - COUNTRY=${COUNTRY}
+      - AUTHURL=${AUTHURL}
