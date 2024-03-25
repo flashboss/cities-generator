@@ -186,3 +186,8 @@ You need to create a certificate and import it through the command:
 keytool -v -export -file mytrustCA.cer -keystore ./docker/prod/volume/cert/application-ct.keystore -alias cities-generator-service
 keytool -import -alias trustedCA -file mytrustCA.cer -keystore ./docker/prod/volume/cert/application-ct.keystore -storepass password -keypass password
 ```
+
+Actually two samples of generated cities can be found online:
+
+https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/it.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/uk.json
