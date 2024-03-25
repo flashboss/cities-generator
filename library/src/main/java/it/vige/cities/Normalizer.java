@@ -19,8 +19,7 @@ public class Normalizer {
 	 * @param caseSensitive   case sensitive parameter
 	 * @param duplicatedNames duplicated names parameter
 	 * @param text            text
-	 * @param lines           lines
-	 * @return the command line
+	 * @param zones           zones
 	 */
 	public static void setName(boolean caseSensitive, boolean duplicatedNames, final String text, List<Node> zones,
 			Node node) {

@@ -67,7 +67,7 @@ public class ResultNodes {
 	/**
 	 * Retrieves the template associated with the result stored in this container.
 	 * 
-	 * @return The nodes associated with the result stored in this container.
+	 * @return The template associated with the result stored in this container.
 	 */
 	public Template getTemplate() {
 		return template;
@@ -76,8 +76,8 @@ public class ResultNodes {
 	/**
 	 * Sets the template associated with the result to be stored in this container.
 	 * 
-	 * @param nodes The nodes associated with the result to be stored in this
-	 *              container.
+	 * @param template The template associated with the result to be stored in this
+	 *                 container.
 	 */
 	public void setTemplate(Template template) {
 		this.template = template;
