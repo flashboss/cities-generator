@@ -1,4 +1,4 @@
-package it.vige.cities.templates.en;
+package it.vige.cities.templates;
 
 /**
  * The english providers actually supported
@@ -6,14 +6,9 @@ package it.vige.cities.templates.en;
  */
 public enum Providers {
 	/**
-	 * BRITANNICA
+	 * NONE
 	 */
-	WIKIPEDIA, 
-	
-	/**
-	 * BRITANNICA
-	 */
-	BRITANNICA, 
+	NONE, 
 	
 	/**
 	 * GEONAMES

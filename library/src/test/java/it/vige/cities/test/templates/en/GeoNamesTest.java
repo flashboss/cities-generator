@@ -12,18 +12,20 @@ import org.junit.jupiter.api.Test;
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
-import it.vige.cities.Result;
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
  * Geonames tests
+ * 
  * @author lucastancapiano
  */
 public class GeoNamesTest extends FileGenerator {
 
 	/**
 	 * Cities
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -34,8 +36,8 @@ public class GeoNamesTest extends FileGenerator {
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
 		Generator generator = new Generator(configuration, true);
-		Result result = generator.generateFile();
-		assertTrue(result == OK);
+		ResultNodes result = generator.generate();
+		assertTrue(result.getResult() == OK);
 		Nodes nodes = readFile(uk.name());
 		assertNotNull(nodes);
 		Node england = nodes.getZones().get(0);

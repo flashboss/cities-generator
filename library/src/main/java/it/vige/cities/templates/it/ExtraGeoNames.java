@@ -1,20 +1,24 @@
 package it.vige.cities.templates.it;
 
-import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.Normalizer.setName;
+import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
 
 /**
  * Extra configuration for italian geonames
+ * 
  * @author lucastancapiano
  */
 public class ExtraGeoNames extends GeoNames {
 
 	/**
 	 * ExtraGeoNames
+	 * 
 	 * @param country         the country
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames true if it accepts duplicated names
@@ -29,10 +33,10 @@ public class ExtraGeoNames extends GeoNames {
 	 * Generate
 	 */
 	@Override
-	protected Nodes generate() throws Exception {
+	protected ResultNodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		addLevel0(nodes, caseSensitive);
-		Nodes nodesFromGeoname = super.generate();
+		Nodes nodesFromGeoname = super.generate().getNodes();
 		for (Node node0 : nodes.getZones()) {
 			for (Node node1 : nodesFromGeoname.getZones()) {
 				if (((node1.getName().equalsIgnoreCase("Piemonte") || node1.getName().equalsIgnoreCase("Liguria")
@@ -67,7 +71,7 @@ public class ExtraGeoNames extends GeoNames {
 			}
 			changeIds(node0);
 		}
-		return nodes;
+		return new ResultNodes(OK, nodes, this);
 	}
 
 	private void changeIds(Node node) {
@@ -92,27 +96,27 @@ public class ExtraGeoNames extends GeoNames {
 		Node northWest = new Node();
 		northWest.setId("" + counter++);
 		northWest.setLevel(0);
-		northWest.setName(execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
+		setName(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null, northWest);
 		nodes.getZones().add(northWest);
 		Node northEast = new Node();
 		northEast.setId("" + counter++);
 		northEast.setLevel(0);
-		northEast.setName(execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
+		setName(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null, northEast);
 		nodes.getZones().add(northEast);
-		Node south = new Node();
-		south.setId("" + counter++);
-		south.setLevel(0);
-		south.setName(execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
-		nodes.getZones().add(south);
 		Node centre = new Node();
 		centre.setId("" + counter++);
 		centre.setLevel(0);
-		centre.setName(execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
+		setName(caseSensitive, true, "III: ITALIA CENTRALE", null, centre);
+		nodes.getZones().add(centre);
+		Node south = new Node();
+		south.setId("" + counter++);
+		south.setLevel(0);
+		setName(caseSensitive, true, "IV: ITALIA MERIDIONALE", null, south);
 		nodes.getZones().add(centre);
 		Node islands = new Node();
 		islands.setId("" + counter++);
 		islands.setLevel(0);
-		islands.setName(execute(caseSensitive, true, "V: ITALIA INSULARE", null));
+		setName(caseSensitive, true, "V: ITALIA INSULARE", null, islands);
 		nodes.getZones().add(islands);
 	}
 

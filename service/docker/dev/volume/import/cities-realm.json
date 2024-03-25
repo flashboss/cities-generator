@@ -32,6 +32,39 @@
 			"groups": [
 				"admin"
 			]
+		},
+		{
+			"username": "alice",
+			"firstName": "Alice",
+			"lastName": "Liddel",
+			"email": "alice@vige.it",
+			"enabled": true,
+			"credentials": [
+				{
+					"type": "password",
+					"value": "alice"
+				}
+			],
+			"realmRoles": [
+				"user"
+			]
+		},
+		{
+			"username": "jdoe",
+			"firstName": "jdoe",
+			"lastName": "jdoe",
+			"email": "jdoe@vige.it",
+			"enabled": true,
+			"credentials": [
+				{
+					"type": "password",
+					"value": "jdoe"
+				}
+			],
+			"realmRoles": [
+				"user",
+				"admin"
+			]
 		}
 	],
 	"clients": [
@@ -55,7 +88,7 @@
 			"secret": "bce5816d-98c4-404f-a18d-bcc5cb005c79",
 			"serviceAccountsEnabled": true,
 			"authorizationServicesEnabled": true,
-			"implicitFlowEnabled": true
+      		"directAccessGrantsEnabled": true
 		}
 	],
 	"roles": {
@@ -63,6 +96,10 @@
 			{
 				"name": "admin",
 				"description": "Administrator privileges"
+			},
+			{
+				"name": "user",
+				"description": "User privileges"
 			}
 		]
 	},
@@ -70,9 +107,7 @@
 		{
 			"name": "admin",
 			"path": "/admin",
-			"attributes": {
-				
-			},
+			"attributes": {},
 			"realmRoles": [
 				"admin"
 			],

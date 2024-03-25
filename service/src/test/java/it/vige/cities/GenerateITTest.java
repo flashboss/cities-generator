@@ -3,20 +3,19 @@ package it.vige.cities;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 
 import it.vige.cities.rest.CitiesController;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
-@SpringBootTest(webEnvironment = DEFINED_PORT)
-@TestPropertySource(locations = "classpath:application-test.properties")
+@SpringBootTest
+@ActiveProfiles("test")
 public class GenerateITTest {
 
 	private Logger logger = getLogger(GenerateITTest.class);
@@ -38,40 +37,40 @@ public class GenerateITTest {
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		nodes = citiesController.getResult("5-2523119-2523918-6540050,5-2523119-2523918-6537748", null);
+		nodes = citiesController.getResult("3069-3931-4393-4503,3069-3931-4393-4394", null);
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
-		assertEquals("5-2523119-2523918-6540050", firstNode.getId());
+		assertEquals("3069-3931-4393-4503", firstNode.getId());
 
-		nodes = citiesController.getResult("5-2523119-2523918-6540050,5-2523119-2523918", "all");
+		nodes = citiesController.getResult("3069-3931-4393-4503,3069-3931-4393", "all");
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
-		assertEquals("5", firstNode.getId());
+		assertEquals("3069", firstNode.getId());
 		Node secondNode = firstNode.getZones().get(0);
-		assertEquals("5-2523119", secondNode.getId());
+		assertEquals("3069-3931", secondNode.getId());
 		Node thirdNode = secondNode.getZones().get(0);
 		assertEquals(1, thirdNode.getZones().size());
-		assertEquals("5-2523119-2523918", thirdNode.getId());
+		assertEquals("3069-3931-4393", thirdNode.getId());
 		Node forthNode = thirdNode.getZones().get(0);
-		assertEquals("5-2523119-2523918-6540050", forthNode.getId());
+		assertEquals("3069-3931-4393-4503", forthNode.getId());
 
-		nodes = citiesController.getResult("5-2523119-2523918-6540050,5-2523119-2523918-6541327", "all");
+		nodes = citiesController.getResult("3069-3931-4393-4503,3069-3931-4393-4397", "all");
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
-		assertEquals("5", firstNode.getId());
+		assertEquals("3069", firstNode.getId());
 		secondNode = firstNode.getZones().get(0);
-		assertEquals("5-2523119", secondNode.getId());
+		assertEquals("3069-3931", secondNode.getId());
 		thirdNode = secondNode.getZones().get(0);
-		assertEquals("5-2523119-2523918", thirdNode.getId());
+		assertEquals("3069-3931-4393", thirdNode.getId());
 		assertEquals(2, thirdNode.getZones().size());
 		forthNode = thirdNode.getZones().get(0);
-		assertEquals("5-2523119-2523918-6540050", forthNode.getId());
+		assertEquals("3069-3931-4393-4503", forthNode.getId());
 		Node fifthNode = thirdNode.getZones().get(1);
-		assertEquals("5-2523119-2523918-6541327", fifthNode.getId());
+		assertEquals("3069-3931-4393-4397", fifthNode.getId());
 	}
 
 }

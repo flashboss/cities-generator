@@ -4,10 +4,14 @@ services:
     image: "vige/cities-generator-auth"
     ports:
       - "8080:8080"
+      - "8400:8787"
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS}
+      - DEBUG=true
+      - DEBUG_PORT=*:8787
+      - DEBUG_SUSPEND=n
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:

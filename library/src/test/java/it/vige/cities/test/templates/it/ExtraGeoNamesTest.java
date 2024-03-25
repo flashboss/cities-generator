@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
-import it.vige.cities.Result;
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
@@ -34,8 +34,8 @@ public class ExtraGeoNamesTest extends FileGenerator {
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
 		Generator generator = new Generator(configuration, true);
-		Result result = generator.generateFile();
-		assertTrue(result == OK);
+		ResultNodes result = generator.generate();
+		assertTrue(result.getResult() == OK);
 		Nodes nodes = readFile(it.name());
 		assertNotNull(nodes);
 		Node northWest = nodes.getZones().get(0);

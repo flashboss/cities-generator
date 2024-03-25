@@ -21,7 +21,7 @@ public class OpenApiConfig {
 	@Value("${keycloak.realm}")
 	private String realm;
 
-	@Value("${keycloak.resource}")
+	@Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
 	private String resource;
 
 	private static final String OAUTH_SCHEME_NAME = "Cities Generator Auth";

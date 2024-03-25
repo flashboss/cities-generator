@@ -1,26 +1,27 @@
 package it.vige.cities.templates;
 
-import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.Normalizer.setName;
+import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
-import static java.lang.Integer.parseInt;
-import static java.util.stream.Collectors.toList;
 import static jakarta.ws.rs.client.ClientBuilder.newClient;
+import static java.lang.Integer.parseInt;
 
 import java.util.List;
 
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.Response;
-
+import it.vige.cities.ResultNodes;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.result.geonames.Countrynodes;
 import it.vige.cities.result.geonames.Geonode;
 import it.vige.cities.result.geonames.Geonodes;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 
 /**
  * The geonames generator
+ * 
  * @author lucastancapiano
  */
 public class GeoNames extends Template {
@@ -44,6 +45,7 @@ public class GeoNames extends Template {
 
 	/**
 	 * GeoNames
+	 * 
 	 * @param country         the country
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames the duplicated names parameter
@@ -61,6 +63,7 @@ public class GeoNames extends Template {
 
 	/**
 	 * Page country
+	 * 
 	 * @param country the country
 	 * @return the response
 	 * @throws Exception if there is a problem
@@ -74,6 +77,7 @@ public class GeoNames extends Template {
 
 	/**
 	 * Page children
+	 * 
 	 * @param id the id
 	 * @return the response
 	 * @throws Exception if there is a problem
@@ -87,6 +91,7 @@ public class GeoNames extends Template {
 
 	/**
 	 * Nodes
+	 * 
 	 * @param zones       the zones
 	 * @param numberLevel the number level
 	 * @param id          the id
@@ -107,8 +112,7 @@ public class GeoNames extends Template {
 					Node node = new Node();
 					node.setId(noFirstLevelId + head.getGeonameId());
 					node.setLevel(numberLevel);
-					node.setName(execute(caseSensitive, duplicatedNames, head.getToponymName(),
-							zones.parallelStream().map(e -> e.getName()).collect(toList())));
+					setName(caseSensitive, duplicatedNames, head.getToponymName(), zones, node);
 					zones.add(node);
 					addNodes(node.getZones(), numberLevel + 1, node.getId());
 				}
@@ -119,12 +123,12 @@ public class GeoNames extends Template {
 	 * Generate
 	 */
 	@Override
-	protected Nodes generate() throws Exception {
+	protected ResultNodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		Response response = getPageCountry(country);
 		Countrynodes countries = response.readEntity(Countrynodes.class);
 		addNodes(nodes.getZones(), firstLevel, countries.getGeonames().get(0).getGeonameId() + "");
-		return nodes;
+		return new ResultNodes(OK, nodes, this);
 	}
 
 }

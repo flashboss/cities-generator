@@ -9,7 +9,7 @@ public enum Providers {
 	/**
 	 * TUTTITALIA
 	 */
-	TUTTITALIA, 
+	WIKIPEDIA, 
 	
 	/**
 	 * COMUNI ITALIANI

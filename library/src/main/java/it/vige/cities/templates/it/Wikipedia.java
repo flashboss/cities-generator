@@ -1,8 +1,7 @@
 package it.vige.cities.templates.it;
 
 import static it.vige.cities.Countries.it;
-import static it.vige.cities.Normalizer.execute;
-import static it.vige.cities.Result.KO;
+import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.util.Arrays.asList;
@@ -11,23 +10,25 @@ import static java.util.stream.Collectors.toList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import it.vige.cities.HTMLTemplate;
-import it.vige.cities.Result;
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
  * Tuttitalia provider
+ * 
  * @author lucastancapiano
  */
-public class Tuttitalia extends HTMLTemplate {
+public class Wikipedia extends HTMLTemplate {
 
-	private final static String URL = "https://www.tuttitalia.it";
+	private final static String URL = "https://it.wikipedia.org/wiki/Comuni_d%27Italia";
 
 	private boolean caseSensitive;
 	private boolean duplicatedNames;
@@ -36,10 +37,11 @@ public class Tuttitalia extends HTMLTemplate {
 
 	/**
 	 * Tuttitalia
+	 * 
 	 * @param caseSensitive   the case sensitive parameter
 	 * @param duplicatedNames the duplicated names parameter
 	 */
-	public Tuttitalia(boolean caseSensitive, boolean duplicatedNames) {
+	public Wikipedia(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = it.name();
@@ -49,68 +51,51 @@ public class Tuttitalia extends HTMLTemplate {
 	 * Generate
 	 */
 	@Override
-	public Nodes generate() throws Exception {
+	public ResultNodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		Document level1 = getPage(URL);
-		Elements lines1 = level1.select("dl dt a");
+		Elements lines1 = level1.select("div div ul li a[title^=Comuni del]");
 		int counter = addLevel0(nodes, caseSensitive, associations);
 		for (Node node0 : nodes.getZones()) {
 			for (Element head1 : lines1) {
-				String name = head1.text();
+				String[] words = head1.text().split("del |della |'");
+				String name = words[words.length - 1];
 				if (associations.get(node0).contains(name)) {
 					Node node1 = new Node();
 					node1.setId(node0.getId() + ID_SEPARATOR + counter++);
 					node1.setLevel(1);
-					node1.setName(execute(caseSensitive, duplicatedNames, name,
-							lines1.parallelStream().map(e -> e.text()).collect(toList())));
+					setName(caseSensitive, duplicatedNames, name, nodes.getZones(), node1);
 					node0.getZones().add(node1);
 					Document level2 = getPage(head1.absUrl("href"));
-					Elements lines2 = level2.select(".ut tr td a");
-					for (Element head2 : lines2) {
+					Elements lines2 = level2
+							.select("div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia]");
+					List<Element> linksNoDuplicated = filterDuplicated(lines2);
+					for (Element head2 : linksNoDuplicated) {
 						Node node2 = new Node();
 						node2.setId(node1.getId() + ID_SEPARATOR + counter++);
 						node2.setLevel(2);
 						String text = head2.text();
-						String[] splittedName = text.split("Provincia di ");
-						if (splittedName.length < 2)
-							splittedName = text.split("Provincia del");
-						if (splittedName.length < 2)
-							splittedName = text.split("Città Metropolitana di ");
-						node2.setName(execute(caseSensitive, duplicatedNames, splittedName[1],
-								lines2.parallelStream().map(e -> e.text()).collect(toList())));
+						setName(caseSensitive, duplicatedNames, text, nodes.getZones(), node2);
 						node1.getZones().add(node2);
-						Document level3 = getPage(head2.absUrl("href"));
-						Elements lines3 = level3.select(".at tr td a");
+						Elements lines3 = level2.select(
+								"div > table.wikitable > tbody > tr:contains(" + node2.getName() + ") > td:eq(0) > a");
 						for (Element head3 : lines3) {
 							Node node3 = new Node();
 							node3.setId(node2.getId() + ID_SEPARATOR + counter++);
 							node3.setLevel(3);
-							node3.setName(execute(caseSensitive, duplicatedNames, head3.text(),
-									lines3.parallelStream().map(e -> e.text()).collect(toList())));
+							setName(caseSensitive, duplicatedNames, head3.text(), nodes.getZones(), node3);
 							node2.getZones().add(node3);
 						}
 					}
 				}
 			}
 		}
-		return nodes;
-	}
-
-	/**
-	 * Generate File
-	 */
-	@Override
-	public Result generateFile() {
-		try {
-			writeFile(generate());
-		} catch (Exception ex) {
-			return KO;
-		}
-		return OK;
+		return new ResultNodes(OK, nodes, this);
 	}
 
 	/**
 	 * Level0
+	 * 
 	 * @param nodes         the nodes
 	 * @param caseSensitive true if it is case sensitive
 	 * @param associations  the associations
@@ -121,36 +106,44 @@ public class Tuttitalia extends HTMLTemplate {
 		Node northWest = new Node();
 		northWest.setId("" + counter++);
 		northWest.setLevel(0);
-		northWest.setName(execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
+		setName(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null, northWest);
 		nodes.getZones().add(northWest);
 		associations.put(northWest, asList(new String[] { "Piemonte", "Liguria", "Valle d'Aosta", "Lombardia" }));
 		Node northEast = new Node();
 		northEast.setId("" + counter++);
 		northEast.setLevel(0);
-		northEast.setName(execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
+		setName(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null, northEast);
 		nodes.getZones().add(northEast);
 		associations.put(northEast,
 				asList(new String[] { "Emilia Romagna", "Veneto", "Trentino Alto Adige", "Friuli Venezia Giulia" }));
-		Node south = new Node();
-		south.setId("" + counter++);
-		south.setLevel(0);
-		south.setName(execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
-		nodes.getZones().add(south);
-		associations.put(south, asList(new String[] { "Lazio", "Marche", "Umbria", "Toscana" }));
 		Node centre = new Node();
 		centre.setId("" + counter++);
 		centre.setLevel(0);
-		centre.setName(execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
+		setName(caseSensitive, true, "III: ITALIA CENTRALE", null, centre);
 		nodes.getZones().add(centre);
-		associations.put(centre,
+		associations.put(centre, asList(new String[] { "Lazio", "Marche", "Umbria", "Toscana" }));
+		Node south = new Node();
+		south.setId("" + counter++);
+		south.setLevel(0);
+		setName(caseSensitive, true, "IV: ITALIA MERIDIONALE", null, south);
+		nodes.getZones().add(south);
+		associations.put(south,
 				asList(new String[] { "Abruzzo", "Campania", "Basilicata", "Molise", "Calabria", "Puglia" }));
 		Node islands = new Node();
 		islands.setId("" + counter++);
 		islands.setLevel(0);
-		islands.setName(execute(caseSensitive, true, "V: ITALIA INSULARE", null));
+		setName(caseSensitive, true, "V: ITALIA INSULARE", null, islands);
 		nodes.getZones().add(islands);
 		associations.put(islands, asList(new String[] { "Sardegna", "Sicilia" }));
 		return counter;
 	}
 
+	private List<Element> filterDuplicated(List<Element> list) {
+		return list.stream().filter(distinctByKey(Element::text)).collect(toList());
+	}
+
+	private <T> java.util.function.Predicate<T> distinctByKey(java.util.function.Function<? super T, ?> keyExtractor) {
+		Set<Object> seen = java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
+		return t -> seen.add(keyExtractor.apply(t));
+	}
 }
