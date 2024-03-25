@@ -54,7 +54,7 @@ public class CitiesController {
 				configuration.setProvider(provider);
 				configuration.setUsername(username);
 				Generator generator = new Generator(configuration, false);
-				nodes.setZones(generator.generate().getZones());
+				nodes.setZones(generator.generate().getNodes().getZones());
 			} catch (Exception ex) {
 				logger.warn(ex.getMessage());
 			}
@@ -156,7 +156,7 @@ public class CitiesController {
 	@PostMapping(value = "/update")
 	public void update(@RequestBody Configuration configuration) throws Exception {
 		Generator generator = new Generator(configuration, true);
-		nodes.setZones(generator.generate().getZones());
+		nodes.setZones(generator.generate().getNodes().getZones());
 	}
 
 }
