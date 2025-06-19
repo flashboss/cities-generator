@@ -1,6 +1,9 @@
 buildscript {
     ext {
-        springBootVersion = '3.2.3'
+        springBootVersion = '3.5.0'
+        citiesVersion = '1.2.4'
+        springdocVersion = '2.8.9'
+        keycloakVersion = '26.0.5'
     }
     repositories {
         mavenCentral()
@@ -11,7 +14,7 @@ buildscript {
 }
 
 plugins {
-	id 'java-library'
+    id 'java-library'
 }
 
 apply plugin: 'java'
@@ -20,12 +23,12 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige.cities'
-version = '1.2.4'
+version = "${citiesVersion}"
 
-sourceCompatibility = 21
+sourceCompatibility = 24
 
 repositories {
-	mavenLocal()
+    mavenLocal()
     mavenCentral()
 }
 
@@ -34,13 +37,13 @@ configurations {
 }
 
 dependencies {
-    implementation('it.vige.cities:cities-generator:1.2.4')
-    implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0')
-    implementation('org.springframework.boot:spring-boot-starter-security')
-    implementation("org.springframework.boot:spring-boot-starter-tomcat")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-    implementation("org.keycloak:keycloak-policy-enforcer:24.0.1")
-    testImplementation('org.keycloak:keycloak-core:24.0.1')
-    testImplementation('org.keycloak:keycloak-test-helper:24.0.1')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    implementation "it.vige.cities:cities-generator:${citiesVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation "org.keycloak:keycloak-policy-enforcer:${keycloakVersion}"
+    testImplementation "org.keycloak:keycloak-core:${keycloakVersion}"
+    testImplementation "org.keycloak:keycloak-test-framework:${keycloakVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

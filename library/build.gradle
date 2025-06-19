@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 group = 'it.vige.cities'
 version = '1.2.4'
 
-sourceCompatibility = 21
+sourceCompatibility = 24
 
 repositories {
     mavenCentral()
