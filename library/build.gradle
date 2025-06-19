@@ -1,11 +1,20 @@
 buildscript {
+    ext {
+        citiesVersion = '1.2.4'
+        slf4jVersion = '2.0.7'
+        jsoupVersion = '1.16.1'
+        commonsCliVersion = '1.5.0'
+        commonsLangVersion = '3.12.0'
+        resteasyVersion = '6.2.3.Final'
+        junitVersion = '5.9.3'
+    }
     repositories {
         mavenCentral()
     }
 }
 
 plugins {
-	id 'java-library'
+    id 'java-library'
     id 'maven-publish'
     id 'signing'
 }
@@ -14,7 +23,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'it.vige.cities'
-version = '1.2.4'
+version = "${citiesVersion}"
 
 sourceCompatibility = 24
 
@@ -26,15 +35,15 @@ repositories {
 }
 
 dependencies {
-    api('org.slf4j:slf4j-simple:2.0.7')
-    api('org.jsoup:jsoup:1.16.1')
-    api('commons-cli:commons-cli:1.5.0')
-    api('org.apache.commons:commons-lang3:3.12.0')
-    api('org.jboss.resteasy:resteasy-jackson2-provider:6.2.3.Final')
-    api('org.jboss.resteasy:resteasy-client:6.2.3.Final')
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.9.3')
-    testImplementation('org.junit.jupiter:junit-jupiter-params:5.9.3')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.3')
+    api "org.slf4j:slf4j-simple:${slf4jVersion}"
+    api "org.jsoup:jsoup:${jsoupVersion}"
+    api "commons-cli:commons-cli:${commonsCliVersion}"
+    api "org.apache.commons:commons-lang3:${commonsLangVersion}"
+    api "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}"
+    api "org.jboss.resteasy:resteasy-client:${resteasyVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
 }
 
 java {
@@ -47,7 +56,7 @@ jar {
         attributes("Main-Class": "it.vige.cities.Generator")
     }
     from {
-		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         sourceSets.main.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     exclude 'META-INF/*'
@@ -93,10 +102,10 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'svn:git:https://github.com/flashboss/cities-generator.git'
-                    developerConnection = 'svn:git:https://github.com/flashboss/cities-generator.git'
+                    connection = 'scm:git:https://github.com/flashboss/cities-generator.git'
+                    developerConnection = 'scm:git:https://github.com/flashboss/cities-generator.git'
                     tag = '1.1.3'
-                    url = 'svn:git:https://github.com/flashboss/cities-generator.git'
+                    url = 'https://github.com/flashboss/cities-generator'
                 }
             }
         }
@@ -115,12 +124,12 @@ publishing {
 }
 
 signing {
-	useGpgCmd()
-	sign publishing.publications.mavenJava
+    useGpgCmd()
+    sign publishing.publications.mavenJava
 }
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }

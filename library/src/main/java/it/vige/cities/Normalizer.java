@@ -20,6 +20,7 @@ public class Normalizer {
 	 * @param duplicatedNames duplicated names parameter
 	 * @param text            text
 	 * @param zones           zones
+	 * @param node            node
 	 */
 	public static void setName(boolean caseSensitive, boolean duplicatedNames, final String text, List<Node> zones,
 			Node node) {
