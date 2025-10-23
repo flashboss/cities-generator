@@ -18,7 +18,7 @@ plugins {
 
 test {
     useJUnitPlatform()
-    enabled = false
+    enabled = true
 }
 
 apply plugin: 'java'
@@ -36,10 +36,13 @@ repositories {
 
 configurations {
     all*.exclude group: 'org.slf4j'
+    all*.exclude group: 'ch.qos.logback'
 }
 
 dependencies {
-    implementation "it.vige.cities:cities-generator:${citiesVersion}"
+    implementation("it.vige.cities:cities-generator:${citiesVersion}") {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
