@@ -14,7 +14,14 @@ import it.vige.cities.result.Node;
 public class Normalizer {
 
 	/**
-	 * Execute
+	 * default Normalizer
+	 */
+	public Normalizer() {
+		
+	}
+	
+	/**
+	 * Set name
 	 * 
 	 * @param caseSensitive   case sensitive parameter
 	 * @param duplicatedNames duplicated names parameter

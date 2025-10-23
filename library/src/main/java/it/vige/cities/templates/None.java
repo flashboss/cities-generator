@@ -14,6 +14,13 @@ import it.vige.cities.result.Nodes;
 public class None extends Template {
 
 	/**
+	 * default None
+	 */
+	public None() {
+		super();
+	}
+
+	/**
 	 * Generate
 	 */
 	@Override

@@ -116,15 +116,15 @@ public class Generator extends Template {
 	private static CommandLine configureOptions(String[] args) throws ParseException {
 		Options options = new Options();
 		options.addOption(builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
-				.desc(MULTI_CASE_SENSITIVE).build());
+				.desc(MULTI_CASE_SENSITIVE).get());
 		options.addOption(builder(SINGLE_COUNTRY).longOpt(MULTI_COUNTRY).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_COUNTRY).build());
+				.desc(MULTI_COUNTRY).get());
 		options.addOption(builder(SINGLE_PROVIDER).longOpt(MULTI_PROVIDER).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_PROVIDER).build());
+				.desc(MULTI_PROVIDER).get());
 		options.addOption(builder(SINGLE_DUPLICATED_NAMES).longOpt(MULTI_DUPLICATED_NAMES).type(Boolean.class)
-				.desc(MULTI_DUPLICATED_NAMES).build());
+				.desc(MULTI_DUPLICATED_NAMES).get());
 		options.addOption(builder(SINGLE_USER).longOpt(MULTI_USER).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_USER).build());
+				.desc(MULTI_USER).get());
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);

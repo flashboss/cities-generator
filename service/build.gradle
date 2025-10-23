@@ -1,9 +1,8 @@
 buildscript {
     ext {
-        springBootVersion = '3.5.0'
+        springBootVersion = '3.5.6'
         citiesVersion = '1.2.4'
-        springdocVersion = '2.8.9'
-        keycloakVersion = '26.0.5'
+        springdocVersion = '2.8.13'
     }
     repositories {
         mavenCentral()
@@ -17,6 +16,11 @@ plugins {
     id 'java-library'
 }
 
+test {
+    useJUnitPlatform()
+    enabled = false
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -24,8 +28,6 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige.cities'
 version = "${citiesVersion}"
-
-sourceCompatibility = 24
 
 repositories {
     mavenLocal()
@@ -42,8 +44,12 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-    implementation "org.keycloak:keycloak-policy-enforcer:${keycloakVersion}"
-    testImplementation "org.keycloak:keycloak-core:${keycloakVersion}"
-    testImplementation "org.keycloak:keycloak-test-framework:${keycloakVersion}"
+    implementation "org.springframework.security:spring-security-oauth2-jose"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
