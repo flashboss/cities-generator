@@ -45,20 +45,20 @@ public class BritannicaTest extends FileGenerator {
 		Node scotland = nodes.getZones().get(2);
 		Node wales = nodes.getZones().get(3);
 		Node duplicatedBedford = england.getZones().get(1).getZones().get(0);
-		assertEquals(england.getId(), "1");
-		assertEquals(england.getLevel(), 0);
-		assertEquals(england.getName(), "ENGLAND");
-		assertEquals(northIreland.getId(), "634");
-		assertEquals(northIreland.getLevel(), 0);
-		assertEquals(northIreland.getName(), "NORTHERN IRELAND");
-		assertEquals(scotland.getId(), "676");
-		assertEquals(scotland.getLevel(), 0);
-		assertEquals(scotland.getName(), "SCOTLAND");
-		assertEquals(wales.getId(), "801");
-		assertEquals(wales.getLevel(), 0);
-		assertEquals(wales.getName(), "WALES");
-		assertEquals(duplicatedBedford.getId(), "1-3-4");
-		assertEquals(duplicatedBedford.getLevel(), 2);
-		assertEquals(duplicatedBedford.getName(), "BEDFORD (CITY)");
+		assertEquals("1", england.getId());
+		assertEquals(0, england.getLevel());
+		assertEquals("ENGLAND", england.getName());
+		assertEquals("634", northIreland.getId());
+		assertEquals(0, northIreland.getLevel());
+		assertEquals("NORTHERN IRELAND", northIreland.getName());
+		assertEquals("676", scotland.getId());
+		assertEquals(0, scotland.getLevel());
+		assertEquals("SCOTLAND", scotland.getName());
+		assertEquals("801", wales.getId());
+		assertEquals(0, wales.getLevel());
+		assertEquals("WALES", wales.getName());
+		assertEquals("1-3-4", duplicatedBedford.getId());
+		assertEquals(2, duplicatedBedford.getLevel());
+		assertEquals("BEDFORD (CITY)", duplicatedBedford.getName());
 	}
 }

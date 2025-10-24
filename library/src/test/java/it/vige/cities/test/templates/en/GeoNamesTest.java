@@ -43,15 +43,15 @@ public class GeoNamesTest extends FileGenerator {
 		Node england = nodes.getZones().get(0);
 		Node barnsley = england.getZones().get(0);
 		Node billingley = barnsley.getZones().get(0);
-		assertEquals(england.getId(), "6269131");
-		assertEquals(england.getLevel(), 0);
-		assertEquals(england.getName(), "ENGLAND");
-		assertEquals(barnsley.getId(), "6269131-3333122");
-		assertEquals(barnsley.getLevel(), 1);
-		assertEquals(barnsley.getName(), "BARNSLEY");
-		assertEquals(billingley.getId(), "6269131-3333122-7299739");
-		assertEquals(billingley.getLevel(), 2);
-		assertEquals(billingley.getName(), "BILLINGLEY");
+		assertEquals("6269131", england.getId());
+		assertEquals(0, england.getLevel());
+		assertEquals("ENGLAND", england.getName());
+		assertEquals("6269131-3333122", barnsley.getId());
+		assertEquals(1, barnsley.getLevel());
+		assertEquals("BARNSLEY", barnsley.getName());
+		assertEquals("6269131-3333122-7299739", billingley.getId());
+		assertEquals(2, billingley.getLevel());
+		assertEquals("BILLINGLEY", billingley.getName());
 	}
 
 }

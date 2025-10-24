@@ -18,12 +18,14 @@ import it.vige.cities.result.Nodes;
 
 /**
  * Extra geonames tests
+ * 
  * @author lucastancapiano
  */
 public class ExtraGeoNamesTest extends FileGenerator {
 
 	/**
 	 * Cities
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -42,18 +44,18 @@ public class ExtraGeoNamesTest extends FileGenerator {
 		Node regioneAutonomaValleDaosta = northWest.getZones().get(0);
 		Node valleDaosta = regioneAutonomaValleDaosta.getZones().get(0);
 		Node allein = valleDaosta.getZones().get(0);
-		assertEquals(northWest.getId(), "1");
-		assertEquals(northWest.getLevel(), 0);
-		assertEquals(northWest.getName(), "I: ITALIA NORD-OCCIDENTALE");
-		assertEquals(regioneAutonomaValleDaosta.getId(), "1-3164857");
-		assertEquals(regioneAutonomaValleDaosta.getLevel(), 1);
-		assertEquals(regioneAutonomaValleDaosta.getName(), "REGIONE AUTONOMA VALLE D'AOSTA");
-		assertEquals(valleDaosta.getId(), "1-3164857-3182996");
-		assertEquals(valleDaosta.getLevel(), 2);
-		assertEquals(valleDaosta.getName(), "VALLE D'AOSTA");
-		assertEquals(allein.getId(), "1-3164857-3182996-6543055");
-		assertEquals(allein.getLevel(), 3);
-		assertEquals(allein.getName(), "ALLEIN");
+		assertEquals("1", northWest.getId());
+		assertEquals(0, northWest.getLevel());
+		assertEquals("I: ITALIA NORD-OCCIDENTALE", northWest.getName());
+		assertEquals("1-3164857", regioneAutonomaValleDaosta.getId());
+		assertEquals(1, regioneAutonomaValleDaosta.getLevel());
+		assertEquals("REGIONE AUTONOMA VALLE D'AOSTA", regioneAutonomaValleDaosta.getName());
+		assertEquals("1-3164857-3182996", valleDaosta.getId());
+		assertEquals(2, valleDaosta.getLevel());
+		assertEquals("VALLE D'AOSTA", valleDaosta.getName());
+		assertEquals("1-3164857-3182996-6543055", allein.getId());
+		assertEquals(3, allein.getLevel());
+		assertEquals("ALLEIN", allein.getName());
 	}
 
 }

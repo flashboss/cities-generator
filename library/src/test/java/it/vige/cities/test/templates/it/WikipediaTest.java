@@ -44,18 +44,18 @@ public class WikipediaTest extends FileGenerator {
 		Node liguria = northWest.getZones().get(0);
 		Node genova = liguria.getZones().get(0);
 		Node arenzano = genova.getZones().get(0);
-		assertEquals(northWest.getId(), "1");
-		assertEquals(northWest.getLevel(), 0);
-		assertEquals(northWest.getName(), "ITALIA NORD OCCIDENTALE");
-		assertEquals(liguria.getId(), "1-2");
-		assertEquals(liguria.getLevel(), 1);
-		assertEquals(liguria.getName(), "LIGURIA");
-		assertEquals(genova.getId(), "1-2-3");
-		assertEquals(genova.getLevel(), 2);
-		assertEquals(genova.getName(), "GENOVA");
-		assertEquals(arenzano.getId(), "1-2-3-4");
-		assertEquals(arenzano.getLevel(), 3);
-		assertEquals(arenzano.getName(), "ARENZANO");
+		assertEquals("1", northWest.getId());
+		assertEquals(0, northWest.getLevel());
+		assertEquals("ITALIA NORD OCCIDENTALE", northWest.getName());
+		assertEquals("1-2", liguria.getId());
+		assertEquals(1, liguria.getLevel());
+		assertEquals("LIGURIA", liguria.getName());
+		assertEquals("1-2-3", genova.getId());
+		assertEquals(2, genova.getLevel());
+		assertEquals("GENOVA", genova.getName());
+		assertEquals("1-2-3-4", arenzano.getId());
+		assertEquals(3, arenzano.getLevel());
+		assertEquals("ARENZANO", arenzano.getName());
 	}
 
 }
