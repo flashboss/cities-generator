@@ -45,10 +45,7 @@ public class Britannica extends HTMLTemplate {
 	public ResultNodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		Document level0 = getPage(URL);
-		Elements lines0 = level0.select(".topic-paragraph:first-child a");
-		lines0.remove(0);
-		lines0.remove(lines0.last());
-		lines0.remove(lines0.last());
+		Elements lines0 = level0.select("section[data-level=\"1\"] h2.h1 a");
 		int counter = 1;
 		int counterLevel0 = 0;
 		int counterLevel1 = 0;
@@ -60,8 +57,8 @@ public class Britannica extends HTMLTemplate {
 			node0.setLevel(0);
 			setName(caseSensitive, duplicatedNames, head0.text(), nodes.getZones(), node0);
 			nodes.getZones().add(node0);
-			Elements block1 = level0.select("div > section[data-level=1]:eq(3)");
-			Elements lines1 = block1.select("section > section");
+			Elements lines1 = level0.select("div > section[data-level=1]").get(counterLevel0)
+					.select("section > section");
 			for (Element head1 : lines1) {
 				Element head1title = head1.select("h2 > a").first();
 				if (head1title == null)
@@ -74,7 +71,7 @@ public class Britannica extends HTMLTemplate {
 				node0.getZones().add(node1);
 				Elements lines2 = head1.select("section > ul > li");
 				for (Element head2 : lines2) {
-					Element head2title = head2.select("a").first();
+					Element head2title = head2.select("div").first();
 					counterLevel2 = counter;
 					Node node2 = new Node();
 					node2.setId(counterLevel0 + ID_SEPARATOR + counterLevel1 + ID_SEPARATOR + counter++);

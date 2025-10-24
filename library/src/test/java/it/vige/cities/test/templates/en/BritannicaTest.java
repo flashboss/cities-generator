@@ -51,14 +51,14 @@ public class BritannicaTest extends FileGenerator {
 		assertEquals(northIreland.getId(), "634");
 		assertEquals(northIreland.getLevel(), 0);
 		assertEquals(northIreland.getName(), "NORTHERN IRELAND");
-		assertEquals(scotland.getId(), "1267");
+		assertEquals(scotland.getId(), "676");
 		assertEquals(scotland.getLevel(), 0);
 		assertEquals(scotland.getName(), "SCOTLAND");
-		assertEquals(wales.getId(), "1900");
+		assertEquals(wales.getId(), "801");
 		assertEquals(wales.getLevel(), 0);
 		assertEquals(wales.getName(), "WALES");
 		assertEquals(duplicatedBedford.getId(), "1-3-4");
 		assertEquals(duplicatedBedford.getLevel(), 2);
-		assertEquals(duplicatedBedford.getName(), "BEDFORD (1)");
+		assertEquals(duplicatedBedford.getName(), "BEDFORD (CITY)");
 	}
 }
