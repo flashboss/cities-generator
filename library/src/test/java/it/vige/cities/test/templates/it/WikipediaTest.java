@@ -42,18 +42,18 @@ public class WikipediaTest extends FileGenerator {
 		assertNotNull(nodes);
 		Node northWest = nodes.getZones().get(0);
 		Node liguria = northWest.getZones().get(0);
-		Node genova = liguria.getZones().get(0);
+		Node genova = liguria.getZones().get(3);
 		Node arenzano = genova.getZones().get(0);
 		assertEquals("1", northWest.getId());
 		assertEquals(0, northWest.getLevel());
-		assertEquals("ITALIA NORD OCCIDENTALE", northWest.getName());
-		assertEquals("1-2", liguria.getId());
+		assertEquals("I: ITALIA NORD-OCCIDENTALE", northWest.getName());
+		assertEquals("1-6", liguria.getId());
 		assertEquals(1, liguria.getLevel());
 		assertEquals("LIGURIA", liguria.getName());
-		assertEquals("1-2-3", genova.getId());
+		assertEquals("1-6-177", genova.getId());
 		assertEquals(2, genova.getLevel());
 		assertEquals("GENOVA", genova.getName());
-		assertEquals("1-2-3-4", arenzano.getId());
+		assertEquals("1-6-177-178", arenzano.getId());
 		assertEquals(3, arenzano.getLevel());
 		assertEquals("ARENZANO", arenzano.getName());
 	}

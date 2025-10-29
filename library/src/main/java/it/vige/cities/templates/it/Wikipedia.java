@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jsoup.select.Selector;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -67,8 +68,8 @@ public class Wikipedia extends HTMLTemplate {
 					setName(caseSensitive, duplicatedNames, name, nodes.getZones(), node1);
 					node0.getZones().add(node1);
 					Document level2 = getPage(head1.absUrl("href"));
-					Elements lines2 = level2
-							.select("div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia]");
+					Elements lines2 = level2.select(
+							"div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Città metropolitana], div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia]");
 					List<Element> linksNoDuplicated = filterDuplicated(lines2);
 					for (Element head2 : linksNoDuplicated) {
 						Node node2 = new Node();
@@ -77,8 +78,10 @@ public class Wikipedia extends HTMLTemplate {
 						String text = head2.text();
 						setName(caseSensitive, duplicatedNames, text, nodes.getZones(), node2);
 						node1.getZones().add(node2);
+						String escapedName = Selector.escapeCssIdentifier(node2.getName());
 						Elements lines3 = level2.select(
-								"div > table.wikitable > tbody > tr:contains(" + node2.getName() + ") > td:eq(0) > a");
+								"div > table.wikitable > tbody > tr:has(td:eq(1) a:matchesOwn((?i)" + escapedName
+										+ ")) > td:eq(0) > a");
 						for (Element head3 : lines3) {
 							Node node3 = new Node();
 							node3.setId(node2.getId() + ID_SEPARATOR + counter++);
