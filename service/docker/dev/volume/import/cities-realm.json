@@ -88,7 +88,8 @@
 			"secret": "bce5816d-98c4-404f-a18d-bcc5cb005c79",
 			"serviceAccountsEnabled": true,
 			"authorizationServicesEnabled": true,
-      		"directAccessGrantsEnabled": true
+			"directAccessGrantsEnabled": true,
+			"implicitFlowEnabled": true
 		}
 	],
 	"roles": {
