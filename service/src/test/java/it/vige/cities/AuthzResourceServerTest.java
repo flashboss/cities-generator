@@ -35,16 +35,16 @@ public class AuthzResourceServerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = "PREMIUM")
-	void testOnlyPremiumUsers() throws Exception {
+	@WithMockUser(roles = "admin")
+	void testOnlyAdminUsers() throws Exception {
 		this.mvc.perform(post("/update").contentType(MediaType.APPLICATION_JSON).content("{ \"provider\":\"NONE\" }"))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("")));
 	}
 
 	@Test
-	@WithMockUser(roles = "USER")
-	void testNonPremiumUsers() throws Exception {
+	@WithMockUser(roles = "user")
+	void testNonAdminUsers() throws Exception {
 		this.mvc.perform(post("/update").contentType(MediaType.APPLICATION_JSON).content("{ \"provider\":\"NONE\" }"))
 				.andExpect(status().isForbidden());
 	}

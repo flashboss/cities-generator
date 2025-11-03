@@ -22,7 +22,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
 				customizer -> customizer
-					.requestMatchers("/update*").hasRole("PREMIUM")
+					.requestMatchers("/update*").hasRole("admin")
 					.anyRequest().permitAll())
 				.csrf(csrf -> csrf.disable())
 				.oauth2ResourceServer(oauth2 -> oauth2
