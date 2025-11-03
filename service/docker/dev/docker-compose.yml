@@ -1,4 +1,3 @@
-version: '3'
 services:
   auth-ct.vige.it:
     image: "vige/cities-generator-auth"
@@ -10,7 +9,6 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS}
       - DEBUG=true
-      - DEBUG_PORT=*:8787
       - DEBUG_SUSPEND=n
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
