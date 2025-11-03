@@ -19,8 +19,9 @@ VOLUME /opt/keycloak/data
 COPY /docker/dev/volume/import /opt/keycloak/data/import
 
 USER root
-RUN chmod -R u+w /opt/keycloak/data/import
+RUN chmod -R 777 /opt/keycloak/data/import
+COPY --chmod=755 docker/dev/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 USER 1000
 
-ENTRYPOINT []
-CMD ["/bin/sh", "-c", "sed -i \"s/REPLACER_CLIENT_ADDRESS/\"$REPLACER_CLIENT_ADDRESS\"/g\" /opt/keycloak/data/import/cities-realm.json && /opt/keycloak/bin/kc.sh start-dev --import-realm"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["start-dev", "--import-realm"]
