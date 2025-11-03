@@ -37,40 +37,40 @@ public class GenerateITTest {
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		nodes = citiesController.getResult("3069-3931-4393-4503,3069-3931-4393-4394", null);
+		nodes = citiesController.getResult("3-3174976-3169069-3175677,3-3174976-3169069-6543031", null);
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
-		assertEquals("3069-3931-4393-4503", firstNode.getId());
+		assertEquals("3-3174976-3169069-3175677", firstNode.getId());
 
-		nodes = citiesController.getResult("3069-3931-4393-4503,3069-3931-4393", "all");
+		nodes = citiesController.getResult("3-3174976-3169069-3175677,3-3174976-3169069", "all");
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
-		assertEquals("3069", firstNode.getId());
+		assertEquals("3", firstNode.getId());
 		Node secondNode = firstNode.getZones().get(0);
-		assertEquals("3069-3931", secondNode.getId());
+		assertEquals("3-3174976", secondNode.getId());
 		Node thirdNode = secondNode.getZones().get(0);
 		assertEquals(1, thirdNode.getZones().size());
-		assertEquals("3069-3931-4393", thirdNode.getId());
+		assertEquals("3-3174976-3169069", thirdNode.getId());
 		Node forthNode = thirdNode.getZones().get(0);
-		assertEquals("3069-3931-4393-4503", forthNode.getId());
+		assertEquals("3-3174976-3169069-3175677", forthNode.getId());
 
-		nodes = citiesController.getResult("3069-3931-4393-4503,3069-3931-4393-4397", "all");
+		nodes = citiesController.getResult("3-3174976-3169069-3175677,3-3174976-3169069-6536952", "all");
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
-		assertEquals("3069", firstNode.getId());
+		assertEquals("3", firstNode.getId());
 		secondNode = firstNode.getZones().get(0);
-		assertEquals("3069-3931", secondNode.getId());
+		assertEquals("3-3174976", secondNode.getId());
 		thirdNode = secondNode.getZones().get(0);
-		assertEquals("3069-3931-4393", thirdNode.getId());
+		assertEquals("3-3174976-3169069", thirdNode.getId());
 		assertEquals(2, thirdNode.getZones().size());
 		forthNode = thirdNode.getZones().get(0);
-		assertEquals("3069-3931-4393-4503", forthNode.getId());
+		assertEquals("3-3174976-3169069-3175677", forthNode.getId());
 		Node fifthNode = thirdNode.getZones().get(1);
-		assertEquals("3069-3931-4393-4397", fifthNode.getId());
+		assertEquals("3-3174976-3169069-6536952", fifthNode.getId());
 	}
 
 }
