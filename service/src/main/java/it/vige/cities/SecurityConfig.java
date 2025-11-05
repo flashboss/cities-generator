@@ -1,14 +1,23 @@
 package it.vige.cities;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -35,13 +44,32 @@ public class SecurityConfig {
 
 	@Bean
 	public JwtAuthenticationConverter jwtAuthenticationConverter() {
-		JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-		grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-		grantedAuthoritiesConverter.setAuthoritiesClaimName("realm_access.roles");
-
 		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new RealmRolesConverter());
 		return jwtAuthenticationConverter;
+	}
+
+	private static class RealmRolesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+		@Override
+		public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
+			// Estrai realm_access dal JWT
+			Map<String, Object> realmAccess = jwt.getClaim("realm_access");
+			if (realmAccess == null) {
+				return Collections.emptyList();
+			}
+
+			// Estrai i ruoli da realm_access.roles
+			@SuppressWarnings("unchecked")
+			Collection<String> roles = (Collection<String>) realmAccess.get("roles");
+			if (roles == null || roles.isEmpty()) {
+				return Collections.emptyList();
+			}
+
+			// Converti i ruoli in GrantedAuthority con prefisso ROLE_
+			return roles.stream()
+					.map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+					.collect(Collectors.toList());
+		}
 	}
 
 	@Bean
