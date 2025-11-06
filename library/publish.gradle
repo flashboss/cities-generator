@@ -52,46 +52,29 @@ signing {
 
 // Task to generate checksums for artifacts
 task generateChecksums {
-    dependsOn 'jar', 'javadocJar', 'sourcesJar', 'generatePomFileForMavenJavaPublication'
+    dependsOn 'jar', 'javadocJar', 'sourcesJar', 'signMavenJavaPublication', 'generatePomFileForMavenJavaPublication'
     
     def artifactBaseName = 'cities-generator'
     def artifactVersion = version
     def libsDirPath = "${buildDir}/libs"
-    def pomFilePath = "${buildDir}/publications/mavenJava/pom-default.xml"
+    def publicationsDirPath = "${buildDir}/publications/mavenJava"
+    def pomFilePath = "${publicationsDirPath}/pom-default.xml"
+    def moduleFilePath = "${publicationsDirPath}/module.json"
     
     doLast {
         def libsDir = new File(libsDirPath)
-        // Maven Central requires MD5 and SHA-1 checksums
-        def algorithms = ['SHA-1', 'MD5']
+        def publicationsDir = new File(publicationsDirPath)
+        // Generate MD5, SHA-1, SHA-256, and SHA-512 checksums
+        def algorithms = ['MD5', 'SHA-1', 'SHA-256', 'SHA-512']
         
-        // Generate checksums for JARs
-        [".jar", "-sources.jar", "-javadoc.jar"].each { suffix ->
-            def jarFile = new File(libsDir, "${artifactBaseName}-${artifactVersion}${suffix}")
-            if (jarFile.exists()) {
-                algorithms.each { algorithm ->
-                    def digest = java.security.MessageDigest.getInstance(algorithm)
-                    jarFile.withInputStream { input ->
-                        def buffer = new byte[4096]
-                        int bytesRead
-                        while ((bytesRead = input.read(buffer)) != -1) {
-                            digest.update(buffer, 0, bytesRead)
-                        }
-                    }
-                    def hashBytes = digest.digest()
-                    def hash = hashBytes.collect { String.format("%02x", it) }.join('')
-                    
-                    def checksumFile = new File(jarFile.parent, "${jarFile.name}.${algorithm.toLowerCase().replace('-', '')}")
-                    checksumFile.text = hash
-                }
+        // Helper closure to generate checksums for a file
+        def generateChecksumsForFile = { File file ->
+            if (!file.exists()) {
+                return
             }
-        }
-        
-        // Generate checksums for POM
-        def pomFile = new File(pomFilePath)
-        if (pomFile.exists()) {
             algorithms.each { algorithm ->
                 def digest = java.security.MessageDigest.getInstance(algorithm)
-                pomFile.withInputStream { input ->
+                file.withInputStream { input ->
                     def buffer = new byte[4096]
                     int bytesRead
                     while ((bytesRead = input.read(buffer)) != -1) {
@@ -101,10 +84,32 @@ task generateChecksums {
                 def hashBytes = digest.digest()
                 def hash = hashBytes.collect { String.format("%02x", it) }.join('')
                 
-                def checksumFile = new File(pomFile.parent, "${pomFile.name}.${algorithm.toLowerCase().replace('-', '')}")
+                def checksumFile = new File(file.parent, "${file.name}.${algorithm.toLowerCase().replace('-', '')}")
                 checksumFile.text = hash
             }
         }
+        
+        // Generate checksums for JARs and their .asc files
+        [".jar", "-sources.jar", "-javadoc.jar"].each { suffix ->
+            def jarFile = new File(libsDir, "${artifactBaseName}-${artifactVersion}${suffix}")
+            generateChecksumsForFile(jarFile)
+            
+            // Generate checksums for .asc files
+            def ascFile = new File(libsDir, "${artifactBaseName}-${artifactVersion}${suffix}.asc")
+            generateChecksumsForFile(ascFile)
+        }
+        
+        // Generate checksums for POM and its .asc file
+        def pomFile = new File(pomFilePath)
+        generateChecksumsForFile(pomFile)
+        def pomAscFile = new File(pomFilePath + ".asc")
+        generateChecksumsForFile(pomAscFile)
+        
+        // Generate checksums for module.json and its .asc file
+        def moduleFile = new File(moduleFilePath)
+        generateChecksumsForFile(moduleFile)
+        def moduleAscFile = new File(moduleFilePath + ".asc")
+        generateChecksumsForFile(moduleAscFile)
     }
 }
 
@@ -125,16 +130,34 @@ task createPublishBundle(type: Zip) {
     from("${buildDir}/libs") {
         include "${artifactBaseName}-${artifactVersion}.jar"
         include "${artifactBaseName}-${artifactVersion}.jar.asc"
-        include "${artifactBaseName}-${artifactVersion}.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}.jar.md5"
+        include "${artifactBaseName}-${artifactVersion}.jar.sha1"
+        include "${artifactBaseName}-${artifactVersion}.jar.sha256"
+        include "${artifactBaseName}-${artifactVersion}.jar.sha512"
+        include "${artifactBaseName}-${artifactVersion}.jar.asc.md5"
+        include "${artifactBaseName}-${artifactVersion}.jar.asc.sha1"
+        include "${artifactBaseName}-${artifactVersion}.jar.asc.sha256"
+        include "${artifactBaseName}-${artifactVersion}.jar.asc.sha512"
         include "${artifactBaseName}-${artifactVersion}-sources.jar"
         include "${artifactBaseName}-${artifactVersion}-sources.jar.asc"
-        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}-sources.jar.md5"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha1"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha256"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha512"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.asc.md5"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.asc.sha1"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.asc.sha256"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.asc.sha512"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc"
-        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.md5"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha1"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha256"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha512"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc.md5"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc.sha1"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc.sha256"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc.sha512"
         into mavenPath
     }
     
@@ -142,12 +165,49 @@ task createPublishBundle(type: Zip) {
     from("${buildDir}/publications/mavenJava") {
         include "pom-default.xml"
         include "pom-default.xml.asc"
-        include "pom-default.xml.sha1"
         include "pom-default.xml.md5"
+        include "pom-default.xml.sha1"
+        include "pom-default.xml.sha256"
+        include "pom-default.xml.sha512"
+        include "pom-default.xml.asc.md5"
+        include "pom-default.xml.asc.sha1"
+        include "pom-default.xml.asc.sha256"
+        include "pom-default.xml.asc.sha512"
         rename "pom-default.xml", "${artifactBaseName}-${artifactVersion}.pom"
         rename "pom-default.xml.asc", "${artifactBaseName}-${artifactVersion}.pom.asc"
-        rename "pom-default.xml.sha1", "${artifactBaseName}-${artifactVersion}.pom.sha1"
         rename "pom-default.xml.md5", "${artifactBaseName}-${artifactVersion}.pom.md5"
+        rename "pom-default.xml.sha1", "${artifactBaseName}-${artifactVersion}.pom.sha1"
+        rename "pom-default.xml.sha256", "${artifactBaseName}-${artifactVersion}.pom.sha256"
+        rename "pom-default.xml.sha512", "${artifactBaseName}-${artifactVersion}.pom.sha512"
+        rename "pom-default.xml.asc.md5", "${artifactBaseName}-${artifactVersion}.pom.asc.md5"
+        rename "pom-default.xml.asc.sha1", "${artifactBaseName}-${artifactVersion}.pom.asc.sha1"
+        rename "pom-default.xml.asc.sha256", "${artifactBaseName}-${artifactVersion}.pom.asc.sha256"
+        rename "pom-default.xml.asc.sha512", "${artifactBaseName}-${artifactVersion}.pom.asc.sha512"
+        into mavenPath
+    }
+    
+    // Include module.json (renamed to .module), signature and checksums from build/publications/mavenJava
+    from("${buildDir}/publications/mavenJava") {
+        include "module.json"
+        include "module.json.asc"
+        include "module.json.md5"
+        include "module.json.sha1"
+        include "module.json.sha256"
+        include "module.json.sha512"
+        include "module.json.asc.md5"
+        include "module.json.asc.sha1"
+        include "module.json.asc.sha256"
+        include "module.json.asc.sha512"
+        rename "module.json", "${artifactBaseName}-${artifactVersion}.module"
+        rename "module.json.asc", "${artifactBaseName}-${artifactVersion}.module.asc"
+        rename "module.json.md5", "${artifactBaseName}-${artifactVersion}.module.md5"
+        rename "module.json.sha1", "${artifactBaseName}-${artifactVersion}.module.sha1"
+        rename "module.json.sha256", "${artifactBaseName}-${artifactVersion}.module.sha256"
+        rename "module.json.sha512", "${artifactBaseName}-${artifactVersion}.module.sha512"
+        rename "module.json.asc.md5", "${artifactBaseName}-${artifactVersion}.module.asc.md5"
+        rename "module.json.asc.sha1", "${artifactBaseName}-${artifactVersion}.module.asc.sha1"
+        rename "module.json.asc.sha256", "${artifactBaseName}-${artifactVersion}.module.asc.sha256"
+        rename "module.json.asc.sha512", "${artifactBaseName}-${artifactVersion}.module.asc.sha512"
         into mavenPath
     }
     
@@ -156,10 +216,11 @@ task createPublishBundle(type: Zip) {
         println "\n✅ Bundle created: ${bundleFile}"
         println "📦 Size: ${bundleFile.length() / 1024} KB"
         println "📦 Files included:"
-        println "   - cities-generator-${artifactVersion}.jar + .asc + .sha1 + .md5"
-        println "   - cities-generator-${artifactVersion}-sources.jar + .asc + .sha1 + .md5"
-        println "   - cities-generator-${artifactVersion}-javadoc.jar + .asc + .sha1 + .md5"
-        println "   - cities-generator-${artifactVersion}.pom + .asc + .sha1 + .md5"
+        println "   - cities-generator-${artifactVersion}.jar + .asc + .md5 + .sha1 + .sha256 + .sha512 (+ .asc.md5/.sha1/.sha256/.sha512)"
+        println "   - cities-generator-${artifactVersion}-sources.jar + .asc + .md5 + .sha1 + .sha256 + .sha512 (+ .asc.md5/.sha1/.sha256/.sha512)"
+        println "   - cities-generator-${artifactVersion}-javadoc.jar + .asc + .md5 + .sha1 + .sha256 + .sha512 (+ .asc.md5/.sha1/.sha256/.sha512)"
+        println "   - cities-generator-${artifactVersion}.pom + .asc + .md5 + .sha1 + .sha256 + .sha512 (+ .asc.md5/.sha1/.sha256/.sha512)"
+        println "   - cities-generator-${artifactVersion}.module + .asc + .md5 + .sha1 + .sha256 + .sha512 (+ .asc.md5/.sha1/.sha256/.sha512)"
     }
 }
 
