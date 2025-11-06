@@ -114,13 +114,14 @@ task createPublishBundle(type: Zip) {
     
     def artifactBaseName = 'cities-generator'
     def artifactVersion = version
+    def mavenPath = "${project.group.toString().replace('.', '/')}/${artifactBaseName}/${artifactVersion}"
     
     archiveBaseName = "${artifactBaseName}-bundle"
     archiveVersion = "${artifactVersion}"
     archiveExtension = 'zip'
     destinationDirectory = file("${buildDir}/distributions")
     
-    // Include JAR, signatures and checksums from build/libs
+    // Include JAR, signatures and checksums from build/libs into Maven directory structure
     from("${buildDir}/libs") {
         include "${artifactBaseName}-${artifactVersion}.jar"
         include "${artifactBaseName}-${artifactVersion}.jar.asc"
@@ -134,9 +135,10 @@ task createPublishBundle(type: Zip) {
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.md5"
+        into mavenPath
     }
     
-    // Include POM, signature and checksums from build/publications/mavenJava with rename
+    // Include POM, signature and checksums from build/publications/mavenJava with rename into Maven directory structure
     from("${buildDir}/publications/mavenJava") {
         include "pom-default.xml"
         include "pom-default.xml.asc"
@@ -146,6 +148,7 @@ task createPublishBundle(type: Zip) {
         rename "pom-default.xml.asc", "${artifactBaseName}-${artifactVersion}.pom.asc"
         rename "pom-default.xml.sha1", "${artifactBaseName}-${artifactVersion}.pom.sha1"
         rename "pom-default.xml.md5", "${artifactBaseName}-${artifactVersion}.pom.md5"
+        into mavenPath
     }
     
     doLast {
