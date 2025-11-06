@@ -7,6 +7,7 @@ buildscript {
         commonsLangVersion = '3.19.0'
         resteasyVersion = '7.0.0.Final'
         junitVersion = '6.0.0'
+        javaVersion = JavaVersion.VERSION_25
     }
     repositories {
         mavenCentral()
@@ -50,8 +51,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
     withJavadocJar()
     withSourcesJar()
 }
@@ -87,8 +88,8 @@ publishing {
                 description = 'Generate a file with the cities of your country'
                 url = 'http://cities-generator.vige.it'
                 properties = [
-                    'maven.compiler.source': '25',
-                    'maven.compiler.target': '25'
+                    'maven.compiler.source': "${javaVersion.majorVersion}",
+                    'maven.compiler.target': "${javaVersion.majorVersion}"
                 ]
                 licenses {
                     license {
@@ -115,22 +116,58 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = 'luca.stancapiano'
-                password = System.properties['mavenPassword']
-            }
-        }
-    }
 }
 
 signing {
     useGpgCmd()
     sign publishing.publications.mavenJava
+}
+
+// Task to create ZIP bundle for manual publication on Central Publishing
+task createPublishBundle(type: Zip) {
+    dependsOn 'jar', 'javadocJar', 'sourcesJar', 'signMavenJavaPublication', 'generatePomFileForMavenJavaPublication'
+    
+    def artifactBaseName = 'cities-generator'
+    def artifactVersion = version
+    
+    archiveBaseName = "${artifactBaseName}-bundle"
+    archiveVersion = "${artifactVersion}"
+    archiveExtension = 'zip'
+    destinationDirectory = file("${buildDir}/distributions")
+    
+    // Include JAR and signatures from build/libs
+    from("${buildDir}/libs") {
+        include "${artifactBaseName}-${artifactVersion}.jar"
+        include "${artifactBaseName}-${artifactVersion}.jar.asc"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.asc"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc"
+    }
+    
+    // Include POM and signature from build/publications/mavenJava with rename
+    from("${buildDir}/publications/mavenJava") {
+        include "pom-default.xml"
+        include "pom-default.xml.asc"
+        rename "pom-default.xml", "${artifactBaseName}-${artifactVersion}.pom"
+        rename "pom-default.xml.asc", "${artifactBaseName}-${artifactVersion}.pom.asc"
+    }
+    
+    doLast {
+        def bundleFile = archiveFile.get().asFile
+        println "\n✅ Bundle created: ${bundleFile}"
+        println "📦 Size: ${bundleFile.length() / 1024} KB"
+        println "📦 Files included:"
+        println "   - cities-generator-${artifactVersion}.jar + .asc"
+        println "   - cities-generator-${artifactVersion}-sources.jar + .asc"
+        println "   - cities-generator-${artifactVersion}-javadoc.jar + .asc"
+        println "   - cities-generator-${artifactVersion}.pom + .asc"
+    }
+}
+
+// Execute createPublishBundle after publishToMavenLocal
+tasks.named('publishToMavenLocal') {
+    finalizedBy 'createPublishBundle'
 }
 
 javadoc {
