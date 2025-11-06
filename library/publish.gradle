@@ -61,7 +61,8 @@ task generateChecksums {
     
     doLast {
         def libsDir = new File(libsDirPath)
-        def algorithms = ['SHA-256', 'SHA-512', 'MD5']
+        // Maven Central requires MD5 and SHA-1 checksums
+        def algorithms = ['SHA-1', 'MD5']
         
         // Generate checksums for JARs
         [".jar", "-sources.jar", "-javadoc.jar"].each { suffix ->
@@ -123,18 +124,15 @@ task createPublishBundle(type: Zip) {
     from("${buildDir}/libs") {
         include "${artifactBaseName}-${artifactVersion}.jar"
         include "${artifactBaseName}-${artifactVersion}.jar.asc"
-        include "${artifactBaseName}-${artifactVersion}.jar.sha256"
-        include "${artifactBaseName}-${artifactVersion}.jar.sha512"
+        include "${artifactBaseName}-${artifactVersion}.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}.jar.md5"
         include "${artifactBaseName}-${artifactVersion}-sources.jar"
         include "${artifactBaseName}-${artifactVersion}-sources.jar.asc"
-        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha256"
-        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha512"
+        include "${artifactBaseName}-${artifactVersion}-sources.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}-sources.jar.md5"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.asc"
-        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha256"
-        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha512"
+        include "${artifactBaseName}-${artifactVersion}-javadoc.jar.sha1"
         include "${artifactBaseName}-${artifactVersion}-javadoc.jar.md5"
     }
     
@@ -142,13 +140,11 @@ task createPublishBundle(type: Zip) {
     from("${buildDir}/publications/mavenJava") {
         include "pom-default.xml"
         include "pom-default.xml.asc"
-        include "pom-default.xml.sha256"
-        include "pom-default.xml.sha512"
+        include "pom-default.xml.sha1"
         include "pom-default.xml.md5"
         rename "pom-default.xml", "${artifactBaseName}-${artifactVersion}.pom"
         rename "pom-default.xml.asc", "${artifactBaseName}-${artifactVersion}.pom.asc"
-        rename "pom-default.xml.sha256", "${artifactBaseName}-${artifactVersion}.pom.sha256"
-        rename "pom-default.xml.sha512", "${artifactBaseName}-${artifactVersion}.pom.sha512"
+        rename "pom-default.xml.sha1", "${artifactBaseName}-${artifactVersion}.pom.sha1"
         rename "pom-default.xml.md5", "${artifactBaseName}-${artifactVersion}.pom.md5"
     }
     
@@ -157,10 +153,10 @@ task createPublishBundle(type: Zip) {
         println "\n✅ Bundle created: ${bundleFile}"
         println "📦 Size: ${bundleFile.length() / 1024} KB"
         println "📦 Files included:"
-        println "   - cities-generator-${artifactVersion}.jar + .asc + .sha256 + .sha512 + .md5"
-        println "   - cities-generator-${artifactVersion}-sources.jar + .asc + .sha256 + .sha512 + .md5"
-        println "   - cities-generator-${artifactVersion}-javadoc.jar + .asc + .sha256 + .sha512 + .md5"
-        println "   - cities-generator-${artifactVersion}.pom + .asc + .sha256 + .sha512 + .md5"
+        println "   - cities-generator-${artifactVersion}.jar + .asc + .sha1 + .md5"
+        println "   - cities-generator-${artifactVersion}-sources.jar + .asc + .sha1 + .md5"
+        println "   - cities-generator-${artifactVersion}-javadoc.jar + .asc + .sha1 + .md5"
+        println "   - cities-generator-${artifactVersion}.pom + .asc + .sha1 + .md5"
     }
 }
 
