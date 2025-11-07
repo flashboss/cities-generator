@@ -21,6 +21,8 @@
 	"users": [
 		{
 			"username": "root",
+			"firstName": "Rooter",
+			"lastName": "The Man",
 			"enabled": true,
 			"email": "cities@vige.it",
 			"credentials": [
