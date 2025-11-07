@@ -21,8 +21,8 @@ COPY /docker/prod/volume/import /opt/keycloak/data/import
 
 USER root
 RUN chmod -R 777 /opt/keycloak/data/import
-COPY --chmod=755 docker/prod/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --chmod=755 docker/prod/docker-entrypoint-auth.sh /usr/local/bin/docker-entrypoint-auth.sh
 USER 1000
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-auth.sh"]
 CMD start --hostname=${HOST_NAME} --https-key-store-file=/opt/keycloak/data/cert/application.keystore --https-key-store-password=${PASSWORD_STORE} --import-realm

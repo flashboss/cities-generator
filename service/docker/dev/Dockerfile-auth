@@ -20,8 +20,8 @@ COPY /docker/dev/volume/import /opt/keycloak/data/import
 
 USER root
 RUN chmod -R 777 /opt/keycloak/data/import
-COPY --chmod=755 docker/dev/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --chmod=755 docker/dev/docker-entrypoint-auth.sh /usr/local/bin/docker-entrypoint-auth.sh
 USER 1000
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-auth.sh"]
 CMD ["start-dev", "--import-realm"]

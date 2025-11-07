@@ -15,25 +15,22 @@ EXPOSE 8080 8000
 
 USER root
 
-ENV TERM xterm
-ENV REALM cities
-ENV AUTHURL http://auth-ct.vige.it:8080
-ENV RESOURCE citiesGenerator
-ENV COUNTRY it
-ENV DUPLICATEDNAMES false
-ENV CASESENSITIVE false
+ENV TERM=xterm
+ENV REALM=cities
+ENV AUTHURL=http://auth-ct.vige.it:8080
+ENV RESOURCE=citiesGenerator
+ENV COUNTRY=it
+ENV DUPLICATEDNAMES=false
+ENV CASESENSITIVE=false
 
 WORKDIR /workspace
 COPY / /workspace/cgservice
 COPY /docker/dev/volume/cities-generator /root/cities-generator
+COPY --chmod=755 docker/dev/docker-entrypoint-ct.sh /usr/local/bin/docker-entrypoint-ct.sh
 RUN cd cgservice && ./gradlew build -x test && \
     rm -Rf /root/.gradle && \
 	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	rm -Rf /workspace/cgservice
 
-CMD FIELDS="-Xrunjdwp:transport=dt_socket,address=0.0.0.0:8000,server=y,suspend=n -Dkeycloak.realm="$REALM" -Dkeycloak.auth-server-url="$AUTHURL" -Dkeycloak.resource="$RESOURCE" -Dcountry="$COUNTRY" -DduplicatedNames="$DUPLICATEDNAMES  && \
-	if [ "$PROVIDER" ] ; then FIELDS=$FIELDS" -Dprovider="$PROVIDER; fi && \
-    if [ "$USERNAME" ] ; then FIELDS=$FIELDS" -Dusername="$USERNAME; fi && \
-    java $FIELDS -jar /workspace/cgservice.jar --server.port=8080 && \
-	tail -f /dev/null
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-ct.sh"]
