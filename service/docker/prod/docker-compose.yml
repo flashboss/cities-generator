@@ -1,4 +1,3 @@
-version: '3'
 services:
   auth-ct.vige.it:
     image: "vige/cities-generator-auth"
