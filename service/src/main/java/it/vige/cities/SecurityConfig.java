@@ -24,8 +24,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
-	private String jwkSetUri;
+	@Value("${keycloak.auth-server-url}")
+	private String authServerUrl;
+
+	@Value("${keycloak.realm}")
+	private String realm;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -74,6 +77,8 @@ public class SecurityConfig {
 
 	@Bean
 	JwtDecoder jwtDecoder() {
-		return NimbusJwtDecoder.withJwkSetUri(this.jwkSetUri).build();
+		// Costruisci jwk-set-uri dinamicamente da auth-server-url e realm
+		String jwkSetUri = authServerUrl.replaceAll("/$", "") + "/realms/" + realm + "/protocol/openid-connect/certs";
+		return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
 	}
 }
