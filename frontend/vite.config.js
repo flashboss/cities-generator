@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
 
@@ -9,6 +9,40 @@ const citiesGeneratorPlugin = () => {
   return {
     name: 'cities-generator-local',
     configureServer(server) {
+      // Serve list of available countries
+      server.middlewares.use('/cities-generator/countries.json', (req, res, next) => {
+        try {
+          const homeDir = os.homedir();
+          const citiesDir = join(homeDir, 'cities-generator');
+          
+          const files = readdirSync(citiesDir).filter((file) => 
+            file.endsWith('.json') && statSync(join(citiesDir, file)).isFile()
+          );
+
+          const countries = files.map((file) => {
+            const code = file.replace('.json', '').toLowerCase();
+            // Try to read the file to get country name from first zone
+            try {
+              const content = readFileSync(join(citiesDir, file), 'utf-8');
+              const data = JSON.parse(content);
+              // Extract country name from zones if available
+              const name = data.zones?.[0]?.name || code.toUpperCase();
+              return { code, name, file };
+            } catch {
+              return { code, name: code.toUpperCase(), file };
+            }
+          });
+
+          res.setHeader('Content-Type', 'application/json');
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.end(JSON.stringify(countries));
+        } catch (err) {
+          res.statusCode = 404;
+          res.end(JSON.stringify([]));
+        }
+      });
+
+      // Serve individual country JSON files
       server.middlewares.use('/cities-generator', (req, res, next) => {
         // Only serve from local filesystem in development
         // In production, files should be in public folder or served via dataUrl

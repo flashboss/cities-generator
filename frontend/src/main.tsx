@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CitiesDropdown } from './CitiesDropdown';
+import { DropdownConfigComponent } from './DropdownConfig';
+import { DropdownConfig, CountryInfo } from './types';
 import './index.css';
 
 // Standalone demo app
 const App: React.FC = () => {
+  const [config, setConfig] = useState<DropdownConfig>({
+    dataSource: 'local',
+    localPath: '$HOME/cities-generator',
+    startFromCountry: false,
+  });
+
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+
   const handleSelect = (node: any) => {
     if (node) {
       console.log('Selected:', node);
@@ -12,19 +22,75 @@ const App: React.FC = () => {
     }
   };
 
-  return (
-    <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1>Cities Generator - Dropdown Menu</h1>
-      <p>Select a location from the hierarchical menu:</p>
+  const loadCountries = async (): Promise<CountryInfo[]> => {
+    try {
+      let url = '/cities-generator/countries.json';
       
-      <div style={{ marginBottom: '20px' }}>
+      if (config.dataSource === 'remote' && config.remoteUrl) {
+        const baseUrl = config.remoteUrl.replace(/\/$/, '');
+        url = `${baseUrl}/countries.json`;
+      }
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+
+      if (config.dataSource === 'remote' && config.username && config.password) {
+        const credentials = btoa(`${config.username}:${config.password}`);
+        headers['Authorization'] = `Basic ${credentials}`;
+      }
+
+      const response = await fetch(url, { headers });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to load countries: ${response.statusText}`);
+      }
+
+      const countries: CountryInfo[] = await response.json();
+      return countries;
+    } catch (err) {
+      console.error('Error loading countries:', err);
+      // Fallback: try to detect from common country codes
+      return [
+        { code: 'it', name: 'Italy', file: 'it.json' },
+        { code: 'uk', name: 'United Kingdom', file: 'uk.json' },
+      ];
+    }
+  };
+
+  const buildDataUrl = (): string | undefined => {
+    if (config.dataSource === 'remote' && config.remoteUrl && selectedCountry) {
+      const baseUrl = config.remoteUrl.replace(/\/$/, '');
+      return `${baseUrl}/${selectedCountry}.json`;
+    }
+    return undefined; // Use default local path
+  };
+
+  return (
+    <div style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
+      <h1>Cities Generator - Dropdown Menu</h1>
+      
+      <DropdownConfigComponent
+        config={config}
+        onConfigChange={setConfig}
+        onLoadCountries={loadCountries}
+      />
+
+      <div style={{ marginTop: '30px', marginBottom: '20px' }}>
         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
           Location:
         </label>
         <CitiesDropdown
-          country="it"
-          placeholder="Select a location..."
+          country={selectedCountry || 'it'}
+          dataUrl={buildDataUrl()}
+          placeholder={config.startFromCountry ? "Select a country first..." : "Select a location..."}
           onSelect={handleSelect}
+          config={config}
+          onCountrySelect={(code) => {
+            setSelectedCountry(code);
+            console.log('Country selected:', code);
+          }}
+          onLoadCountries={loadCountries}
         />
       </div>
 
@@ -70,4 +136,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>
 );
-

@@ -1,0 +1,114 @@
+.dropdown-config {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+.dropdown-config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.dropdown-config-header h3 {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+.dropdown-config-toggle {
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.dropdown-config-toggle:hover {
+  background: #0052a3;
+}
+
+.dropdown-config-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dropdown-config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dropdown-config-section label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.dropdown-config-subsection {
+  margin-left: 24px;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dropdown-config-subsection label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-weight: normal;
+}
+
+.dropdown-config-subsection input[type="text"],
+.dropdown-config-subsection input[type="password"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.dropdown-config-subsection small {
+  color: #666;
+  font-size: 0.85em;
+}
+
+.dropdown-config-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dropdown-config-countries {
+  margin-left: 24px;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.dropdown-config-countries-list ul {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+}
+
+.dropdown-config-countries-list li {
+  margin: 5px 0;
+}
+
+.dropdown-config-loading,
+.dropdown-config-no-countries {
+  padding: 10px;
+  color: #666;
+  font-style: italic;
+}
+
