@@ -112,7 +112,7 @@ public class ExtraGeoNames extends GeoNames {
 		south.setId("" + counter++);
 		south.setLevel(0);
 		setName(caseSensitive, true, "IV: ITALIA MERIDIONALE", null, south);
-		nodes.getZones().add(centre);
+		nodes.getZones().add(south);
 		Node islands = new Node();
 		islands.setId("" + counter++);
 		islands.setLevel(0);
