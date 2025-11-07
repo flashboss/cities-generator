@@ -8,6 +8,7 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS}
       - HOST_NAME=${HOST_NAME}
+      - PASSWORD_STORE=${PASSWORD_STORE:-password}
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:

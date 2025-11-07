@@ -150,11 +150,12 @@ Over the country, optionally as for the library you can add the following param:
 
 This image starts without SSO server, so it is not complete. For a sample complete environment you can start the command from the docker/prod folder of the project:
 ```
-COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} HOST_NAME=${HOST_NAME} AUTHURL=${AUTHURL} docker compose up
+COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} HOST_NAME=${HOST_NAME} AUTHURL=${AUTHURL} PASSWORD_STORE=${PASSWORD_STORE} docker compose up
 ```
 Where ${COUNTRY} is the choosen language, it or en. While ${HOST_NAME} is the external keycloak url, for example auth-ct.vige.it .
 ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8743
 ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8443
+${PASSWORD_STORE} is the password for the SSL/TLS keystore files. Default: `password`.
 It will allow to download a keycloak instance where the server can be connected. 
 After you can connect to keycloak through the url https://auth-ct.vige.it:8443
 
