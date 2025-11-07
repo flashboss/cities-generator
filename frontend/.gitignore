@@ -1,12 +1,3 @@
-bin
-build
-.project
-.classpath
-.settings
-.gradle
-.DS_Store
-.vscode
-
 # Logs
 logs
 *.log

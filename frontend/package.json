@@ -1,0 +1,26 @@
+{
+  "name": "cities-generator-frontend",
+  "version": "1.0.0",
+  "description": "Portable hierarchical dropdown menu for cities-generator JSON data",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --mode standalone && vite build --mode webcomponent",
+    "build:umd": "vite build",
+    "build:standalone": "vite build --mode standalone",
+    "build:webcomponent": "vite build --mode webcomponent",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  }
+}
+
