@@ -6,6 +6,7 @@ build
 .gradle
 .DS_Store
 .vscode
+.vite
 
 # Logs
 logs
