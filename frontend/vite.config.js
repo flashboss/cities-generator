@@ -4,6 +4,20 @@ import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
 
+// Helper function to get country name from code using i18n
+const getCountryName = (code) => {
+  try {
+    // Use Intl.DisplayNames for proper country names
+    const displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
+    // Convert country code to ISO 3166-1 alpha-2 (e.g., 'it' -> 'IT', 'uk' -> 'GB')
+    const isoCode = code.toUpperCase() === 'UK' ? 'GB' : code.toUpperCase();
+    return displayNames.of(isoCode) || code.toUpperCase();
+  } catch {
+    // Fallback to uppercase code if Intl is not available
+    return code.toUpperCase();
+  }
+};
+
 // Plugin to serve JSON files from $HOME/cities-generator in development
 const citiesGeneratorPlugin = () => {
   return {
@@ -21,16 +35,8 @@ const citiesGeneratorPlugin = () => {
 
           const countries = files.map((file) => {
             const code = file.replace('.json', '').toLowerCase();
-            // Try to read the file to get country name from first zone
-            try {
-              const content = readFileSync(join(citiesDir, file), 'utf-8');
-              const data = JSON.parse(content);
-              // Extract country name from zones if available
-              const name = data.zones?.[0]?.name || code.toUpperCase();
-              return { code, name, file };
-            } catch {
-              return { code, name: code.toUpperCase(), file };
-            }
+            const name = getCountryName(code);
+            return { code, name, file };
           });
 
           res.setHeader('Content-Type', 'application/json');
