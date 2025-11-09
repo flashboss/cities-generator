@@ -18,6 +18,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [loadingCountries, setLoadingCountries] = useState(false);
   const [countries, setCountries] = useState<CountryInfo[]>(availableCountries);
+  const [countriesError, setCountriesError] = useState<string | null>(null);
 
   useEffect(() => {
     if (config.startFromCountry && onLoadCountries) {
@@ -28,10 +29,14 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   const loadCountries = async () => {
     if (!onLoadCountries) return;
     setLoadingCountries(true);
+    setCountriesError(null);
     try {
       const loadedCountries = await onLoadCountries();
       setCountries(loadedCountries);
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load countries';
+      setCountriesError(errorMessage);
+      setCountries([]);
       console.error('Error loading countries:', err);
     } finally {
       setLoadingCountries(false);
@@ -149,6 +154,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               <div className="dropdown-config-countries">
                 {loadingCountries ? (
                   <div className="dropdown-config-loading">Loading countries...</div>
+                ) : countriesError ? (
+                  <div className="dropdown-config-error" style={{ color: 'red', padding: '10px' }}>
+                    Error: {countriesError}
+                  </div>
                 ) : countries.length > 0 ? (
                   <div className="dropdown-config-countries-list">
                     <strong>Available countries:</strong>

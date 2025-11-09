@@ -44,7 +44,8 @@ const citiesGeneratorPlugin = () => {
           res.end(JSON.stringify(countries));
         } catch (err) {
           res.statusCode = 404;
-          res.end(JSON.stringify([]));
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Failed to load countries list', message: err.message }));
         }
       });
 

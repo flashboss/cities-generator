@@ -46,15 +46,24 @@ const App: React.FC = () => {
         throw new Error(`Failed to load countries: ${response.statusText}`);
       }
 
-      const countries: CountryInfo[] = await response.json();
+      const data = await response.json();
+      
+      // Check if the response contains an error object
+      if (data && typeof data === 'object' && 'error' in data) {
+        const errorMessage = data.message || data.error || 'Failed to load countries';
+        throw new Error(errorMessage);
+      }
+      
+      // Ensure it's an array
+      if (!Array.isArray(data)) {
+        throw new Error('Invalid response: expected an array of countries');
+      }
+      
+      const countries: CountryInfo[] = data;
       return countries;
     } catch (err) {
       console.error('Error loading countries:', err);
-      // Fallback: try to detect from common country codes
-      return [
-        { code: 'it', name: 'Italy', file: 'it.json' },
-        { code: 'uk', name: 'United Kingdom', file: 'uk.json' },
-      ];
+      throw err;
     }
   };
 

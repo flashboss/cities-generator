@@ -137,8 +137,20 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
         }
       }
 
-      const jsonData: Nodes = JSON.parse(text);
-      setNodes(jsonData);
+      const jsonData = JSON.parse(text);
+      
+      // Check if the response contains an error object
+      if (jsonData && typeof jsonData === 'object' && 'error' in jsonData) {
+        const errorMessage = jsonData.message || jsonData.error || 'Failed to load cities data';
+        throw new Error(errorMessage);
+      }
+      
+      // Validate it's a valid Nodes object
+      if (!jsonData || typeof jsonData !== 'object' || !('zones' in jsonData)) {
+        throw new Error('Invalid response: expected a valid cities data structure');
+      }
+      
+      setNodes(jsonData as Nodes);
       setShowCountrySelection(false);
       if (onCountrySelect) {
         onCountrySelect(countryCode);
