@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Node, Nodes, DropdownConfig, CountryInfo } from './types';
+import { Node, Nodes, DropdownConfig } from './types';
 import './CitiesDropdown.css';
 
 interface CitiesDropdownProps {
@@ -11,8 +11,6 @@ interface CitiesDropdownProps {
   className?: string;
   config?: DropdownConfig;
   onCountrySelect?: (countryCode: string) => void;
-  availableCountries?: CountryInfo[];
-  onLoadCountries?: () => Promise<CountryInfo[]>;
 }
 
 export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
@@ -24,31 +22,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   className = '',
   config,
   onCountrySelect,
-  availableCountries = [],
-  onLoadCountries,
 }) => {
   const [nodes, setNodes] = useState<Nodes | null>(data || null);
   const [selectedPath, setSelectedPath] = useState<Node[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(
-    config?.startFromCountry ? null : initialCountry
-  );
-  const [countries, setCountries] = useState<CountryInfo[]>(availableCountries);
-  const [showCountrySelection, setShowCountrySelection] = useState(
-    config?.startFromCountry || false
-  );
+  const [selectedCountry] = useState<string | null>(initialCountry);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (config?.startFromCountry && onLoadCountries) {
-      loadCountries();
-    } else if (config?.startFromCountry && availableCountries.length > 0) {
-      setCountries(availableCountries);
-      setShowCountrySelection(true);
-    }
-  }, [config?.startFromCountry, onLoadCountries, availableCountries]);
 
   useEffect(() => {
     if (data) {
@@ -56,44 +37,20 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       return;
     }
 
-    if (!showCountrySelection && selectedCountry) {
+    if (selectedCountry) {
       loadCountryData(selectedCountry);
     }
-  }, [data, selectedCountry, showCountrySelection]);
-
-  const loadCountries = async () => {
-    if (!onLoadCountries) return;
-    setLoading(true);
-    try {
-      const loadedCountries = await onLoadCountries();
-      setCountries(loadedCountries);
-      setShowCountrySelection(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load countries');
-      console.error('Error loading countries:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [data, selectedCountry]);
 
   const buildDataUrl = (countryCode: string): string => {
     if (dataUrl) {
       return dataUrl;
     }
 
-    if (config) {
-      if (config.dataSource === 'local') {
-        // For local, use the Vite middleware path
-        return `/cities-generator/${countryCode}.json`;
-      } else if (config.dataSource === 'remote' && config.remoteUrl) {
-        // For remote, construct URL
-        const baseUrl = config.remoteUrl.replace(/\/$/, '');
-        return `${baseUrl}/${countryCode}.json`;
-      }
-    }
-
-    // Default: use Vite middleware
-    return `/cities-generator/${countryCode}.json`;
+    // Default GitHub URL
+    const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
+    const baseUrl = (config?.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
+    return `${baseUrl}/${countryCode}.json`;
   };
 
   const loadCountryData = async (countryCode: string) => {
@@ -102,12 +59,10 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     const url = buildDataUrl(countryCode);
 
     try {
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
+      const headers: HeadersInit = {};
 
       // Add authentication if configured
-      if (config?.dataSource === 'remote' && config.username && config.password) {
+      if (config?.username && config?.password) {
         const credentials = btoa(`${config.username}:${config.password}`);
         headers['Authorization'] = `Basic ${credentials}`;
       }
@@ -117,24 +72,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('text/html')) {
-          const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          if (isLocalhost) {
-            throw new Error(`File not found at ${url}. Make sure the file exists in $HOME/cities-generator/${countryCode}.json`);
-          } else {
-            throw new Error(`File not found at ${url}. Please check the remote URL configuration.`);
-          }
+          throw new Error(`File not found at ${url}. Please check the remote URL configuration.`);
         }
         throw new Error(`Failed to load data: ${response.statusText}`);
       }
 
       const text = await response.text();
       if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<!doctype')) {
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        if (isLocalhost) {
-          throw new Error(`File not found at ${url}. Make sure the file exists in $HOME/cities-generator/${countryCode}.json`);
-        } else {
-          throw new Error(`File not found at ${url}. Please check the remote URL configuration.`);
-        }
+        throw new Error(`File not found at ${url}. Please check the remote URL configuration.`);
       }
 
       const jsonData = JSON.parse(text);
@@ -151,7 +96,6 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       }
       
       setNodes(jsonData as Nodes);
-      setShowCountrySelection(false);
       if (onCountrySelect) {
         onCountrySelect(countryCode);
       }
@@ -163,10 +107,6 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     }
   };
 
-  const handleCountryClick = (country: CountryInfo) => {
-    setSelectedCountry(country.code);
-    setSelectedPath([]);
-  };
 
   const handleNodeClick = (node: Node, level: number) => {
     const newPath = selectedPath.slice(0, level);
@@ -183,16 +123,6 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   };
 
   const getCurrentLevelNodes = (): Node[] => {
-    if (showCountrySelection) {
-      // Return countries as nodes for selection
-      return countries.map(country => ({
-        id: country.code,
-        name: `${country.code.toUpperCase()} - ${country.name}`,
-        level: 0,
-        zones: [],
-      }));
-    }
-
     if (!nodes) return [];
     if (selectedPath.length === 0) return nodes.zones;
 
@@ -201,21 +131,13 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   };
 
   const getDisplayText = (): string => {
-    if (showCountrySelection) {
-      return selectedCountry ? `${selectedCountry.toUpperCase()} - ${countries.find(c => c.code === selectedCountry)?.name || ''}` : 'Select country...';
-    }
     if (selectedPath.length === 0) return placeholder;
     return selectedPath.map(n => n.name).join(' > ');
   };
 
   const clearSelection = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (showCountrySelection) {
-      setSelectedCountry(null);
-      setNodes(null);
-    } else {
-      setSelectedPath([]);
-    }
+    setSelectedPath([]);
     if (onSelect) {
       onSelect(null as any);
     }
@@ -256,22 +178,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
       {isOpen && (
         <div className="cities-dropdown-menu" role="listbox">
-          {showCountrySelection && selectedCountry && (
-            <div className="cities-dropdown-breadcrumb">
-              <button
-                className="cities-dropdown-breadcrumb-item"
-                onClick={() => {
-                  setSelectedCountry(null);
-                  setNodes(null);
-                  setSelectedPath([]);
-                }}
-              >
-                ← Back to countries
-              </button>
-            </div>
-          )}
-
-          {!showCountrySelection && selectedPath.length > 0 && (
+          {selectedPath.length > 0 && (
             <div className="cities-dropdown-breadcrumb">
               {selectedPath.map((node, index) => (
                 <button
@@ -298,21 +205,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
                   key={node.id}
                   className={`cities-dropdown-item ${
                     node.zones && node.zones.length > 0 ? 'has-children' : 'leaf'
-                  } ${showCountrySelection ? 'country-item' : ''}`}
+                  }`}
                   role="option"
                   onClick={() => {
-                    if (showCountrySelection) {
-                      handleCountryClick(countries.find(c => c.code === node.id) || { code: node.id, name: node.name, file: `${node.id}.json` });
-                    } else {
-                      handleNodeClick(node, selectedPath.length);
-                    }
+                    handleNodeClick(node, selectedPath.length);
                   }}
                 >
                   <span className="cities-dropdown-item-name">{node.name}</span>
-                  {node.zones && node.zones.length > 0 && !showCountrySelection && (
-                    <span className="cities-dropdown-item-arrow">▶</span>
-                  )}
-                  {showCountrySelection && (
+                  {node.zones && node.zones.length > 0 && (
                     <span className="cities-dropdown-item-arrow">▶</span>
                   )}
                 </li>

@@ -10,12 +10,9 @@ export interface Nodes {
 }
 
 export interface DropdownConfig {
-  dataSource: 'local' | 'remote';
-  localPath?: string;
   remoteUrl?: string;
   username?: string;
   password?: string;
-  startFromCountry?: boolean;
 }
 
 export interface CountryInfo {

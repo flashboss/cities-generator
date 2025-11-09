@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CitiesDropdown } from './CitiesDropdown';
 import { DropdownConfigComponent } from './DropdownConfig';
-import { DropdownConfig, CountryInfo } from './types';
+import { DropdownConfig } from './types';
 import './index.css';
+
+// Default GitHub URL for cities data
+const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
 
 // Standalone demo app
 const App: React.FC = () => {
   const [config, setConfig] = useState<DropdownConfig>({
-    dataSource: 'local',
-    localPath: '$HOME/cities-generator',
-    startFromCountry: false,
+    remoteUrl: DEFAULT_GITHUB_URL,
   });
-
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   const handleSelect = (node: any) => {
     if (node) {
@@ -22,58 +21,6 @@ const App: React.FC = () => {
     }
   };
 
-  const loadCountries = async (): Promise<CountryInfo[]> => {
-    try {
-      let url = '/cities-generator/countries.json';
-      
-      if (config.dataSource === 'remote' && config.remoteUrl) {
-        const baseUrl = config.remoteUrl.replace(/\/$/, '');
-        url = `${baseUrl}/countries.json`;
-      }
-
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-
-      if (config.dataSource === 'remote' && config.username && config.password) {
-        const credentials = btoa(`${config.username}:${config.password}`);
-        headers['Authorization'] = `Basic ${credentials}`;
-      }
-
-      const response = await fetch(url, { headers });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to load countries: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      // Check if the response contains an error object
-      if (data && typeof data === 'object' && 'error' in data) {
-        const errorMessage = data.message || data.error || 'Failed to load countries';
-        throw new Error(errorMessage);
-      }
-      
-      // Ensure it's an array
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid response: expected an array of countries');
-      }
-      
-      const countries: CountryInfo[] = data;
-      return countries;
-    } catch (err) {
-      console.error('Error loading countries:', err);
-      throw err;
-    }
-  };
-
-  const buildDataUrl = (): string | undefined => {
-    if (config.dataSource === 'remote' && config.remoteUrl && selectedCountry) {
-      const baseUrl = config.remoteUrl.replace(/\/$/, '');
-      return `${baseUrl}/${selectedCountry}.json`;
-    }
-    return undefined; // Use default local path
-  };
 
   return (
     <div style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
@@ -82,7 +29,6 @@ const App: React.FC = () => {
       <DropdownConfigComponent
         config={config}
         onConfigChange={setConfig}
-        onLoadCountries={loadCountries}
       />
 
       <div style={{ marginTop: '30px', marginBottom: '20px' }}>
@@ -90,16 +36,10 @@ const App: React.FC = () => {
           Location:
         </label>
         <CitiesDropdown
-          country={selectedCountry || 'it'}
-          dataUrl={buildDataUrl()}
-          placeholder={config.startFromCountry ? "Select a country first..." : "Select a location..."}
+          country="it"
+          placeholder="Select a location..."
           onSelect={handleSelect}
           config={config}
-          onCountrySelect={(code) => {
-            setSelectedCountry(code);
-            console.log('Country selected:', code);
-          }}
-          onLoadCountries={loadCountries}
         />
       </div>
 
