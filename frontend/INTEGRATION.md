@@ -33,9 +33,23 @@ Works in **ANY** platform without framework dependencies.
 <script src="./dist/cities-generator.umd.js"></script>
 
 <!-- Use the component -->
+<!-- Using default URL (no data-url needed) -->
 <cities-dropdown 
   country="it" 
-  data-url="/path/to/it.json"
+  placeholder="Select location...">
+</cities-dropdown>
+
+<!-- Using custom base URL (automatically appends /it.json) -->
+<cities-dropdown 
+  country="it" 
+  data-url="https://example.com/cities"
+  placeholder="Select location...">
+</cities-dropdown>
+
+<!-- Using full URL to specific file -->
+<cities-dropdown 
+  country="it" 
+  data-url="https://example.com/custom/path/it.json"
   placeholder="Select location...">
 </cities-dropdown>
 
@@ -59,9 +73,30 @@ Use when you can't include React separately.
 <!-- Use via JavaScript API -->
 <div id="my-dropdown"></div>
 <script>
+  // Using default URL
   CitiesGenerator.render('#my-dropdown', {
     country: 'it',
-    dataUrl: '/path/to/it.json',
+    placeholder: 'Select location...',
+    onSelect: (node) => {
+      console.log('Selected:', node);
+    }
+  });
+  
+  // Using custom base URL (automatically appends /it.json)
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'it',
+    dataUrl: 'https://example.com/cities',
+    placeholder: 'Select location...',
+    onSelect: (node) => {
+      console.log('Selected:', node);
+    }
+  });
+  
+  // Using full URL to specific file
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'it',
+    dataUrl: 'https://example.com/custom/path/it.json',
+    placeholder: 'Select location...',
     onSelect: (node) => {
       console.log('Selected:', node);
     }
@@ -78,11 +113,30 @@ import { CitiesDropdown } from './CitiesDropdown';
 
 function MyComponent() {
   return (
-    <CitiesDropdown
-      country="it"
-      dataUrl="/path/to/it.json"
-      onSelect={(node) => console.log(node)}
-    />
+    <>
+      {/* Using default URL */}
+      <CitiesDropdown
+        country="it"
+        placeholder="Select location..."
+        onSelect={(node) => console.log(node)}
+      />
+      
+      {/* Using custom base URL (automatically appends /it.json) */}
+      <CitiesDropdown
+        country="it"
+        dataUrl="https://example.com/cities"
+        placeholder="Select location..."
+        onSelect={(node) => console.log(node)}
+      />
+      
+      {/* Using full URL to specific file */}
+      <CitiesDropdown
+        country="it"
+        dataUrl="https://example.com/custom/path/it.json"
+        placeholder="Select location..."
+        onSelect={(node) => console.log(node)}
+      />
+    </>
   );
 }
 ```
@@ -107,6 +161,16 @@ add_action('wp_enqueue_scripts', 'enqueue_cities_dropdown');
 
 **3. Use in template:**
 ```php
+<!-- Using default URL -->
+<cities-dropdown country="it"></cities-dropdown>
+
+<!-- Using custom base URL (automatically appends /it.json) -->
+<cities-dropdown 
+  country="it" 
+  data-url="<?php echo get_template_directory_uri(); ?>/data">
+</cities-dropdown>
+
+<!-- Using full URL to specific file -->
 <cities-dropdown 
   country="it" 
   data-url="<?php echo get_template_directory_uri(); ?>/data/it.json">
@@ -132,6 +196,13 @@ cities_dropdown:
 ```twig
 {{ attach_library('your_theme/cities_dropdown') }}
 
+{# Using default URL #}
+<cities-dropdown country="it"></cities-dropdown>
+
+{# Using custom base URL (automatically appends /it.json) #}
+<cities-dropdown country="it" data-url="/sites/default/files/cities"></cities-dropdown>
+
+{# Using full URL to specific file #}
 <cities-dropdown country="it" data-url="/sites/default/files/cities/it.json"></cities-dropdown>
 ```
 
@@ -150,6 +221,13 @@ js.fast.load=true
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/js/cities-generator.umd.js"></script>
 
+<%-- Using default URL --%>
+<cities-dropdown country="it"></cities-dropdown>
+
+<%-- Using custom base URL (automatically appends /it.json) --%>
+<cities-dropdown country="it" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data"></cities-dropdown>
+
+<%-- Using full URL to specific file --%>
 <cities-dropdown country="it" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data/it.json"></cities-dropdown>
 ```
 
@@ -167,6 +245,13 @@ $document->addScript(JURI::root() . 'templates/your-template/js/cities-generator
 
 **2. Use in template:**
 ```php
+<!-- Using default URL -->
+<cities-dropdown country="it"></cities-dropdown>
+
+<!-- Using custom base URL (automatically appends /it.json) -->
+<cities-dropdown country="it" data-url="<?php echo JURI::root(); ?>data"></cities-dropdown>
+
+<!-- Using full URL to specific file -->
 <cities-dropdown country="it" data-url="<?php echo JURI::root(); ?>data/it.json"></cities-dropdown>
 ```
 
@@ -184,6 +269,14 @@ $document->addScript(JURI::root() . 'templates/your-template/js/cities-generator
 </head>
 <body>
     <h1>Select Location</h1>
+    
+    <!-- Using default URL -->
+    <cities-dropdown country="it"></cities-dropdown>
+    
+    <!-- Using custom base URL (automatically appends /it.json) -->
+    <cities-dropdown country="it" data-url="./data"></cities-dropdown>
+    
+    <!-- Using full URL to specific file -->
     <cities-dropdown country="it" data-url="./data/it.json"></cities-dropdown>
     
     <script>
@@ -215,8 +308,11 @@ Override CSS classes:
 ### Web Component Attributes
 
 - `country` (string): Country code, e.g., "it", "uk"
-- `data-url` (string): URL to JSON file
-- `placeholder` (string): Placeholder text
+- `data-url` (string, optional): 
+  - If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`
+  - If specified without `.json` extension, treated as base URL and automatically appends `/{country}.json`
+  - If specified with `.json` extension, used as complete URL to the JSON file
+- `placeholder` (string, optional): Placeholder text (default: "Select location...")
 
 ### Events
 
@@ -226,10 +322,26 @@ Override CSS classes:
 ### JavaScript API
 
 ```javascript
+// Using default URL
 CitiesGenerator.render(container, {
   country: 'it',
-  dataUrl: '/path/to/it.json',
-  placeholder: 'Select...',
+  placeholder: 'Select location...',
+  onSelect: (node) => console.log(node)
+});
+
+// Using custom base URL (automatically appends /it.json)
+CitiesGenerator.render(container, {
+  country: 'it',
+  dataUrl: 'https://example.com/cities',
+  placeholder: 'Select location...',
+  onSelect: (node) => console.log(node)
+});
+
+// Using full URL to specific file
+CitiesGenerator.render(container, {
+  country: 'it',
+  dataUrl: 'https://example.com/custom/path/it.json',
+  placeholder: 'Select location...',
   onSelect: (node) => console.log(node)
 });
 ```

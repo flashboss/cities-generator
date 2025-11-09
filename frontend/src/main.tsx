@@ -37,7 +37,7 @@ const App: React.FC = () => {
         </label>
         <CitiesDropdown
           country="it"
-          placeholder="Select a location..."
+          placeholder={config.placeholder || "Select a location..."}
           onSelect={handleSelect}
           config={config}
         />
@@ -48,9 +48,25 @@ const App: React.FC = () => {
         <h3>1. Web Component (Most Portable)</h3>
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<script src="./dist/cities-generator.umd.js"></script>
+
+<!-- Using default URL (no data-url needed) -->
 <cities-dropdown 
   country="it" 
-  data-url="/path/to/it.json">
+  placeholder="Select location...">
+</cities-dropdown>
+
+<!-- Using custom base URL (automatically appends /it.json) -->
+<cities-dropdown 
+  country="it" 
+  data-url="https://example.com/cities"
+  placeholder="Select location...">
+</cities-dropdown>
+
+<!-- Using full URL to specific file -->
+<cities-dropdown 
+  country="it" 
+  data-url="https://example.com/custom/path/it.json"
+  placeholder="Select location...">
 </cities-dropdown>`}
         </pre>
 
@@ -58,9 +74,26 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`import { CitiesDropdown } from 'cities-generator-frontend';
 
+// Using default URL
 <CitiesDropdown
   country="it"
-  dataUrl="/path/to/it.json"
+  placeholder="Select location..."
+  onSelect={(node) => console.log(node)}
+/>
+
+// Using custom base URL (automatically appends /it.json)
+<CitiesDropdown
+  country="it"
+  dataUrl="https://example.com/cities"
+  placeholder="Select location..."
+  onSelect={(node) => console.log(node)}
+/>
+
+// Using full URL to specific file
+<CitiesDropdown
+  country="it"
+  dataUrl="https://example.com/custom/path/it.json"
+  placeholder="Select location..."
   onSelect={(node) => console.log(node)}
 />`}
         </pre>
@@ -71,6 +104,8 @@ const App: React.FC = () => {
 <script>
   CitiesGenerator.render('#cities-dropdown', {
     country: 'it',
+    placeholder: 'Select location...',
+    // dataUrl: 'https://example.com/cities', // Optional: base URL
     onSelect: (node) => console.log(node)
   });
 </script>`}

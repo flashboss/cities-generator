@@ -52,7 +52,6 @@
         <!-- Use the component -->
         <cities-dropdown 
             country="it" 
-            data-url="../../it.json"
             placeholder="Select a location...">
         </cities-dropdown>
         
@@ -67,7 +66,14 @@
 &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
 &lt;script src="./dist/cities-generator.umd.js"&gt;&lt;/script&gt;
 
-&lt;cities-dropdown country="it" data-url="/path/to/it.json"&gt;&lt;/cities-dropdown&gt;</code></pre>
+&lt;!-- Using default URL --&gt;
+&lt;cities-dropdown country="it" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;
+
+&lt;!-- Using custom base URL (automatically appends /it.json) --&gt;
+&lt;cities-dropdown country="it" data-url="https://example.com/cities" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;
+
+&lt;!-- Using full URL to specific file --&gt;
+&lt;cities-dropdown country="it" data-url="https://example.com/custom/path/it.json" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;</code></pre>
     </div>
     
     <div class="example">
@@ -82,7 +88,6 @@
         <script>
             CitiesGenerator.render('#standalone-dropdown', {
                 country: 'it',
-                dataUrl: '../../it.json',
                 placeholder: 'Select location...',
                 onSelect: (node) => {
                     console.log('Selected:', node);
@@ -94,9 +99,26 @@
         <pre><code>&lt;div id="my-dropdown"&gt;&lt;/div&gt;
 &lt;script src="./dist/cities-generator-standalone.iife.js"&gt;&lt;/script&gt;
 &lt;script&gt;
+  // Using default URL
   CitiesGenerator.render('#my-dropdown', {
     country: 'it',
-    dataUrl: '/path/to/it.json',
+    placeholder: 'Select location...',
+    onSelect: (node) => console.log(node)
+  });
+  
+  // Using custom base URL (automatically appends /it.json)
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'it',
+    dataUrl: 'https://example.com/cities',
+    placeholder: 'Select location...',
+    onSelect: (node) => console.log(node)
+  });
+  
+  // Using full URL to specific file
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'it',
+    dataUrl: 'https://example.com/custom/path/it.json',
+    placeholder: 'Select location...',
     onSelect: (node) => console.log(node)
   });
 &lt;/script&gt;</code></pre>
@@ -113,7 +135,6 @@
             if (window.CitiesGenerator) {
                 CitiesGenerator.render('#api-dropdown', {
                     country: 'it',
-                    dataUrl: '../../it.json',
                     placeholder: 'Choose a location...',
                     onSelect: (node) => {
                         console.log('API Selected:', node);
@@ -122,9 +143,26 @@
             }
         </script>
         
-        <pre><code>CitiesGenerator.render('#container', {
+        <pre><code>// Using default URL
+CitiesGenerator.render('#container', {
   country: 'it',
-  dataUrl: '/path/to/it.json',
+  placeholder: 'Select location...',
+  onSelect: (node) => console.log(node)
+});
+
+// Using custom base URL (automatically appends /it.json)
+CitiesGenerator.render('#container', {
+  country: 'it',
+  dataUrl: 'https://example.com/cities',
+  placeholder: 'Select location...',
+  onSelect: (node) => console.log(node)
+});
+
+// Using full URL to specific file
+CitiesGenerator.render('#container', {
+  country: 'it',
+  dataUrl: 'https://example.com/custom/path/it.json',
+  placeholder: 'Select location...',
   onSelect: (node) => console.log(node)
 });</code></pre>
     </div>

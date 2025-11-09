@@ -44,7 +44,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
   const buildDataUrl = (countryCode: string): string => {
     if (dataUrl) {
-      return dataUrl;
+      // If dataUrl already ends with .json, use it as is
+      // Otherwise, append /{countryCode}.json to the base URL
+      if (dataUrl.endsWith('.json')) {
+        return dataUrl;
+      }
+      // dataUrl is a base URL, append the country file
+      const baseUrl = dataUrl.replace(/\/$/, '');
+      return `${baseUrl}/${countryCode}.json`;
     }
 
     // Default GitHub URL

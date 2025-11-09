@@ -13,6 +13,7 @@ export interface DropdownConfig {
   remoteUrl?: string;
   username?: string;
   password?: string;
+  placeholder?: string;
 }
 
 export interface CountryInfo {
