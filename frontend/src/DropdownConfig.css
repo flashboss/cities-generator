@@ -52,7 +52,8 @@
 }
 
 .dropdown-config-section input[type="text"],
-.dropdown-config-section input[type="password"] {
+.dropdown-config-section input[type="password"],
+.dropdown-config-section select {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;

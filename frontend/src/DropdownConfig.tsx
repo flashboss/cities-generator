@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DropdownConfig } from './types';
+import i18nCountries from 'i18n-iso-countries';
+import enLocale from 'i18n-iso-countries/langs/en.json';
 import './DropdownConfig.css';
+
+// Register English locale for country names
+i18nCountries.registerLocale(enLocale);
 
 interface DropdownConfigProps {
   config: DropdownConfig;
   onConfigChange: (config: DropdownConfig) => void;
+}
+
+interface CountryOption {
+  code: string;
+  name: string;
 }
 
 export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
@@ -12,10 +22,77 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   onConfigChange,
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [countries, setCountries] = useState<CountryOption[]>([]);
+  const [loadingCountries, setLoadingCountries] = useState(false);
+  const [countriesError, setCountriesError] = useState<string | null>(null);
 
   const updateConfig = (updates: Partial<DropdownConfig>) => {
     onConfigChange({ ...config, ...updates });
   };
+
+  // Load available countries from remote URL by checking which JSON files exist
+  useEffect(() => {
+    const loadCountries = async () => {
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
+      const baseUrl = (config.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
+
+      setLoadingCountries(true);
+      setCountriesError(null);
+
+      try {
+        // Get all ISO 3166-1 alpha-2 country codes
+        const allCountryCodes = i18nCountries.getAlpha2Codes();
+        const countryList = Object.keys(allCountryCodes).map((code) => ({
+          code: code.toLowerCase(),
+          name: i18nCountries.getName(code, 'en') || code.toUpperCase(),
+        }));
+        
+        // Add common non-standard codes that might be used in the repository
+        // UK is commonly used instead of GB (ISO standard)
+        if (!countryList.find(c => c.code === 'uk')) {
+          countryList.push({ code: 'uk', name: 'United Kingdom' });
+        }
+        
+        // Try to fetch each country to see which ones exist
+        const checkPromises = countryList.map(async (country) => {
+          try {
+            const testUrl = `${baseUrl}/${country.code}.json`;
+            const testResponse = await fetch(testUrl, { method: 'HEAD' });
+            if (testResponse.ok) {
+              return country;
+            }
+          } catch {
+            // Try GET with Range header as fallback
+            try {
+              const testUrl = `${baseUrl}/${country.code}.json`;
+              const testResponse = await fetch(testUrl, { method: 'GET', headers: { 'Range': 'bytes=0-0' } });
+              if (testResponse.ok || testResponse.status === 206) {
+                return country;
+              }
+            } catch {
+              // Skip if file doesn't exist
+            }
+          }
+          return null;
+        });
+        
+        const results = await Promise.all(checkPromises);
+        const found = results.filter((c): c is CountryOption => c !== null);
+        
+        setCountries(found);
+      } catch (err) {
+        console.error('Error loading countries:', err);
+        setCountriesError('Could not load countries list');
+        setCountries([]);
+      } finally {
+        setLoadingCountries(false);
+      }
+    };
+
+    if (showAdvanced) {
+      loadCountries();
+    }
+  }, [config.remoteUrl, showAdvanced]);
 
   return (
     <div className="dropdown-config">
@@ -69,14 +146,33 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           <div className="dropdown-config-section">
             <label>
               Country:
-              <input
-                type="text"
-                value={config.country || ''}
-                onChange={(e) => updateConfig({ country: e.target.value })}
-                placeholder="it"
-              />
+              {loadingCountries ? (
+                <select disabled>
+                  <option>Loading countries...</option>
+                </select>
+              ) : countries.length === 0 ? (
+                <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
+                  No countries available. Check the remote URL.
+                </div>
+              ) : (
+                <select
+                  value={config.country || countries[0]?.code || ''}
+                  onChange={(e) => updateConfig({ country: e.target.value })}
+                >
+                  {countries.map((country) => (
+                    <option key={country.code} value={country.code}>
+                      {country.name} ({country.code})
+                    </option>
+                  ))}
+                </select>
+              )}
             </label>
-            <small>Country code (e.g., "it", "uk", "fr") - default: "it"</small>
+            {countriesError && (
+              <small style={{ color: '#d32f2f' }}>{countriesError}</small>
+            )}
+            {!countriesError && !loadingCountries && countries.length > 0 && (
+              <small>Select country from available JSON files</small>
+            )}
           </div>
 
           <div className="dropdown-config-section">
