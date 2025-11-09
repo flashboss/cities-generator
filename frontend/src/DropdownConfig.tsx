@@ -47,12 +47,6 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           name: i18nCountries.getName(code, 'en') || code.toUpperCase(),
         }));
         
-        // Add common non-standard codes that might be used in the repository
-        // UK is commonly used instead of GB (ISO standard)
-        if (!countryList.find(c => c.code === 'uk')) {
-          countryList.push({ code: 'uk', name: 'United Kingdom' });
-        }
-        
         // Try to fetch each country to see which ones exist
         const checkPromises = countryList.map(async (country) => {
           try {

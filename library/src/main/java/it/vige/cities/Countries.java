@@ -12,7 +12,7 @@ public enum Countries {
 	it,
 
 	/**
-	 * UK
+	 * GB
 	 */
-	uk
+	gb
 }

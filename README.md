@@ -1,17 +1,17 @@
 # Cities Generator
 Generates a descriptor file for the cities choosing:
 
-- **-c:** the country of the generated cities named by the first two characters for example **uk** and **it**. If not specified the default locale of the machine is used.
+- **-c:** the country of the generated cities named by the first two characters for example **gb** and **it**. If not specified the default locale of the machine is used.
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false.
-- **-p:** choose the first provider to create the file descriptor. You can choose for **uk**: BRITANNICA or GEONAMES. For **it**: COMUNIITALIANI, TUTTITALIA or EXTRAGEONAMES. For all other coutries the provider is GEONAMES. Else start a default.
+- **-p:** choose the first provider to create the file descriptor. You can choose for **gb**: BRITANNICA or GEONAMES. For **it**: COMUNIITALIANI, TUTTITALIA or EXTRAGEONAMES. For all other coutries the provider is GEONAMES. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
 
 To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.5:jar -DoutputDirectory=. && java -jar cities-generator-1.2.5.jar -c uk
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.5:jar -DoutputDirectory=. && java -jar cities-generator-1.2.5.jar -c gb
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
@@ -88,7 +88,7 @@ To run the image use the command:
 ```
 docker run -d --name cities-generator -p8380:8080 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
-Where it is the chosen country. You can choose uk,it or other else country using the first two characters of the code.
+Where it is the chosen country. You can choose gb,it or other else country using the first two characters of the code.
 Over the country, optionally as for the library you can add the following param:
 
 - REALM
@@ -136,7 +136,7 @@ To run the image use the command:
 ```
 docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
-Where it is the chosen country. You can choose uk,it or other else country using the first two characters of the code.
+Where it is the chosen country. You can choose gb,it or other else country using the first two characters of the code.
 Over the country, optionally as for the library you can add the following param:
 
 - REALM
@@ -191,7 +191,7 @@ keytool -import -alias trustedCA -file mytrustCA.cer -keystore ./docker/prod/vol
 Actually two samples of generated cities can be found online:
 
 https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/it.json
-https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/uk.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/gb.json
 
 ## Frontend
 
@@ -353,7 +353,7 @@ function MyComponent() {
 
 ### Component Props
 
-- `country` (string): Country code, e.g., "it", "uk" (default: "it")
+- `country` (string): Country code, e.g., "it", "gb" (default: "it")
 - `dataUrl` (string, optional): 
   - If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`
   - If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)

@@ -11,7 +11,7 @@ By default, the component loads data from the GitHub repository:
 
 If you want to use local files instead, you can:
 
-1. Place JSON files here with the naming pattern `{country}.json` (e.g., `it.json`, `uk.json`)
+1. Place JSON files here with the naming pattern `{country}.json` (e.g., `it.json`, `gb.json`)
 
 2. Use the `data-url` attribute to point to this directory:
    ```html
