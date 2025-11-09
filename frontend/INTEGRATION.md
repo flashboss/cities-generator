@@ -33,6 +33,9 @@ Works in **ANY** platform without framework dependencies.
 <script src="./dist/cities-generator.umd.js"></script>
 
 <!-- Use the component -->
+<!-- Using default parameters -->
+<cities-dropdown />
+
 <!-- Using default URL (no data-url needed) -->
 <cities-dropdown 
   country="it" 
@@ -66,6 +69,9 @@ Use when you can't include React separately.
 <!-- Use via JavaScript API -->
 <div id="my-dropdown"></div>
 <script>
+  // Using default parameters
+  CitiesGenerator.render('#my-dropdown');
+
   // Using default URL
   CitiesGenerator.render('#my-dropdown', {
     country: 'it',
@@ -97,6 +103,9 @@ import { CitiesDropdown } from './CitiesDropdown';
 function MyComponent() {
   return (
     <>
+      {/* Using default parameters */}
+      <CitiesDropdown />
+
       {/* Using default URL */}
       <CitiesDropdown
         country="it"
@@ -136,6 +145,9 @@ add_action('wp_enqueue_scripts', 'enqueue_cities_dropdown');
 
 **3. Use in template:**
 ```php
+<!-- Using default parameters -->
+<cities-dropdown />
+
 <!-- Using default URL -->
 <cities-dropdown country="it"></cities-dropdown>
 
@@ -230,6 +242,9 @@ $document->addScript(JURI::root() . 'templates/your-template/js/cities-generator
 <body>
     <h1>Select Location</h1>
     
+    <!-- Using default parameters -->
+    <cities-dropdown />
+    
     <!-- Using default URL -->
     <cities-dropdown country="it"></cities-dropdown>
     
@@ -278,6 +293,9 @@ Override CSS classes:
 ### JavaScript API
 
 ```javascript
+// Using default parameters
+CitiesGenerator.render(container);
+
 // Using default URL
 CitiesGenerator.render(container, {
   country: 'it',

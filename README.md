@@ -259,6 +259,9 @@ Works in **any** platform without framework dependencies. Simply include the scr
 <link rel="stylesheet" href="./dist/style.css">
 
 <!-- Use the component -->
+<!-- Using default parameters -->
+<cities-dropdown />
+
 <!-- Using default URL (no data-url needed) -->
 <cities-dropdown 
   country="it" 
@@ -292,6 +295,9 @@ Use when you can't include React separately. The standalone bundle includes Reac
 <!-- Use via JavaScript API -->
 <div id="my-dropdown"></div>
 <script>
+  // Using default parameters
+  CitiesGenerator.render('#my-dropdown');
+
   // Using default URL
   CitiesGenerator.render('#my-dropdown', {
     country: 'it',
@@ -323,6 +329,9 @@ import { CitiesDropdown } from './CitiesDropdown';
 function MyComponent() {
   return (
     <>
+      {/* Using default parameters */}
+      <CitiesDropdown />
+
       {/* Using default URL */}
       <CitiesDropdown
         country="it"
@@ -385,6 +394,9 @@ add_action('wp_enqueue_scripts', 'enqueue_cities_dropdown');
 
 **3. Use in template:**
 ```php
+<!-- Using default parameters -->
+<cities-dropdown />
+
 <!-- Using default URL -->
 <cities-dropdown country="it"></cities-dropdown>
 
@@ -417,6 +429,9 @@ cities_dropdown:
 ```twig
 {{ attach_library('your_theme/cities_dropdown') }}
 
+{# Using default parameters #}
+<cities-dropdown />
+
 {# Using default URL #}
 <cities-dropdown country="it"></cities-dropdown>
 
@@ -440,6 +455,12 @@ js.fast.load=true
 <script src="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/js/cities-generator.umd.js"></script>
 <link rel="stylesheet" href="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/js/style.css">
 
+<%-- Using default parameters --%>
+<cities-dropdown />
+
+<%-- Using default URL --%>
+<cities-dropdown country="it"></cities-dropdown>
+
 <%-- Using default URL --%>
 <cities-dropdown country="it"></cities-dropdown>
 
@@ -462,6 +483,9 @@ $document->addStyleSheet(JURI::root() . 'templates/your-template/js/style.css');
 
 **2. Use in template:**
 ```php
+<!-- Using default parameters -->
+<cities-dropdown />
+
 <!-- Using default URL -->
 <cities-dropdown country="it"></cities-dropdown>
 

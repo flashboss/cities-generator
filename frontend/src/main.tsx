@@ -50,6 +50,9 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<script src="./dist/cities-generator.umd.js"></script>
 
+<!-- Using default parameters -->
+<cities-dropdown />
+
 <!-- Using default URL (no data-url needed) -->
 <cities-dropdown 
   country="it" 
@@ -67,6 +70,9 @@ const App: React.FC = () => {
         <h3>2. React Component</h3>
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`import { CitiesDropdown } from 'cities-generator-frontend';
+
+// Using default parameters
+<CitiesDropdown />
 
 // Using default URL
 <CitiesDropdown
@@ -88,6 +94,11 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<div id="cities-dropdown"></div>
 <script>
+
+  // Using default parameters
+  CitiesGenerator.render('#cities-dropdown');
+
+  // Else
   CitiesGenerator.render('#cities-dropdown', {
     country: 'it',
     placeholder: 'Select location...',
