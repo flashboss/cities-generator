@@ -36,6 +36,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               Remote URL:
               <input
                 type="text"
+                className="dropdown-config-remote-url"
                 value={config.remoteUrl || ''}
                 onChange={(e) => updateConfig({ remoteUrl: e.target.value })}
                 placeholder="https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe"

@@ -51,6 +51,20 @@
   font-weight: 500;
 }
 
+.dropdown-config-section input[type="text"],
+.dropdown-config-section input[type="password"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.dropdown-config-remote-url {
+  flex: 1;
+  min-width: 400px;
+  max-width: 100%;
+}
+
 .dropdown-config-subsection {
   margin-left: 24px;
   padding: 10px;
@@ -83,9 +97,19 @@
 
 .dropdown-config-credentials {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  gap: 15px;
   margin-top: 10px;
+  align-items: flex-start;
+}
+
+.dropdown-config-credentials label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .dropdown-config-countries {

@@ -47,82 +47,51 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       setSelectedPath([]);
       setError(null);
       setNodes(null);
-      loadCountryData(selectedCountry);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, selectedCountry, config?.remoteUrl, dataUrl]);
-
-  const buildDataUrl = (countryCode: string): string => {
-    // Default GitHub URL
-    const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
-    
-    // Always use baseUrl and append /{countryCode}.json
-    // If dataUrl is provided, treat it as base URL (remove trailing slash and .json if present)
-    let baseUrl: string;
-    if (dataUrl) {
-      // Remove .json extension if present and trailing slashes
-      baseUrl = dataUrl.replace(/\.json$/, '').replace(/\/$/, '');
-    } else {
-      baseUrl = (config?.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
-    }
-    
-    return `${baseUrl}/${countryCode}.json`;
-  };
-
-  const loadCountryData = async (countryCode: string) => {
-    setLoading(true);
-    setError(null);
-    const url = buildDataUrl(countryCode);
-
-    try {
-      const headers: HeadersInit = {};
-
-      // Add authentication if configured
-      if (config?.username && config?.password) {
-        const credentials = btoa(`${config.username}:${config.password}`);
-        headers['Authorization'] = `Basic ${credentials}`;
+      
+      // Build URL with current config
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
+      let baseUrl: string;
+      if (dataUrl) {
+        baseUrl = dataUrl.replace(/\.json$/, '').replace(/\/$/, '');
+      } else {
+        baseUrl = (config?.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
       }
+      const url = `${baseUrl}/${selectedCountry}.json`;
+      
+      // Load data with current config
+      const loadData = async () => {
+        setLoading(true);
+        setError(null);
 
-      const response = await fetch(url, { headers });
+        try {
+          const headers: HeadersInit = {};
 
-      if (!response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('text/html')) {
-          throw new Error(`File not found at ${url}. Please check the remote URL configuration.`);
+          // Add authentication if configured
+          if (config?.username && config?.password) {
+            const credentials = btoa(`${config.username}:${config.password}`);
+            headers['Authorization'] = `Basic ${credentials}`;
+          }
+
+          const response = await fetch(url, { headers });
+
+          if (!response.ok) {
+            throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+          }
+
+          const jsonData: Nodes = await response.json();
+          setNodes(jsonData);
+        } catch (err) {
+          const errorMessage = err instanceof Error ? err.message : 'Failed to load country data';
+          setError(errorMessage);
+          setNodes(null);
+        } finally {
+          setLoading(false);
         }
-        throw new Error(`Failed to load data: ${response.statusText}`);
-      }
-
-      const text = await response.text();
-      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<!doctype')) {
-        throw new Error(`File not found at ${url}. Please check the remote URL configuration.`);
-      }
-
-      const jsonData = JSON.parse(text);
+      };
       
-      // Check if the response contains an error object
-      if (jsonData && typeof jsonData === 'object' && 'error' in jsonData) {
-        const errorMessage = jsonData.message || jsonData.error || 'Failed to load cities data';
-        throw new Error(errorMessage);
-      }
-      
-      // Validate it's a valid Nodes object
-      if (!jsonData || typeof jsonData !== 'object' || !('zones' in jsonData)) {
-        throw new Error('Invalid response: expected a valid cities data structure');
-      }
-      
-      setNodes(jsonData as Nodes);
-      if (onCountrySelect) {
-        onCountrySelect(countryCode);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load cities data');
-      console.error('Error loading cities data:', err);
-    } finally {
-      setLoading(false);
+      loadData();
     }
-  };
-
+  }, [data, selectedCountry, config?.remoteUrl, config?.username, config?.password, dataUrl, config]);
 
   const handleNodeClick = (node: Node, level: number) => {
     const newPath = selectedPath.slice(0, level);

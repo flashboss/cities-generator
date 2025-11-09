@@ -37,8 +37,8 @@ const App: React.FC = () => {
           Location:
         </label>
         <CitiesDropdown
-          country={config.country || "it"}
-          placeholder={config.placeholder || "Select a location..."}
+          country={config.country}
+          placeholder={config.placeholder}
           onSelect={handleSelect}
           config={config}
         />
