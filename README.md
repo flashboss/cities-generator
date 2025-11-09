@@ -538,9 +538,3 @@ The component uses CSS classes prefixed with `cities-dropdown-`. You can overrid
   background-color: #your-hover-color;
 }
 ```
-
-### Example
-
-See `frontend/example.html` for a complete working example with all integration methods.
-
-For detailed platform-specific integration instructions, see `frontend/INTEGRATION.md`.
