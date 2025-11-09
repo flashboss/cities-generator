@@ -3,20 +3,14 @@ import { Node, Nodes, DropdownConfig } from './types';
 import './CitiesDropdown.css';
 
 interface CitiesDropdownProps {
-  dataUrl?: string;
   data?: Nodes;
-  country?: string;
-  placeholder?: string;
   onSelect?: (node: Node) => void;
   className?: string;
   config?: DropdownConfig;
 }
 
 export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
-  dataUrl,
   data,
-  country: initialCountry = 'it',
-  placeholder = 'Select location...',
   onSelect,
   className = '',
   config,
@@ -26,13 +20,10 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(initialCountry);
+  const selectedCountry = config?.country || 'it';
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<Array<{ node: Node; path: Node[] }>>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Update selectedCountry when initialCountry prop changes
-  useEffect(() => {
-    setSelectedCountry(initialCountry);
-  }, [initialCountry]);
 
   useEffect(() => {
     if (data) {
@@ -48,12 +39,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       
       // Build URL with current config
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
-      let baseUrl: string;
-      if (dataUrl) {
-        baseUrl = dataUrl.replace(/\.json$/, '').replace(/\/$/, '');
-      } else {
-        baseUrl = (config?.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
-      }
+      const baseUrl = (config?.dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
       const url = `${baseUrl}/${selectedCountry}.json`;
       
       // Load data with current config
@@ -89,7 +75,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       
       loadData();
     }
-  }, [data, selectedCountry, config?.remoteUrl, config?.username, config?.password, dataUrl, config]);
+  }, [data, selectedCountry, config]);
 
   const handleNodeClick = (node: Node, level: number) => {
     const newPath = selectedPath.slice(0, level);
@@ -105,6 +91,43 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     }
   };
 
+  // Search function that recursively searches all nodes
+  const searchNodes = (query: string, nodeList: Node[], currentPath: Node[] = []): Array<{ node: Node; path: Node[] }> => {
+    if (!query || !nodeList) return [];
+    
+    const results: Array<{ node: Node; path: Node[] }> = [];
+    const lowerQuery = query.toLowerCase();
+    
+    for (const node of nodeList) {
+      const newPath = [...currentPath, node];
+      
+      // Check if node name matches
+      if (node.name.toLowerCase().includes(lowerQuery)) {
+        results.push({ node, path: newPath });
+      }
+      
+      // Recursively search children
+      if (node.zones && node.zones.length > 0) {
+        results.push(...searchNodes(query, node.zones, newPath));
+      }
+    }
+    
+    return results;
+  };
+
+  // Update search results when search query changes
+  useEffect(() => {
+    if (config?.enableSearch && searchQuery && nodes) {
+      const results = searchNodes(searchQuery, nodes.zones);
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+      if (!config?.enableSearch) {
+        setSearchQuery('');
+      }
+    }
+  }, [searchQuery, nodes, config?.enableSearch]);
+
   const getCurrentLevelNodes = (): Node[] => {
     if (!nodes) return [];
     if (selectedPath.length === 0) return nodes.zones;
@@ -114,7 +137,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   };
 
   const getDisplayText = (): string => {
-    if (selectedPath.length === 0) return placeholder;
+    if (selectedPath.length === 0) return config?.placeholder || 'Select location...';
     return selectedPath.map(n => n.name).join(' > ');
   };
 
@@ -140,7 +163,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     <div className={`cities-dropdown ${className}`} ref={dropdownRef}>
       <div
         className="cities-dropdown-trigger"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          const newIsOpen = !isOpen;
+          setIsOpen(newIsOpen);
+          if (!newIsOpen) {
+            // Reset search when closing
+            setSearchQuery('');
+          }
+        }}
         role="button"
         tabIndex={0}
         aria-expanded={isOpen}
@@ -161,46 +191,106 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
       {isOpen && (
         <div className="cities-dropdown-menu" role="listbox">
-          {selectedPath.length > 0 && (
-            <div className="cities-dropdown-breadcrumb">
-              {selectedPath.map((node, index) => (
-                <button
-                  key={node.id}
-                  className="cities-dropdown-breadcrumb-item"
-                  onClick={() => {
-                    const newPath = selectedPath.slice(0, index + 1);
-                    setSelectedPath(newPath);
-                  }}
-                >
-                  {node.name}
-                  {index < selectedPath.length - 1 && ' > '}
-                </button>
-              ))}
+          {config?.enableSearch && (
+            <div className="cities-dropdown-search">
+              <input
+                type="text"
+                className="cities-dropdown-search-input"
+                placeholder={config.searchPlaceholder || "Search location..."}
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value) {
+                    setSelectedPath([]);
+                  }
+                }}
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+              />
             </div>
           )}
 
-          {currentLevelNodes.length === 0 ? (
-            <div className="cities-dropdown-empty">No options available</div>
+          {config?.enableSearch && searchQuery ? (
+            // Show search results
+            searchResults.length === 0 ? (
+              <div className="cities-dropdown-empty">No results found</div>
+            ) : (
+              <ul className="cities-dropdown-list">
+                {searchResults.map(({ node, path }) => (
+                  <li
+                    key={node.id}
+                    className={`cities-dropdown-item ${
+                      node.zones && node.zones.length > 0 ? 'has-children' : 'leaf'
+                    }`}
+                    role="option"
+                    onClick={() => {
+                      setSelectedPath(path);
+                      setSearchQuery('');
+                      if (!node.zones || node.zones.length === 0) {
+                        // Leaf node - select and close
+                        if (onSelect) {
+                          onSelect(node);
+                        }
+                        setIsOpen(false);
+                      }
+                      // If node has children, keep dropdown open and navigate to that level
+                    }}
+                  >
+                    <span className="cities-dropdown-item-name">
+                      {path.map(n => n.name).join(' > ')}
+                    </span>
+                    {node.zones && node.zones.length > 0 && (
+                      <span className="cities-dropdown-item-arrow">▶</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )
           ) : (
-            <ul className="cities-dropdown-list">
-              {currentLevelNodes.map((node) => (
-                <li
-                  key={node.id}
-                  className={`cities-dropdown-item ${
-                    node.zones && node.zones.length > 0 ? 'has-children' : 'leaf'
-                  }`}
-                  role="option"
-                  onClick={() => {
-                    handleNodeClick(node, selectedPath.length);
-                  }}
-                >
-                  <span className="cities-dropdown-item-name">{node.name}</span>
-                  {node.zones && node.zones.length > 0 && (
-                    <span className="cities-dropdown-item-arrow">▶</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            // Show normal hierarchical navigation
+            <>
+              {selectedPath.length > 0 && (
+                <div className="cities-dropdown-breadcrumb">
+                  {selectedPath.map((node, index) => (
+                    <button
+                      key={node.id}
+                      className="cities-dropdown-breadcrumb-item"
+                      onClick={() => {
+                        const newPath = selectedPath.slice(0, index + 1);
+                        setSelectedPath(newPath);
+                      }}
+                    >
+                      {node.name}
+                      {index < selectedPath.length - 1 && ' > '}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {currentLevelNodes.length === 0 ? (
+                <div className="cities-dropdown-empty">No options available</div>
+              ) : (
+                <ul className="cities-dropdown-list">
+                  {currentLevelNodes.map((node) => (
+                    <li
+                      key={node.id}
+                      className={`cities-dropdown-item ${
+                        node.zones && node.zones.length > 0 ? 'has-children' : 'leaf'
+                      }`}
+                      role="option"
+                      onClick={() => {
+                        handleNodeClick(node, selectedPath.length);
+                      }}
+                    >
+                      <span className="cities-dropdown-item-name">{node.name}</span>
+                      {node.zones && node.zones.length > 0 && (
+                        <span className="cities-dropdown-item-arrow">▶</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
         </div>
       )}

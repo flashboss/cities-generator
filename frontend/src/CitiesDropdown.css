@@ -81,6 +81,27 @@
   overflow-y: auto;
 }
 
+.cities-dropdown-search {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.cities-dropdown-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.cities-dropdown-search-input:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  border-color: #0066cc;
+}
+
 .cities-dropdown-breadcrumb {
   padding: 10px 15px;
   border-bottom: 1px solid #eee;

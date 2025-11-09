@@ -10,11 +10,13 @@ export interface Nodes {
 }
 
 export interface DropdownConfig {
-  remoteUrl?: string;
+  dataUrl?: string;
+  country?: string;
+  placeholder?: string;
   username?: string;
   password?: string;
-  placeholder?: string;
-  country?: string;
+  enableSearch?: boolean;
+  searchPlaceholder?: string;
 }
 
 export interface CountryInfo {

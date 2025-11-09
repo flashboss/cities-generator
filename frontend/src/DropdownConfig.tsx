@@ -34,7 +34,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   useEffect(() => {
     const loadCountries = async () => {
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
-      const baseUrl = (config.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
+      const baseUrl = (config.dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
 
       setLoadingCountries(true);
       setCountriesError(null);
@@ -86,7 +86,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
     if (showAdvanced) {
       loadCountries();
     }
-  }, [config.remoteUrl, showAdvanced]);
+  }, [config.dataUrl, showAdvanced]);
 
   return (
     <div className="dropdown-config">
@@ -104,12 +104,12 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
         <div className="dropdown-config-content">
           <div className="dropdown-config-section">
             <label>
-              Remote URL:
+              Data URL:
               <input
                 type="text"
                 className="dropdown-config-remote-url"
-                value={config.remoteUrl || ''}
-                onChange={(e) => updateConfig({ remoteUrl: e.target.value })}
+                value={config.dataUrl || ''}
+                onChange={(e) => updateConfig({ dataUrl: e.target.value })}
                 placeholder="https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe"
               />
             </label>
@@ -181,6 +181,32 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               />
             </label>
             <small>Placeholder text displayed in the dropdown (default: "Select location...")</small>
+          </div>
+
+          <div className="dropdown-config-section">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={config.enableSearch || false}
+                  onChange={(e) => updateConfig({ enableSearch: e.target.checked })}
+                />
+                <span>Enable search</span>
+              </label>
+              {config.enableSearch && (
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1', minWidth: '200px' }}>
+                  <span style={{ whiteSpace: 'nowrap' }}>Search placeholder:</span>
+                  <input
+                    type="text"
+                    value={config.searchPlaceholder || ''}
+                    onChange={(e) => updateConfig({ searchPlaceholder: e.target.value })}
+                    placeholder="Search location..."
+                    style={{ flex: '1', minWidth: '150px' }}
+                  />
+                </label>
+              )}
+            </div>
+            <small>Enable text search to find locations by name</small>
           </div>
         </div>
       )}

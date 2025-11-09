@@ -11,7 +11,7 @@ const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-g
 // Standalone demo app
 const App: React.FC = () => {
   const [config, setConfig] = useState<DropdownConfig>({
-    remoteUrl: DEFAULT_GITHUB_URL,
+    dataUrl: DEFAULT_GITHUB_URL,
     country: 'it',
   });
 
@@ -37,8 +37,6 @@ const App: React.FC = () => {
           Location:
         </label>
         <CitiesDropdown
-          country={config.country}
-          placeholder={config.placeholder}
           onSelect={handleSelect}
           config={config}
         />
@@ -53,17 +51,14 @@ const App: React.FC = () => {
 <!-- Using default parameters -->
 <cities-dropdown />
 
-<!-- Using default URL (no data-url needed) -->
+<!-- Using default URL -->
 <cities-dropdown 
-  country="it" 
-  placeholder="Select location...">
+  data-config='{"country":"it","placeholder":"Select location..."}'>
 </cities-dropdown>
 
 <!-- Using custom base URL (automatically appends /it.json) -->
 <cities-dropdown 
-  country="it" 
-  data-url="https://example.com/cities"
-  placeholder="Select location...">
+  data-config='{"country":"it","dataUrl":"https://example.com/cities","placeholder":"Select location..."}'>
 </cities-dropdown>`}
         </pre>
 
@@ -72,20 +67,35 @@ const App: React.FC = () => {
 {`import { CitiesDropdown } from 'cities-generator-frontend';
 
 // Using default parameters
-<CitiesDropdown />
+<CitiesDropdown config={{}} />
 
 // Using default URL
 <CitiesDropdown
-  country="it"
-  placeholder="Select location..."
+  config={{
+    country: 'it',
+    placeholder: 'Select location...'
+  }}
   onSelect={(node) => console.log(node)}
 />
 
 // Using custom base URL (automatically appends /it.json)
 <CitiesDropdown
-  country="it"
-  dataUrl="https://example.com/cities"
-  placeholder="Select location..."
+  config={{
+    country: 'it',
+    dataUrl: 'https://example.com/cities',
+    placeholder: 'Select location...'
+  }}
+  onSelect={(node) => console.log(node)}
+/>
+
+// Using search functionality
+<CitiesDropdown
+  config={{
+    country: 'it',
+    placeholder: 'Select location...',
+    enableSearch: true,
+    searchPlaceholder: 'Search location...'
+  }}
   onSelect={(node) => console.log(node)}
 />`}
         </pre>
@@ -96,13 +106,37 @@ const App: React.FC = () => {
 <script>
 
   // Using default parameters
-  CitiesGenerator.render('#cities-dropdown');
-
-  // Else
   CitiesGenerator.render('#cities-dropdown', {
-    country: 'it',
-    placeholder: 'Select location...',
-    // dataUrl: 'https://example.com/cities', // Optional: base URL
+    config: {}
+  });
+
+  // Using default URL
+  CitiesGenerator.render('#cities-dropdown', {
+    config: {
+      country: 'it',
+      placeholder: 'Select location...'
+    },
+    onSelect: (node) => console.log(node)
+  });
+
+  // Using custom base URL (automatically appends /it.json)
+  CitiesGenerator.render('#cities-dropdown', {
+    config: {
+      country: 'it',
+      dataUrl: 'https://example.com/cities',
+      placeholder: 'Select location...'
+    },
+    onSelect: (node) => console.log(node)
+  });
+
+  // Using search functionality
+  CitiesGenerator.render('#cities-dropdown', {
+    config: {
+      country: 'it',
+      placeholder: 'Select location...',
+      enableSearch: true,
+      searchPlaceholder: 'Search location...'
+    },
     onSelect: (node) => console.log(node)
   });
 </script>`}
