@@ -264,12 +264,15 @@ Works in **any** platform without framework dependencies. Simply include the scr
 
 <!-- Using default URL -->
 <cities-dropdown 
-  data-config='{"country":"it","placeholder":"Select location..."}'>
+  country="it" 
+  placeholder="Select location...">
 </cities-dropdown>
 
 <!-- Using custom base URL (automatically appends /it.json) -->
 <cities-dropdown 
-  data-config='{"country":"it","dataUrl":"https://example.com/cities","placeholder":"Select location..."}'>
+  country="it" 
+  data-url="https://example.com/cities"
+  placeholder="Select location...">
 </cities-dropdown>
 
 <script>
@@ -293,16 +296,12 @@ Use when you can't include React separately. The standalone bundle includes Reac
 <div id="my-dropdown"></div>
 <script>
   // Using default parameters
-  CitiesGenerator.render('#my-dropdown', {
-    config: {}
-  });
+  CitiesGenerator.render('#my-dropdown');
 
   // Using default URL
   CitiesGenerator.render('#my-dropdown', {
-    config: {
-      country: 'it',
-      placeholder: 'Select location...'
-    },
+    country: 'it',
+    placeholder: 'Select location...',
     onSelect: (node) => {
       console.log('Selected:', node);
     }
@@ -310,11 +309,9 @@ Use when you can't include React separately. The standalone bundle includes Reac
   
   // Using custom base URL (automatically appends /it.json)
   CitiesGenerator.render('#my-dropdown', {
-    config: {
-      country: 'it',
-      dataUrl: 'https://example.com/cities',
-      placeholder: 'Select location...'
-    },
+    country: 'it',
+    dataUrl: 'https://example.com/cities',
+    placeholder: 'Select location...',
     onSelect: (node) => {
       console.log('Selected:', node);
     }
@@ -322,12 +319,10 @@ Use when you can't include React separately. The standalone bundle includes Reac
   
   // Using search functionality
   CitiesGenerator.render('#my-dropdown', {
-    config: {
-      country: 'it',
-      placeholder: 'Select location...',
-      enableSearch: true,
-      searchPlaceholder: 'Search location...'
-    },
+    country: 'it',
+    placeholder: 'Select location...',
+    enableSearch: true,
+    searchPlaceholder: 'Search location...',
     onSelect: (node) => {
       console.log('Selected:', node);
     }
@@ -346,35 +341,29 @@ function MyComponent() {
   return (
     <>
       {/* Using default parameters */}
-      <CitiesDropdown config={{}} />
+      <CitiesDropdown />
 
       {/* Using default URL */}
       <CitiesDropdown
-        config={{
-          country: 'it',
-          placeholder: 'Select location...'
-        }}
+        country="it"
+        placeholder="Select location..."
         onSelect={(node) => console.log(node)}
       />
       
       {/* Using custom base URL (automatically appends /it.json) */}
       <CitiesDropdown
-        config={{
-          country: 'it',
-          dataUrl: 'https://example.com/cities',
-          placeholder: 'Select location...'
-        }}
+        country="it"
+        dataUrl="https://example.com/cities"
+        placeholder="Select location..."
         onSelect={(node) => console.log(node)}
       />
       
       {/* Using search functionality */}
       <CitiesDropdown
-        config={{
-          country: 'it',
-          placeholder: 'Select location...',
-          enableSearch: true,
-          searchPlaceholder: 'Search location...'
-        }}
+        country="it"
+        placeholder="Select location..."
+        enableSearch={true}
+        searchPlaceholder="Search location..."
         onSelect={(node) => console.log(node)}
       />
     </>
@@ -387,14 +376,13 @@ function MyComponent() {
 - `data` (Nodes, optional): Direct data object (optional)
 - `onSelect` (function, optional): Callback when a leaf node is selected
 - `className` (string, optional): Additional CSS classes
-- `config` (DropdownConfig, optional): Configuration object with the following properties:
-  - `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
-  - `country` (string, optional): Country code, e.g., "it", "gb" (default: "it")
-  - `placeholder` (string, optional): Placeholder text (default: "Select location...")
-  - `username` (string, optional): Username for HTTP Basic Authentication
-  - `password` (string, optional): Password for HTTP Basic Authentication
-  - `enableSearch` (boolean, optional): Enable text search functionality (default: false)
-  - `searchPlaceholder` (string, optional): Placeholder text for the search input field (default: "Search location...")
+- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
+- `country` (string, optional): Country code, e.g., "it", "gb" (default: "it")
+- `placeholder` (string, optional): Placeholder text (default: "Select location...")
+- `username` (string, optional): Username for HTTP Basic Authentication
+- `password` (string, optional): Password for HTTP Basic Authentication
+- `enableSearch` (boolean, optional): Enable text search functionality (default: false)
+- `searchPlaceholder` (string, optional): Placeholder text for the search input field (default: "Search location...")
 
 ### Events
 

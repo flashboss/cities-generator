@@ -2,25 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Node, Nodes, DropdownConfig } from './types';
 import './CitiesDropdown.css';
 
-interface CitiesDropdownProps {
+interface CitiesDropdownProps extends DropdownConfig {
   data?: Nodes;
   onSelect?: (node: Node) => void;
   className?: string;
-  config?: DropdownConfig;
 }
 
 export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   data,
   onSelect,
   className = '',
-  config,
+  dataUrl,
+  country = 'it',
+  placeholder = 'Select location...',
+  username,
+  password,
+  enableSearch = false,
+  searchPlaceholder = 'Search location...',
 }) => {
   const [nodes, setNodes] = useState<Nodes | null>(data || null);
   const [selectedPath, setSelectedPath] = useState<Node[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const selectedCountry = config?.country || 'it';
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Array<{ node: Node; path: Node[] }>>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -31,16 +35,16 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       return;
     }
 
-    if (selectedCountry) {
+    if (country) {
       // Reset state when URL or country changes
       setSelectedPath([]);
       setError(null);
       setNodes(null);
       
-      // Build URL with current config
+      // Build URL
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
-      const baseUrl = (config?.dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
-      const url = `${baseUrl}/${selectedCountry}.json`;
+      const baseUrl = (dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
+      const url = `${baseUrl}/${country}.json`;
       
       // Load data with current config
       const loadData = async () => {
@@ -51,8 +55,8 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
           const headers: HeadersInit = {};
 
           // Add authentication if configured
-          if (config?.username && config?.password) {
-            const credentials = btoa(`${config.username}:${config.password}`);
+          if (username && password) {
+            const credentials = btoa(`${username}:${password}`);
             headers['Authorization'] = `Basic ${credentials}`;
           }
 
@@ -75,7 +79,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       
       loadData();
     }
-  }, [data, selectedCountry, config]);
+  }, [data, country, dataUrl, username, password]);
 
   const handleNodeClick = (node: Node, level: number) => {
     const newPath = selectedPath.slice(0, level);
@@ -117,16 +121,16 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
   // Update search results when search query changes
   useEffect(() => {
-    if (config?.enableSearch && searchQuery && nodes) {
+    if (enableSearch && searchQuery && nodes) {
       const results = searchNodes(searchQuery, nodes.zones);
       setSearchResults(results);
     } else {
       setSearchResults([]);
-      if (!config?.enableSearch) {
+      if (!enableSearch) {
         setSearchQuery('');
       }
     }
-  }, [searchQuery, nodes, config?.enableSearch]);
+  }, [searchQuery, nodes, enableSearch]);
 
   const getCurrentLevelNodes = (): Node[] => {
     if (!nodes) return [];
@@ -137,7 +141,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   };
 
   const getDisplayText = (): string => {
-    if (selectedPath.length === 0) return config?.placeholder || 'Select location...';
+    if (selectedPath.length === 0) return placeholder;
     return selectedPath.map(n => n.name).join(' > ');
   };
 
@@ -177,7 +181,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
         aria-haspopup="listbox"
       >
         <span className="cities-dropdown-text">{getDisplayText()}</span>
-        {(selectedPath.length > 0 || selectedCountry) && (
+        {selectedPath.length > 0 && (
           <button
             className="cities-dropdown-clear"
             onClick={clearSelection}
@@ -191,12 +195,12 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
       {isOpen && (
         <div className="cities-dropdown-menu" role="listbox">
-          {config?.enableSearch && (
+          {enableSearch && (
             <div className="cities-dropdown-search">
               <input
                 type="text"
                 className="cities-dropdown-search-input"
-                placeholder={config.searchPlaceholder || "Search location..."}
+                placeholder={searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -210,7 +214,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
             </div>
           )}
 
-          {config?.enableSearch && searchQuery ? (
+          {enableSearch && searchQuery ? (
             // Show search results
             searchResults.length === 0 ? (
               <div className="cities-dropdown-empty">No results found</div>

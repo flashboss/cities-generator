@@ -12,7 +12,7 @@ class CitiesDropdownElement extends HTMLElement {
   private reactRoot: any = null;
 
   static get observedAttributes() {
-    return ['data-config'];
+    return ['country', 'data-url', 'placeholder', 'username', 'password', 'enable-search', 'search-placeholder'];
   }
 
   connectedCallback() {
@@ -42,16 +42,13 @@ class CitiesDropdownElement extends HTMLElement {
       return;
     }
 
-    const configAttr = this.getAttribute('data-config');
-    let config: any = {};
-    
-    if (configAttr) {
-      try {
-        config = JSON.parse(configAttr);
-      } catch (e) {
-        console.error('Invalid data-config JSON:', e);
-      }
-    }
+    const country = this.getAttribute('country') || 'it';
+    const dataUrl = this.getAttribute('data-url');
+    const placeholder = this.getAttribute('placeholder') || 'Select location...';
+    const username = this.getAttribute('username');
+    const password = this.getAttribute('password');
+    const enableSearch = this.getAttribute('enable-search') === 'true';
+    const searchPlaceholder = this.getAttribute('search-placeholder') || 'Search location...';
 
     const handleSelect = (node: any) => {
       this.dispatchEvent(
@@ -63,7 +60,13 @@ class CitiesDropdownElement extends HTMLElement {
     };
 
     const element = React.createElement(CitiesDropdown, {
-      config,
+      country,
+      dataUrl,
+      placeholder,
+      username,
+      password,
+      enableSearch,
+      searchPlaceholder,
       onSelect: handleSelect,
     });
 

@@ -38,7 +38,7 @@ const App: React.FC = () => {
         </label>
         <CitiesDropdown
           onSelect={handleSelect}
-          config={config}
+          {...config}
         />
       </div>
 
@@ -53,12 +53,15 @@ const App: React.FC = () => {
 
 <!-- Using default URL -->
 <cities-dropdown 
-  data-config='{"country":"it","placeholder":"Select location..."}'>
+  country="it" 
+  placeholder="Select location...">
 </cities-dropdown>
 
 <!-- Using custom base URL (automatically appends /it.json) -->
 <cities-dropdown 
-  data-config='{"country":"it","dataUrl":"https://example.com/cities","placeholder":"Select location..."}'>
+  country="it" 
+  data-url="https://example.com/cities"
+  placeholder="Select location...">
 </cities-dropdown>`}
         </pre>
 
@@ -67,35 +70,29 @@ const App: React.FC = () => {
 {`import { CitiesDropdown } from 'cities-generator-frontend';
 
 // Using default parameters
-<CitiesDropdown config={{}} />
+<CitiesDropdown />
 
 // Using default URL
 <CitiesDropdown
-  config={{
-    country: 'it',
-    placeholder: 'Select location...'
-  }}
+  country="it"
+  placeholder="Select location..."
   onSelect={(node) => console.log(node)}
 />
 
 // Using custom base URL (automatically appends /it.json)
 <CitiesDropdown
-  config={{
-    country: 'it',
-    dataUrl: 'https://example.com/cities',
-    placeholder: 'Select location...'
-  }}
+  country="it"
+  dataUrl="https://example.com/cities"
+  placeholder="Select location..."
   onSelect={(node) => console.log(node)}
 />
 
 // Using search functionality
 <CitiesDropdown
-  config={{
-    country: 'it',
-    placeholder: 'Select location...',
-    enableSearch: true,
-    searchPlaceholder: 'Search location...'
-  }}
+  country="it"
+  placeholder="Select location..."
+  enableSearch={true}
+  searchPlaceholder="Search location..."
   onSelect={(node) => console.log(node)}
 />`}
         </pre>
@@ -106,37 +103,29 @@ const App: React.FC = () => {
 <script>
 
   // Using default parameters
-  CitiesGenerator.render('#cities-dropdown', {
-    config: {}
-  });
+  CitiesGenerator.render('#cities-dropdown');
 
   // Using default URL
   CitiesGenerator.render('#cities-dropdown', {
-    config: {
-      country: 'it',
-      placeholder: 'Select location...'
-    },
+    country: 'it',
+    placeholder: 'Select location...',
     onSelect: (node) => console.log(node)
   });
 
   // Using custom base URL (automatically appends /it.json)
   CitiesGenerator.render('#cities-dropdown', {
-    config: {
-      country: 'it',
-      dataUrl: 'https://example.com/cities',
-      placeholder: 'Select location...'
-    },
+    country: 'it',
+    dataUrl: 'https://example.com/cities',
+    placeholder: 'Select location...',
     onSelect: (node) => console.log(node)
   });
 
   // Using search functionality
   CitiesGenerator.render('#cities-dropdown', {
-    config: {
-      country: 'it',
-      placeholder: 'Select location...',
-      enableSearch: true,
-      searchPlaceholder: 'Search location...'
-    },
+    country: 'it',
+    placeholder: 'Select location...',
+    enableSearch: true,
+    searchPlaceholder: 'Search location...',
     onSelect: (node) => console.log(node)
   });
 </script>`}
