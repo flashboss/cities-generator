@@ -60,13 +60,6 @@ const App: React.FC = () => {
   country="it" 
   data-url="https://example.com/cities"
   placeholder="Select location...">
-</cities-dropdown>
-
-<!-- Using full URL to specific file -->
-<cities-dropdown 
-  country="it" 
-  data-url="https://example.com/custom/path/it.json"
-  placeholder="Select location...">
 </cities-dropdown>`}
         </pre>
 
@@ -85,14 +78,6 @@ const App: React.FC = () => {
 <CitiesDropdown
   country="it"
   dataUrl="https://example.com/cities"
-  placeholder="Select location..."
-  onSelect={(node) => console.log(node)}
-/>
-
-// Using full URL to specific file
-<CitiesDropdown
-  country="it"
-  dataUrl="https://example.com/custom/path/it.json"
   placeholder="Select location..."
   onSelect={(node) => console.log(node)}
 />`}

@@ -43,20 +43,19 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   }, [data, selectedCountry]);
 
   const buildDataUrl = (countryCode: string): string => {
-    if (dataUrl) {
-      // If dataUrl already ends with .json, use it as is
-      // Otherwise, append /{countryCode}.json to the base URL
-      if (dataUrl.endsWith('.json')) {
-        return dataUrl;
-      }
-      // dataUrl is a base URL, append the country file
-      const baseUrl = dataUrl.replace(/\/$/, '');
-      return `${baseUrl}/${countryCode}.json`;
-    }
-
     // Default GitHub URL
     const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
-    const baseUrl = (config?.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
+    
+    // Always use baseUrl and append /{countryCode}.json
+    // If dataUrl is provided, treat it as base URL (remove trailing slash and .json if present)
+    let baseUrl: string;
+    if (dataUrl) {
+      // Remove .json extension if present and trailing slashes
+      baseUrl = dataUrl.replace(/\.json$/, '').replace(/\/$/, '');
+    } else {
+      baseUrl = (config?.remoteUrl || DEFAULT_GITHUB_URL).replace(/\/$/, '');
+    }
+    
     return `${baseUrl}/${countryCode}.json`;
   };
 

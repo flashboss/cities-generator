@@ -46,13 +46,6 @@ Works in **ANY** platform without framework dependencies.
   placeholder="Select location...">
 </cities-dropdown>
 
-<!-- Using full URL to specific file -->
-<cities-dropdown 
-  country="it" 
-  data-url="https://example.com/custom/path/it.json"
-  placeholder="Select location...">
-</cities-dropdown>
-
 <script>
   document.querySelector('cities-dropdown').addEventListener('select', (e) => {
     console.log('Selected:', e.detail);
@@ -91,16 +84,6 @@ Use when you can't include React separately.
       console.log('Selected:', node);
     }
   });
-  
-  // Using full URL to specific file
-  CitiesGenerator.render('#my-dropdown', {
-    country: 'it',
-    dataUrl: 'https://example.com/custom/path/it.json',
-    placeholder: 'Select location...',
-    onSelect: (node) => {
-      console.log('Selected:', node);
-    }
-  });
 </script>
 ```
 
@@ -125,14 +108,6 @@ function MyComponent() {
       <CitiesDropdown
         country="it"
         dataUrl="https://example.com/cities"
-        placeholder="Select location..."
-        onSelect={(node) => console.log(node)}
-      />
-      
-      {/* Using full URL to specific file */}
-      <CitiesDropdown
-        country="it"
-        dataUrl="https://example.com/custom/path/it.json"
         placeholder="Select location..."
         onSelect={(node) => console.log(node)}
       />
@@ -169,12 +144,6 @@ add_action('wp_enqueue_scripts', 'enqueue_cities_dropdown');
   country="it" 
   data-url="<?php echo get_template_directory_uri(); ?>/data">
 </cities-dropdown>
-
-<!-- Using full URL to specific file -->
-<cities-dropdown 
-  country="it" 
-  data-url="<?php echo get_template_directory_uri(); ?>/data/it.json">
-</cities-dropdown>
 ```
 
 ### Drupal
@@ -201,9 +170,6 @@ cities_dropdown:
 
 {# Using custom base URL (automatically appends /it.json) #}
 <cities-dropdown country="it" data-url="/sites/default/files/cities"></cities-dropdown>
-
-{# Using full URL to specific file #}
-<cities-dropdown country="it" data-url="/sites/default/files/cities/it.json"></cities-dropdown>
 ```
 
 ### Liferay
@@ -226,9 +192,6 @@ js.fast.load=true
 
 <%-- Using custom base URL (automatically appends /it.json) --%>
 <cities-dropdown country="it" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data"></cities-dropdown>
-
-<%-- Using full URL to specific file --%>
-<cities-dropdown country="it" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data/it.json"></cities-dropdown>
 ```
 
 ### Joomla
@@ -250,9 +213,6 @@ $document->addScript(JURI::root() . 'templates/your-template/js/cities-generator
 
 <!-- Using custom base URL (automatically appends /it.json) -->
 <cities-dropdown country="it" data-url="<?php echo JURI::root(); ?>data"></cities-dropdown>
-
-<!-- Using full URL to specific file -->
-<cities-dropdown country="it" data-url="<?php echo JURI::root(); ?>data/it.json"></cities-dropdown>
 ```
 
 ### Vanilla HTML/Any Platform
@@ -275,9 +235,6 @@ $document->addScript(JURI::root() . 'templates/your-template/js/cities-generator
     
     <!-- Using custom base URL (automatically appends /it.json) -->
     <cities-dropdown country="it" data-url="./data"></cities-dropdown>
-    
-    <!-- Using full URL to specific file -->
-    <cities-dropdown country="it" data-url="./data/it.json"></cities-dropdown>
     
     <script>
         document.querySelector('cities-dropdown').addEventListener('select', (e) => {
@@ -310,8 +267,7 @@ Override CSS classes:
 - `country` (string): Country code, e.g., "it", "uk"
 - `data-url` (string, optional): 
   - If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`
-  - If specified without `.json` extension, treated as base URL and automatically appends `/{country}.json`
-  - If specified with `.json` extension, used as complete URL to the JSON file
+  - If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
 - `placeholder` (string, optional): Placeholder text (default: "Select location...")
 
 ### Events
@@ -333,14 +289,6 @@ CitiesGenerator.render(container, {
 CitiesGenerator.render(container, {
   country: 'it',
   dataUrl: 'https://example.com/cities',
-  placeholder: 'Select location...',
-  onSelect: (node) => console.log(node)
-});
-
-// Using full URL to specific file
-CitiesGenerator.render(container, {
-  country: 'it',
-  dataUrl: 'https://example.com/custom/path/it.json',
   placeholder: 'Select location...',
   onSelect: (node) => console.log(node)
 });

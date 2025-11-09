@@ -70,10 +70,7 @@
 &lt;cities-dropdown country="it" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;
 
 &lt;!-- Using custom base URL (automatically appends /it.json) --&gt;
-&lt;cities-dropdown country="it" data-url="https://example.com/cities" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;
-
-&lt;!-- Using full URL to specific file --&gt;
-&lt;cities-dropdown country="it" data-url="https://example.com/custom/path/it.json" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;</code></pre>
+&lt;cities-dropdown country="it" data-url="https://example.com/cities" placeholder="Select location..."&gt;&lt;/cities-dropdown&gt;</code></pre>
     </div>
     
     <div class="example">
@@ -113,14 +110,6 @@
     placeholder: 'Select location...',
     onSelect: (node) => console.log(node)
   });
-  
-  // Using full URL to specific file
-  CitiesGenerator.render('#my-dropdown', {
-    country: 'it',
-    dataUrl: 'https://example.com/custom/path/it.json',
-    placeholder: 'Select location...',
-    onSelect: (node) => console.log(node)
-  });
 &lt;/script&gt;</code></pre>
     </div>
     
@@ -154,14 +143,6 @@ CitiesGenerator.render('#container', {
 CitiesGenerator.render('#container', {
   country: 'it',
   dataUrl: 'https://example.com/cities',
-  placeholder: 'Select location...',
-  onSelect: (node) => console.log(node)
-});
-
-// Using full URL to specific file
-CitiesGenerator.render('#container', {
-  country: 'it',
-  dataUrl: 'https://example.com/custom/path/it.json',
   placeholder: 'Select location...',
   onSelect: (node) => console.log(node)
 });</code></pre>
