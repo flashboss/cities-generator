@@ -14,6 +14,7 @@ export interface DropdownConfig {
   username?: string;
   password?: string;
   placeholder?: string;
+  country?: string;
 }
 
 export interface CountryInfo {

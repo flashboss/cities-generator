@@ -12,6 +12,7 @@ const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-g
 const App: React.FC = () => {
   const [config, setConfig] = useState<DropdownConfig>({
     remoteUrl: DEFAULT_GITHUB_URL,
+    country: 'it',
   });
 
   const handleSelect = (node: any) => {
@@ -36,7 +37,7 @@ const App: React.FC = () => {
           Location:
         </label>
         <CitiesDropdown
-          country="it"
+          country={config.country || "it"}
           placeholder={config.placeholder || "Select a location..."}
           onSelect={handleSelect}
           config={config}

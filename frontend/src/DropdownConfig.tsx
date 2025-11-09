@@ -67,6 +67,19 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
 
           <div className="dropdown-config-section">
             <label>
+              Country:
+              <input
+                type="text"
+                value={config.country || ''}
+                onChange={(e) => updateConfig({ country: e.target.value })}
+                placeholder="it"
+              />
+            </label>
+            <small>Country code (e.g., "it", "uk", "fr") - default: "it"</small>
+          </div>
+
+          <div className="dropdown-config-section">
+            <label>
               Placeholder:
               <input
                 type="text"

@@ -28,8 +28,13 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCountry] = useState<string | null>(initialCountry);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(initialCountry);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Update selectedCountry when initialCountry prop changes
+  useEffect(() => {
+    setSelectedCountry(initialCountry);
+  }, [initialCountry]);
 
   useEffect(() => {
     if (data) {
@@ -38,9 +43,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     }
 
     if (selectedCountry) {
+      // Reset state when URL or country changes
+      setSelectedPath([]);
+      setError(null);
+      setNodes(null);
       loadCountryData(selectedCountry);
     }
-  }, [data, selectedCountry]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, selectedCountry, config?.remoteUrl, dataUrl]);
 
   const buildDataUrl = (countryCode: string): string => {
     // Default GitHub URL
