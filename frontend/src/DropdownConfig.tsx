@@ -84,6 +84,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               Placeholder:
               <input
                 type="text"
+                className="dropdown-config-remote-url"
                 value={config.placeholder || ''}
                 onChange={(e) => updateConfig({ placeholder: e.target.value })}
                 placeholder="Select location..."

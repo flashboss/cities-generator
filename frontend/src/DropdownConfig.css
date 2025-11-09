@@ -59,10 +59,11 @@
   font-size: 0.9em;
 }
 
-.dropdown-config-remote-url {
+.dropdown-config-section input.dropdown-config-remote-url {
   flex: 1;
-  min-width: 400px;
-  max-width: 100%;
+  min-width: 300px;
+  max-width: 550px;
+  width: auto;
 }
 
 .dropdown-config-subsection {
