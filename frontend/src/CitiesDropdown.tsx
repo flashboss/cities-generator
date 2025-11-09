@@ -10,7 +10,6 @@ interface CitiesDropdownProps {
   onSelect?: (node: Node) => void;
   className?: string;
   config?: DropdownConfig;
-  onCountrySelect?: (countryCode: string) => void;
 }
 
 export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
@@ -21,7 +20,6 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   onSelect,
   className = '',
   config,
-  onCountrySelect,
 }) => {
   const [nodes, setNodes] = useState<Nodes | null>(data || null);
   const [selectedPath, setSelectedPath] = useState<Node[]>([]);
