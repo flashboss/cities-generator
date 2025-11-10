@@ -6,7 +6,7 @@ import { DropdownConfig } from './types';
 import './index.css';
 
 // Default GitHub URL for cities data
-const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe';
+const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu';
 
 // Standalone demo app
 const App: React.FC = () => {

@@ -376,7 +376,7 @@ function MyComponent() {
 - `data` (Nodes, optional): Direct data object (optional)
 - `onSelect` (function, optional): Callback when a leaf node is selected
 - `className` (string, optional): Additional CSS classes
-- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
+- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
 - `country` (string, optional): Country code, e.g., "it", "gb" (default: "it")
 - `placeholder` (string, optional): Placeholder text (default: "Select location...")
 - `username` (string, optional): Username for HTTP Basic Authentication

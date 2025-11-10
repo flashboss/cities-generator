@@ -5,7 +5,7 @@ This directory can be used to store local JSON files if you want to serve them f
 ## Default Behavior
 
 By default, the component loads data from the GitHub repository:
-- Default URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/europe/{country}.json`
+- Default URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu/{country}.json`
 
 ## Using Local Files
 
