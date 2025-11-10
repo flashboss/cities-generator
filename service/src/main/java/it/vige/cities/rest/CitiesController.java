@@ -44,6 +44,9 @@ public class CitiesController {
 	@Value("${username:#{null}}")
 	private String username;
 
+	@Value("${language:it}")
+	private String language;
+
 	public void init() {
 		if (nodes.getZones().isEmpty())
 			try {
@@ -53,6 +56,7 @@ public class CitiesController {
 				configuration.setDuplicatedNames(duplicatedNames);
 				configuration.setProvider(provider);
 				configuration.setUsername(username);
+				configuration.setLanguage(language);
 				Generator generator = new Generator(configuration, false);
 				nodes.setZones(generator.generate().getNodes().getZones());
 			} catch (Exception ex) {

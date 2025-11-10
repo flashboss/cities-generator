@@ -38,60 +38,106 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
     onConfigChange({ ...config, ...updates });
   };
 
-  // Load available countries from remote URL by checking which JSON files exist
-  // Files are in format {language}_{country}.json (e.g., it_IT.json, en_GB.json)
-  // First, we find all unique countries by checking all language combinations
+  // Load available countries by reading directories from the data URL
+  // Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
   useEffect(() => {
     const loadCountries = async () => {
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
-      const baseUrl = (config.dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
+      const dataUrl = config.dataUrl || DEFAULT_GITHUB_URL;
+      const baseUrl = dataUrl.replace(/\.json$/, '').replace(/\/$/, '');
 
       setLoadingCountries(true);
       setCountriesError(null);
 
       try {
-        // Get all ISO 3166-1 alpha-2 country codes
-        const allCountryCodes = i18nCountries.getAlpha2Codes();
-        const countryList = Object.keys(allCountryCodes).map((code) => ({
-          code: code.toUpperCase(),
-          name: i18nCountries.getName(code, 'en') || code.toUpperCase(),
-        }));
+        // Check if it's a GitHub URL (more robust check)
+        const isGitHub = baseUrl.includes('github.com') || baseUrl.includes('raw.githubusercontent.com');
         
-        // Common language codes to check
-        const languages = ['it', 'en', 'fr', 'de', 'es', 'pt'];
+        let countryCodes: string[] = [];
         
-        // Try to fetch each country with each language to see which countries exist
-        // Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
-        const foundCountries = new Set<string>();
-        
-        for (const country of countryList) {
-          for (const lang of languages) {
+        if (isGitHub) {
+          // Use GitHub API to list directories
+          // Convert raw.githubusercontent.com URL to api.github.com URL
+          // Example: https://raw.githubusercontent.com/user/repo/branch/path
+          // To: https://api.github.com/repos/user/repo/contents/path
+          // Also handle: https://raw.githubusercontent.com/user/repo/branch/path/ (with trailing slash)
+          const githubMatch = baseUrl.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?(.*)/);
+          if (githubMatch) {
+            const [, user, repo, branch, path] = githubMatch;
+            // Remove trailing slash from path if present
+            const cleanPath = path.replace(/\/$/, '');
+            const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${cleanPath || ''}?ref=${branch}`;
+            
             try {
-              const testUrl = `${baseUrl}/${country.code}/${lang}.json`;
+              const response = await fetch(apiUrl);
+              if (response.ok) {
+                const contents = await response.json();
+                // Filter for directories (type === 'dir')
+                const directories = Array.isArray(contents) 
+                  ? contents.filter((item: any) => item.type === 'dir')
+                  : [];
+                countryCodes = directories.map((dir: any) => dir.name.toUpperCase());
+              } else {
+                console.error('GitHub API error:', response.status, response.statusText);
+              }
+            } catch (err) {
+              console.error('Error fetching GitHub API:', err);
+            }
+          } else {
+            console.warn('GitHub URL detected but regex did not match:', baseUrl);
+          }
+          // For GitHub, NEVER use fallback - raw.githubusercontent.com doesn't support directory listing
+          // The presence of the directory (from GitHub API) is sufficient to show it in the list
+        } else {
+          // Fallback for non-GitHub servers: try to verify which directories exist
+          // IMPORTANT: Never use this for GitHub URLs - they don't support directory listing
+          if (baseUrl.includes('github.com') || baseUrl.includes('raw.githubusercontent.com')) {
+            console.warn('Skipping fallback directory check for GitHub URL:', baseUrl);
+            setCountries([]);
+            setLoadingCountries(false);
+            return;
+          }
+          
+          // Get all ISO 3166-1 alpha-2 country codes
+          const allCountryCodes = i18nCountries.getAlpha2Codes();
+          const allCodes = Object.keys(allCountryCodes).map(code => code.toUpperCase());
+          
+          // Try to verify which directories exist by checking if they respond
+          const checkPromises = allCodes.map(async (code) => {
+            try {
+              // Try HEAD request to directory (some servers return 200/403 for existing directories)
+              const testUrl = `${baseUrl}/${code}/`;
               const testResponse = await fetch(testUrl, { method: 'HEAD' });
-              if (testResponse.ok) {
-                foundCountries.add(country.code);
-                break; // Found at least one language for this country, no need to check others
+              // Accept 200, 403 (forbidden but exists), or 405 (method not allowed but exists)
+              if (testResponse.ok || testResponse.status === 403 || testResponse.status === 405) {
+                return code;
               }
             } catch {
-              // Try GET with Range header as fallback
+              // Try GET as fallback
               try {
-                const testUrl = `${baseUrl}/${country.code}/${lang}.json`;
-                const testResponse = await fetch(testUrl, { method: 'GET', headers: { 'Range': 'bytes=0-0' } });
-                if (testResponse.ok || testResponse.status === 206) {
-                  foundCountries.add(country.code);
-                  break; // Found at least one language for this country, no need to check others
+                const testUrl = `${baseUrl}/${code}/`;
+                const testResponse = await fetch(testUrl, { method: 'GET' });
+                if (testResponse.ok || testResponse.status === 403 || testResponse.status === 405) {
+                  return code;
                 }
               } catch {
-                // Skip if file doesn't exist
+                // Skip if directory doesn't exist
               }
             }
-          }
+            return null;
+          });
+          
+          const results = await Promise.all(checkPromises);
+          countryCodes = results.filter((c): c is string => c !== null);
         }
         
-        // Convert Set to array of CountryOption
-        const availableCountries = countryList.filter(c => foundCountries.has(c.code));
-        setCountries(availableCountries);
+        // Map country codes to CountryOption with names
+        const countryList = countryCodes.map((code) => ({
+          code: code.toUpperCase(),
+          name: i18nCountries.getName(code.toLowerCase(), 'en') || code.toUpperCase(),
+        }));
+        
+        setCountries(countryList);
       } catch (err) {
         console.error('Error loading countries:', err);
         setCountriesError('Could not load countries list');
@@ -135,36 +181,81 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
         
         // Check which languages are available for the selected country
         // Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
-        const checkPromises = languageCodes.map(async (lang) => {
-          try {
-            const testUrl = `${baseUrl}/${countryCode}/${lang.code}.json`;
-            const testResponse = await fetch(testUrl, { method: 'HEAD' });
-            if (testResponse.ok) {
-              return lang;
+        const isGitHub = baseUrl.includes('github.com') || baseUrl.includes('raw.githubusercontent.com');
+        
+        let foundLanguages: LanguageOption[] = [];
+        
+        if (isGitHub) {
+          // Use GitHub API to list files in the country directory
+          // Convert raw.githubusercontent.com URL to api.github.com URL
+          // Example: https://raw.githubusercontent.com/user/repo/branch/path
+          // To: https://api.github.com/repos/user/repo/contents/path/countryCode
+          const githubMatch = baseUrl.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?(.*)/);
+          if (githubMatch) {
+            const [, user, repo, branch, path] = githubMatch;
+            // Remove trailing slash from path if present
+            const cleanPath = path.replace(/\/$/, '');
+            const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${cleanPath ? `${cleanPath}/` : ''}${countryCode}?ref=${branch}`;
+            
+            try {
+              const response = await fetch(apiUrl);
+              if (response.ok) {
+                const contents = await response.json();
+                // Filter for JSON files (type === 'file' and name ends with .json)
+                const files = Array.isArray(contents) 
+                  ? contents.filter((item: any) => item.type === 'file' && item.name.endsWith('.json'))
+                  : [];
+                // Extract language codes from filenames (e.g., "it.json" -> "it")
+                const availableLangCodes = files.map((file: any) => file.name.replace('.json', '').toLowerCase());
+                foundLanguages = languageCodes.filter(lang => availableLangCodes.includes(lang.code));
+              }
+            } catch (err) {
+              console.error('Error fetching GitHub API for languages:', err);
             }
-          } catch {
-            // Try GET with Range header as fallback
+          } else {
+            console.warn('GitHub URL detected but regex did not match for languages:', baseUrl);
+          }
+        } else {
+          // Fallback for non-GitHub servers: check each language file
+          // IMPORTANT: Never use this for GitHub URLs - use GitHub API instead
+          if (baseUrl.includes('github.com') || baseUrl.includes('raw.githubusercontent.com')) {
+            console.warn('Skipping fallback language check for GitHub URL:', baseUrl);
+            setLanguages([]);
+            setLoadingLanguages(false);
+            return;
+          }
+          
+          const checkPromises = languageCodes.map(async (lang) => {
             try {
               const testUrl = `${baseUrl}/${countryCode}/${lang.code}.json`;
-              const testResponse = await fetch(testUrl, { method: 'GET', headers: { 'Range': 'bytes=0-0' } });
-              if (testResponse.ok || testResponse.status === 206) {
+              const testResponse = await fetch(testUrl, { method: 'HEAD' });
+              if (testResponse.ok) {
                 return lang;
               }
             } catch {
-              // Skip if file doesn't exist
+              // Try GET with Range header as fallback
+              try {
+                const testUrl = `${baseUrl}/${countryCode}/${lang.code}.json`;
+                const testResponse = await fetch(testUrl, { method: 'GET', headers: { 'Range': 'bytes=0-0' } });
+                if (testResponse.ok || testResponse.status === 206) {
+                  return lang;
+                }
+              } catch {
+                // Skip if file doesn't exist (404 is normal, don't log as error)
+              }
             }
-          }
-          return null;
-        });
+            return null;
+          });
+          
+          const results = await Promise.all(checkPromises);
+          foundLanguages = results.filter((l): l is LanguageOption => l !== null);
+        }
         
-        const results = await Promise.all(checkPromises);
-        const found = results.filter((l): l is LanguageOption => l !== null);
-        
-        setLanguages(found);
+        setLanguages(foundLanguages);
         
         // If current language is not available, reset to first available or 'it'
-        if (found.length > 0 && (!config.language || !found.find(l => l.code === config.language))) {
-          updateConfig({ language: found[0].code });
+        if (foundLanguages.length > 0 && (!config.language || !foundLanguages.find((l: LanguageOption) => l.code === config.language))) {
+          updateConfig({ language: foundLanguages[0].code });
         }
       } catch (err) {
         console.error('Error loading languages:', err);

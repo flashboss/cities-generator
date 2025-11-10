@@ -9,6 +9,7 @@ FIELDS="$FIELDS -Dkeycloak.auth-server-url=${AUTHURL:-https://auth-ct.vige.it:84
 FIELDS="$FIELDS -Dkeycloak.resource=${RESOURCE:-citiesGenerator}"
 FIELDS="$FIELDS -Dcountry=${COUNTRY:-IT}"
 FIELDS="$FIELDS -DduplicatedNames=${DUPLICATEDNAMES:-false}"
+FIELDS="$FIELDS -Dlanguage=${LANGUAGE:-it}"
 
 # Add optional provider if set
 if [ -n "$PROVIDER" ]; then

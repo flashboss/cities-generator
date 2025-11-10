@@ -2,6 +2,7 @@
 Generates a descriptor file for the cities choosing:
 
 - **-c:** the country of the generated cities named by the first two characters for example **GB** and **IT**. If not specified the default locale of the machine is used.
+- **-l:** the language code for the location names (e.g., "it", "en"). If not specified, defaults to "it".
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false.
 - **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA or GEONAMES. For **IT**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
@@ -11,13 +12,13 @@ To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.6:jar -DoutputDirectory=. && java -jar cities-generator-1.2.6.jar -c GB
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.6:jar -DoutputDirectory=. && java -jar cities-generator-1.2.6.jar -c GB -l en
 ```
-It will return a json file inside the ${user.home}/cities-generator dir
+It will return a json file inside the ${user.home}/cities-generator/GB/en.json (structure: {country}/{language}.json)
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT -l it
 ```
 
 - Through api java follow the instructions:
@@ -45,6 +46,7 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
 	...
 	Configuration configuration = new Configuration();
 	configuration.setCountry(Countries.IT.name());
+	configuration.setLanguage("it"); // Optional, defaults to "it"
 	Generator generator = new Generator(configuration, true);
 	Nodes result = generator.generate();
 	System.out.println(result.getZones());
@@ -56,7 +58,7 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
 	...
 	Result result = generator.generateFile();
 ```
-You will find the file IT.json in the ${user.home}/cities-generator directory
+You will find the file IT/it.json in the ${user.home}/cities-generator directory (structure: {country}/{language}.json)
 
 ## Geonames registration
 
@@ -70,12 +72,12 @@ A REST service can be installed in your machine. This returns a json format with
 ```
 And then start it through the command:
 ```
-java -jar build/libs/cities-generator-service-1.2.6.jar --country=IT --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.2.6.jar --country=IT --language=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to http://cities-generator-service.vige.it:8380/swagger-ui/index.html
 In a production environment you could use https so:
 ```
-java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.6.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.6.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --language=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 ### Docker development image
@@ -134,15 +136,17 @@ docker pull vige/cities-generator
 ```
 To run the image use the command:
 ```
-docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=IT -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
+docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=IT -eLANGUAGE=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
 Where IT is the chosen country. You can choose GB,IT or other else country using the first two characters of the code.
+The language defaults to "it" if not specified.
 Over the country, optionally as for the library you can add the following param:
 
 - REALM
 - AUTHURL
 - RESOURCE
 - COUNTRY
+- LANGUAGE (default: "it")
 - PROVIDER
 - CASESENSITIVE
 - DUPLICATEDNAMES
@@ -188,10 +192,14 @@ keytool -v -export -file mytrustCA.cer -keystore ./docker/prod/volume/cert/appli
 keytool -import -alias trustedCA -file mytrustCA.cer -keystore ./docker/prod/volume/cert/application-ct.keystore -storepass password -keypass password
 ```
 
-Actually two samples of generated cities can be found online:
+Actually samples of generated cities can be found online:
 
-https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/IT.json
-https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/GB.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/IT/it.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/IT/en.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/GB/it.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/GB/en.json
+
+The structure is {country}/{language}.json (e.g., IT/it.json, GB/en.json)
 
 ## Frontend
 
@@ -265,12 +273,14 @@ Works in **any** platform without framework dependencies. Simply include the scr
 <!-- Using default URL -->
 <cities-dropdown 
   country="IT" 
+  language="it"
   placeholder="Select location...">
 </cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /IT.json) -->
+<!-- Using custom base URL (automatically appends /IT/it.json) -->
 <cities-dropdown 
   country="IT" 
+  language="it"
   data-url="https://example.com/cities"
   placeholder="Select location...">
 </cities-dropdown>
@@ -301,15 +311,17 @@ Use when you can't include React separately. The standalone bundle includes Reac
   // Using default URL
   CitiesGenerator.render('#my-dropdown', {
     country: 'IT',
+    language: 'it',
     placeholder: 'Select location...',
     onSelect: (node) => {
       console.log('Selected:', node);
     }
   });
   
-  // Using custom base URL (automatically appends /IT.json)
+  // Using custom base URL (automatically appends /IT/it.json)
   CitiesGenerator.render('#my-dropdown', {
     country: 'IT',
+    language: 'it',
     dataUrl: 'https://example.com/cities',
     placeholder: 'Select location...',
     onSelect: (node) => {
@@ -320,6 +332,7 @@ Use when you can't include React separately. The standalone bundle includes Reac
   // Using search functionality
   CitiesGenerator.render('#my-dropdown', {
     country: 'IT',
+    language: 'it',
     placeholder: 'Select location...',
     enableSearch: true,
     searchPlaceholder: 'Search location...',
@@ -346,13 +359,15 @@ function MyComponent() {
       {/* Using default URL */}
       <CitiesDropdown
         country="IT"
+        language="it"
         placeholder="Select location..."
         onSelect={(node) => console.log(node)}
       />
       
-      {/* Using custom base URL (automatically appends /IT.json) */}
+      {/* Using custom base URL (automatically appends /IT/it.json) */}
       <CitiesDropdown
         country="IT"
+        language="it"
         dataUrl="https://example.com/cities"
         placeholder="Select location..."
         onSelect={(node) => console.log(node)}
@@ -361,6 +376,7 @@ function MyComponent() {
       {/* Using search functionality */}
       <CitiesDropdown
         country="IT"
+        language="it"
         placeholder="Select location..."
         enableSearch={true}
         searchPlaceholder="Search location..."
@@ -376,8 +392,9 @@ function MyComponent() {
 - `data` (Nodes, optional): Direct data object (optional)
 - `onSelect` (function, optional): Callback when a leaf node is selected
 - `className` (string, optional): Additional CSS classes
-- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
+- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/{country}/{language}.json`. If specified, treated as base URL and automatically appends `/{country}/{language}.json` (any `.json` extension in the URL is automatically removed)
 - `country` (string, optional): Country code, e.g., "IT", "GB" (default: "IT")
+- `language` (string, optional): Language code, e.g., "it", "en" (default: "it")
 - `placeholder` (string, optional): Placeholder text (default: "Select location...")
 - `username` (string, optional): Username for HTTP Basic Authentication
 - `password` (string, optional): Password for HTTP Basic Authentication
@@ -420,11 +437,12 @@ add_action('wp_enqueue_scripts', 'enqueue_cities_dropdown');
 <cities-dropdown />
 
 <!-- Using default URL -->
-<cities-dropdown country="IT"></cities-dropdown>
+<cities-dropdown country="IT" language="it"></cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /IT.json) -->
+<!-- Using custom base URL (automatically appends /IT/it.json) -->
 <cities-dropdown 
   country="IT" 
+  language="it"
   data-url="<?php echo get_template_directory_uri(); ?>/data">
 </cities-dropdown>
 ```
@@ -455,10 +473,10 @@ cities_dropdown:
 <cities-dropdown />
 
 {# Using default URL #}
-<cities-dropdown country="IT"></cities-dropdown>
+<cities-dropdown country="IT" language="it"></cities-dropdown>
 
-{# Using custom base URL (automatically appends /IT.json) #}
-<cities-dropdown country="IT" data-url="/sites/default/files/cities"></cities-dropdown>
+{# Using custom base URL (automatically appends /IT/it.json) #}
+<cities-dropdown country="IT" language="it" data-url="/sites/default/files/cities"></cities-dropdown>
 ```
 
 #### Liferay
@@ -481,13 +499,10 @@ js.fast.load=true
 <cities-dropdown />
 
 <%-- Using default URL --%>
-<cities-dropdown country="IT"></cities-dropdown>
+<cities-dropdown country="IT" language="it"></cities-dropdown>
 
-<%-- Using default URL --%>
-<cities-dropdown country="IT"></cities-dropdown>
-
-<%-- Using custom base URL (automatically appends /IT.json) --%>
-<cities-dropdown country="IT" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data"></cities-dropdown>
+<%-- Using custom base URL (automatically appends /IT/it.json) --%>
+<cities-dropdown country="IT" language="it" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data"></cities-dropdown>
 ```
 
 #### Joomla
@@ -509,10 +524,10 @@ $document->addStyleSheet(JURI::root() . 'templates/your-template/js/style.css');
 <cities-dropdown />
 
 <!-- Using default URL -->
-<cities-dropdown country="IT"></cities-dropdown>
+<cities-dropdown country="IT" language="it"></cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /IT.json) -->
-<cities-dropdown country="IT" data-url="<?php echo JURI::root(); ?>data"></cities-dropdown>
+<!-- Using custom base URL (automatically appends /IT/it.json) -->
+<cities-dropdown country="IT" language="it" data-url="<?php echo JURI::root(); ?>data"></cities-dropdown>
 ```
 
 ### Data Format

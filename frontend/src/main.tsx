@@ -55,12 +55,14 @@ const App: React.FC = () => {
 <!-- Using default URL -->
 <cities-dropdown 
   country="IT" 
+  language="it"
   placeholder="Select location...">
 </cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /IT.json) -->
+<!-- Using custom base URL (automatically appends /IT/it.json) -->
 <cities-dropdown 
   country="IT" 
+  language="it"
   data-url="https://example.com/cities"
   placeholder="Select location...">
 </cities-dropdown>`}
@@ -76,13 +78,15 @@ const App: React.FC = () => {
 // Using default URL
 <CitiesDropdown
   country="IT"
+  language="it"
   placeholder="Select location..."
   onSelect={(node) => console.log(node)}
 />
 
-// Using custom base URL (automatically appends /IT.json)
+// Using custom base URL (automatically appends /IT/it.json)
 <CitiesDropdown
   country="IT"
+  language="it"
   dataUrl="https://example.com/cities"
   placeholder="Select location..."
   onSelect={(node) => console.log(node)}
@@ -91,6 +95,7 @@ const App: React.FC = () => {
 // Using search functionality
 <CitiesDropdown
   country="IT"
+  language="it"
   placeholder="Select location..."
   enableSearch={true}
   searchPlaceholder="Search location..."
@@ -109,13 +114,15 @@ const App: React.FC = () => {
   // Using default URL
   CitiesGenerator.render('#cities-dropdown', {
     country: 'IT',
+    language: 'it',
     placeholder: 'Select location...',
     onSelect: (node) => console.log(node)
   });
 
-  // Using custom base URL (automatically appends /IT.json)
+  // Using custom base URL (automatically appends /IT/it.json)
   CitiesGenerator.render('#cities-dropdown', {
     country: 'IT',
+    language: 'it',
     dataUrl: 'https://example.com/cities',
     placeholder: 'Select location...',
     onSelect: (node) => console.log(node)
@@ -124,6 +131,7 @@ const App: React.FC = () => {
   // Using search functionality
   CitiesGenerator.render('#cities-dropdown', {
     country: 'IT',
+    language: 'it',
     placeholder: 'Select location...',
     enableSearch: true,
     searchPlaceholder: 'Search location...',
