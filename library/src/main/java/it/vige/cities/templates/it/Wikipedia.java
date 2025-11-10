@@ -75,14 +75,82 @@ public class Wikipedia extends HTMLTemplate {
 					setName(caseSensitive, duplicatedNames, name, nodes.getZones(), node1);
 					node0.getZones().add(node1);
 					Document level2 = getPage(head1.absUrl("href"));
+					// Try to find provinces/cities metropolitan with specific title attributes
 					Elements lines2 = level2.select(
-							"div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Città metropolitana], div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia], div > table.wikitable > tbody > tr > td:eq(0) > a[title^=Città metropolitana], div > table.wikitable > tbody > tr > td:eq(0) > a[title^=Provincia]");
+							"table.wikitable > tbody > tr > td:eq(1) > a[title^=Città metropolitana], table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia], table.wikitable > tbody > tr > td:eq(0) > a[title^=Città metropolitana], table.wikitable > tbody > tr > td:eq(0) > a[title^=Provincia]");
+					// If not found, try a more generic selector for provinces (e.g., for Sicilia)
+					// Check href with URL-encoded characters
+					if (lines2.isEmpty()) {
+						lines2 = level2.select(
+								"table.wikitable > tbody > tr > td:eq(1) > a[href*=/Provincia_], table.wikitable > tbody > tr > td:eq(1) > a[href*=/Citt%C3%A0_metropolitana_], table.wikitable > tbody > tr > td:eq(1) > a[href*=/Città_metropolitana_], table.wikitable > tbody > tr > td:eq(0) > a[href*=/Provincia_], table.wikitable > tbody > tr > td:eq(0) > a[href*=/Citt%C3%A0_metropolitana_], table.wikitable > tbody > tr > td:eq(0) > a[href*=/Città_metropolitana_]");
+					}
+					// If still not found, try to find links in the "Provincia" column by looking at table structure
+					if (lines2.isEmpty()) {
+						// Find the "Provincia" column index dynamically
+						int provinciaColumnIndex = -1;
+						Elements headerRows = level2.select("table.wikitable > thead > tr > th, table.wikitable > tbody > tr:first-child > th");
+						for (Element header : headerRows) {
+							String headerText = header.text().toLowerCase();
+							if (headerText.contains("provincia")) {
+								// Find the index of this header
+								int index = 0;
+								Element current = header.previousElementSibling();
+								while (current != null) {
+									index++;
+									current = current.previousElementSibling();
+								}
+								provinciaColumnIndex = index;
+								break;
+							}
+						}
+						
+						Elements allLinks = new Elements();
+						if (provinciaColumnIndex >= 0) {
+							// Use the found column index
+							allLinks = level2.select("table.wikitable > tbody > tr > td:eq(" + provinciaColumnIndex + ") > a");
+						} else {
+							// Fallback: try all columns
+							allLinks = level2.select("table.wikitable > tbody > tr > td:eq(1) > a");
+							if (allLinks.isEmpty()) {
+								allLinks = level2.select("table.wikitable > tbody > tr > td:eq(2) > a");
+							}
+							if (allLinks.isEmpty()) {
+								allLinks = level2.select("table.wikitable > tbody > tr > td:eq(0) > a");
+							}
+						}
+						
+						// Filter to keep only province/metropolitan city links
+						Elements filteredLinks = new Elements();
+						for (Element link : allLinks) {
+							String href = link.attr("href");
+							String title = link.attr("title");
+							// Check if it's a province/metropolitan city link
+							// Be more lenient: if href contains province-related terms, include it
+							boolean isProvince = false;
+							if (href != null) {
+								String hrefLower = href.toLowerCase();
+								isProvince = hrefLower.contains("provincia") || hrefLower.contains("citt") || 
+											hrefLower.contains("metropolitana") || hrefLower.contains("libero_consorzio") ||
+											hrefLower.contains("libero-consorzio");
+							}
+							if (!isProvince && title != null) {
+								String titleLower = title.toLowerCase();
+								isProvince = titleLower.contains("provincia") || titleLower.contains("città metropolitana") || 
+											titleLower.contains("libero consorzio");
+							}
+							if (isProvince) {
+								filteredLinks.add(link);
+							}
+						}
+						lines2 = filteredLinks;
+					}
 					List<Element> linksNoDuplicated = filterDuplicated(lines2);
 					
 					// If no provinces found (e.g., Valle d'Aosta), treat the region as having direct municipalities
-					if (linksNoDuplicated.isEmpty() && (name.equals("Valle d'Aosta") || name.equals("Sicilia") || name.equals("Sardegna"))) {
+					// Note: Sicilia and Sardegna have provinces, so they should follow the normal flow
+					if (linksNoDuplicated.isEmpty() && name.equals("Valle d'Aosta")) {
 						// For regions without provinces, get municipalities directly from the table
-						Elements directComuni = level2.select("div > table.wikitable > tbody > tr > td:eq(0) > a");
+						Elements directComuni = level2.select("table.wikitable > tbody > tr > td:eq(0) > a");
 						for (Element comune : directComuni) {
 							String comuneText = comune.text();
 							// Skip header links and special pages
@@ -97,7 +165,7 @@ public class Wikipedia extends HTMLTemplate {
 								node1.getZones().add(node2);
 							}
 						}
-					} else {
+					} else if (!linksNoDuplicated.isEmpty()) {
 						// Normal flow: provinces -> municipalities
 						for (Element head2 : linksNoDuplicated) {
 							Node node2 = new Node();
@@ -108,7 +176,7 @@ public class Wikipedia extends HTMLTemplate {
 							node1.getZones().add(node2);
 							String escapedName = Selector.escapeCssIdentifier(node2.getName());
 							Elements lines3 = level2.select(
-									"div > table.wikitable > tbody > tr:has(td:eq(1) a:matchesOwn((?i)" + escapedName
+									"table.wikitable > tbody > tr:has(td:eq(1) a:matchesOwn((?i)" + escapedName
 											+ ")) > td:eq(0) > a");
 							for (Element head3 : lines3) {
 								Node node3 = new Node();
