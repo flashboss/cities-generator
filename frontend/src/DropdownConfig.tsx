@@ -43,7 +43,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
         // Get all ISO 3166-1 alpha-2 country codes
         const allCountryCodes = i18nCountries.getAlpha2Codes();
         const countryList = Object.keys(allCountryCodes).map((code) => ({
-          code: code.toLowerCase(),
+          code: code.toUpperCase(),
           name: i18nCountries.getName(code, 'en') || code.toUpperCase(),
         }));
         
