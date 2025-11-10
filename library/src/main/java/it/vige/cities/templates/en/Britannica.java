@@ -48,8 +48,6 @@ public class Britannica extends HTMLTemplate {
 		Elements lines0 = level0.select("section[data-level=\"1\"] h2.h1 a");
 		int counter = 1;
 		int counterLevel0 = 0;
-		int counterLevel1 = 0;
-		int counterLevel2 = 0;
 		for (Element head0 : lines0) {
 			counterLevel0++;
 			Node node0 = new Node();
@@ -63,33 +61,29 @@ public class Britannica extends HTMLTemplate {
 				Element head1title = head1.select("h2 > a").first();
 				if (head1title == null)
 					head1title = head1.select("h2").first();
-				counterLevel1 = counter;
 				Node node1 = new Node();
-				node1.setId(counterLevel0 + ID_SEPARATOR + counter++);
+				node1.setId(node0.getId() + ID_SEPARATOR + counter++);
 				node1.setLevel(1);
 				setName(caseSensitive, duplicatedNames, head1title.text(), nodes.getZones(), node1);
 				node0.getZones().add(node1);
 				Elements lines2 = head1.select("section > ul > li");
 				for (Element head2 : lines2) {
 					Element head2title = head2.select("div").first();
-					counterLevel2 = counter;
 					Node node2 = new Node();
-					node2.setId(counterLevel0 + ID_SEPARATOR + counterLevel1 + ID_SEPARATOR + counter++);
+					node2.setId(node1.getId() + ID_SEPARATOR + counter++);
 					node2.setLevel(2);
 					setName(caseSensitive, duplicatedNames, head2title.text(), nodes.getZones(), node2);
 					node1.getZones().add(node2);
 					Elements lines3 = head2.select("div > ul > li a");
 					for (Element head3 : lines3) {
 						Node node3 = new Node();
-						node3.setId(counterLevel0 + ID_SEPARATOR + counterLevel1 + ID_SEPARATOR + counterLevel2
-								+ ID_SEPARATOR + counter++);
+						node3.setId(node2.getId() + ID_SEPARATOR + counter++);
 						node3.setLevel(3);
 						setName(caseSensitive, duplicatedNames, head3.text(), nodes.getZones(), node3);
 						node2.getZones().add(node3);
 					}
 				}
 			}
-			counterLevel1 = 0;
 		}
 		return new ResultNodes(OK, nodes, this);
 	}
