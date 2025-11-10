@@ -39,8 +39,9 @@ public class ExtraGeoNames extends GeoNames {
 		Nodes nodesFromGeoname = super.generate().getNodes();
 		for (Node node0 : nodes.getZones()) {
 			for (Node node1 : nodesFromGeoname.getZones()) {
-				if (((node1.getName().equalsIgnoreCase("Piemonte") || node1.getName().equalsIgnoreCase("Liguria")
-						|| node1.getName().equalsIgnoreCase("Regione Autonoma Valle d'Aosta")
+				if (((node1.getName().equalsIgnoreCase("Piemonte")
+						|| node1.getName().equalsIgnoreCase("Liguria")
+						|| node1.getName().equalsIgnoreCase("REGIONE AUTONOMA VALLE D\'AOSTA")
 						|| node1.getName().equalsIgnoreCase("Lombardia"))
 						&& node0.getName().equalsIgnoreCase("I: ITALIA NORD-OCCIDENTALE")) ||
 
@@ -51,7 +52,8 @@ public class ExtraGeoNames extends GeoNames {
 								&& node0.getName().equalsIgnoreCase("II: ITALIA NORD-ORIENTALE")))
 						||
 
-						(((node1.getName().equalsIgnoreCase("Lazio") || node1.getName().equalsIgnoreCase("Marche")
+						(((node1.getName().equalsIgnoreCase("Lazio") 
+								|| node1.getName().equalsIgnoreCase("Marche")
 								|| node1.getName().equalsIgnoreCase("Umbria")
 								|| node1.getName().equalsIgnoreCase("Toscana"))
 								&& node0.getName().equalsIgnoreCase("III: ITALIA CENTRALE")))
@@ -65,7 +67,8 @@ public class ExtraGeoNames extends GeoNames {
 								&& node0.getName().equalsIgnoreCase("IV: ITALIA MERIDIONALE")))
 						||
 
-						(((node1.getName().equalsIgnoreCase("Sardegna") || node1.getName().equalsIgnoreCase("Sicilia"))
+						(((node1.getName().equalsIgnoreCase("Sardegna") || node1.getName().equalsIgnoreCase("Sardinia")
+								|| node1.getName().equalsIgnoreCase("Sicilia") || node1.getName().equalsIgnoreCase("Sicily"))
 								&& node0.getName().equalsIgnoreCase("V: ITALIA INSULARE"))))
 					node0.getZones().add(node1);
 			}

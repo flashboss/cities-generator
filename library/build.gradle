@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        citiesVersion = '1.2.5'
+        citiesVersion = '1.2.6'
         slf4jVersion = '2.0.17'
         jsoupVersion = '1.21.2'
         commonsCliVersion = '1.10.0'

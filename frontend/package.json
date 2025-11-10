@@ -1,6 +1,6 @@
 {
   "name": "cities-generator-frontend",
-  "version": "1.0.0",
+  "version": "1.2.6",
   "description": "Portable hierarchical dropdown menu for cities-generator JSON data",
   "type": "module",
   "scripts": {

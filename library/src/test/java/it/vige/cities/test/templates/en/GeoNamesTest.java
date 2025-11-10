@@ -41,17 +41,17 @@ public class GeoNamesTest extends FileGenerator {
 		Nodes nodes = readFile(gb.name());
 		assertNotNull(nodes);
 		Node england = nodes.getZones().get(0);
-		Node barnsley = england.getZones().get(0);
-		Node billingley = barnsley.getZones().get(0);
-		assertEquals("6269131", england.getId());
+		Node bedford = england.getZones().get(1);
+		Node bedfordCity = bedford.getZones().get(0);
+		assertEquals("1", england.getId());
 		assertEquals(0, england.getLevel());
 		assertEquals("ENGLAND", england.getName());
-		assertEquals("6269131-3333122", barnsley.getId());
-		assertEquals(1, barnsley.getLevel());
-		assertEquals("BARNSLEY", barnsley.getName());
-		assertEquals("6269131-3333122-7299739", billingley.getId());
-		assertEquals(2, billingley.getLevel());
-		assertEquals("BILLINGLEY", billingley.getName());
+		assertEquals("1-3", bedford.getId());
+		assertEquals(1, bedford.getLevel());
+		assertEquals("BEDFORD", bedford.getName());
+		assertEquals("1-3-4", bedfordCity.getId());
+		assertEquals(2, bedfordCity.getLevel());
+		assertEquals("BEDFORD (CITY)", bedfordCity.getName());
 	}
 
 }
