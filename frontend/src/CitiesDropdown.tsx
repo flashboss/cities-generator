@@ -14,6 +14,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   className = '',
   dataUrl,
   country = 'IT',
+  language = 'it',
   placeholder = 'Select location...',
   username,
   password,
@@ -36,15 +37,17 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     }
 
     if (country) {
-      // Reset state when URL or country changes
+      // Reset state when URL, country, or language changes
       setSelectedPath([]);
       setError(null);
       setNodes(null);
       
-      // Build URL
+      // Build URL: format is {country}/{language}.json (e.g., IT/it.json, GB/en.json)
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
       const baseUrl = (dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
-      const url = `${baseUrl}/${country}.json`;
+      const lang = (language || 'it').toLowerCase();
+      const countryCode = country.toUpperCase();
+      const url = `${baseUrl}/${countryCode}/${lang}.json`;
       
       // Load data with current config
       const loadData = async () => {
@@ -79,7 +82,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       
       loadData();
     }
-  }, [data, country, dataUrl, username, password]);
+  }, [data, country, language, dataUrl, username, password]);
 
   const handleNodeClick = (node: Node, level: number) => {
     const newPath = selectedPath.slice(0, level);

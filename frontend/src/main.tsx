@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [config, setConfig] = useState<DropdownConfig>({
     dataUrl: DEFAULT_GITHUB_URL,
     country: 'IT',
+    language: 'it',
   });
 
   const handleSelect = (node: any) => {

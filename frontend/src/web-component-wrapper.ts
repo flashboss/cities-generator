@@ -12,7 +12,7 @@ class CitiesDropdownElement extends HTMLElement {
   private reactRoot: any = null;
 
   static get observedAttributes() {
-    return ['country', 'data-url', 'placeholder', 'username', 'password', 'enable-search', 'search-placeholder'];
+    return ['country', 'language', 'data-url', 'placeholder', 'username', 'password', 'enable-search', 'search-placeholder'];
   }
 
   connectedCallback() {
@@ -43,6 +43,7 @@ class CitiesDropdownElement extends HTMLElement {
     }
 
     const country = this.getAttribute('country') || 'IT';
+    const language = this.getAttribute('language') || 'it';
     const dataUrl = this.getAttribute('data-url');
     const placeholder = this.getAttribute('placeholder') || 'Select location...';
     const username = this.getAttribute('username');
@@ -61,6 +62,7 @@ class CitiesDropdownElement extends HTMLElement {
 
     const element = React.createElement(CitiesDropdown, {
       country,
+      language,
       dataUrl,
       placeholder,
       username,

@@ -7,7 +7,7 @@ class CitiesDropdownElement extends HTMLElement {
   private reactRoot: any = null;
 
   static get observedAttributes() {
-    return ['country', 'data-url', 'placeholder'];
+    return ['country', 'language', 'data-url', 'placeholder'];
   }
 
   constructor() {
@@ -27,6 +27,7 @@ class CitiesDropdownElement extends HTMLElement {
 
   private render() {
     const country = this.getAttribute('country') || 'IT';
+    const language = this.getAttribute('language') || 'it';
     const dataUrl = this.getAttribute('data-url');
     const placeholder = this.getAttribute('placeholder') || 'Select location...';
 
@@ -44,6 +45,7 @@ class CitiesDropdownElement extends HTMLElement {
 
         const element = React.createElement(CitiesDropdown, {
           country,
+          language,
           dataUrl,
           placeholder,
           onSelect: handleSelect,

@@ -114,13 +114,13 @@ public class FileGenerator {
 	 */
 	protected void writeFile(Nodes nodes, String templateName) throws Exception {
 		new File(CITIES_HOME).mkdir();
-		String fileName;
-		if (language != null && !language.isEmpty()) {
-			fileName = language.toLowerCase() + "_" + country.toUpperCase() + ".json";
-		} else {
-			fileName = country.toUpperCase() + ".json";
-		}
-		String name = CITIES_HOME + fileName;
+		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		String countryDir = country.toUpperCase();
+		String lang = (language != null && !language.isEmpty()) ? language.toLowerCase() : "it";
+		File countryFolder = new File(CITIES_HOME + countryDir);
+		countryFolder.mkdirs();
+		String fileName = lang + ".json";
+		String name = CITIES_HOME + countryDir + File.separator + fileName;
 		
 		// Serialize nodes to JSON
 		JsonNode jsonNode = mapper.valueToTree(nodes);
@@ -170,13 +170,11 @@ public class FileGenerator {
 	 */
 	protected Nodes readFile(String country, String language) throws Exception {
 		new File(CITIES_HOME).mkdir();
-		String fileName;
-		if (language != null && !language.isEmpty()) {
-			fileName = language.toLowerCase() + "_" + country.toUpperCase() + ".json";
-		} else {
-			fileName = country.toUpperCase() + ".json";
-		}
-		return mapper.readValue(new File(CITIES_HOME + fileName), Nodes.class);
+		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		String countryDir = country.toUpperCase();
+		String lang = (language != null && !language.isEmpty()) ? language.toLowerCase() : "it";
+		String fileName = lang + ".json";
+		return mapper.readValue(new File(CITIES_HOME + countryDir + File.separator + fileName), Nodes.class);
 	}
 
 	/**
@@ -185,13 +183,11 @@ public class FileGenerator {
 	 */
 	protected boolean exists() {
 		new File(CITIES_HOME).mkdir();
-		String fileName;
-		if (language != null && !language.isEmpty()) {
-			fileName = language.toLowerCase() + "_" + country.toUpperCase() + ".json";
-		} else {
-			fileName = country.toUpperCase() + ".json";
-		}
-		return new File(CITIES_HOME).exists() && new File(CITIES_HOME + fileName).exists();
+		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		String countryDir = country.toUpperCase();
+		String lang = (language != null && !language.isEmpty()) ? language.toLowerCase() : "it";
+		String fileName = lang + ".json";
+		return new File(CITIES_HOME).exists() && new File(CITIES_HOME + countryDir + File.separator + fileName).exists();
 	}
 
 }

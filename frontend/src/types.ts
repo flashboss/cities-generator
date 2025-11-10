@@ -12,6 +12,7 @@ export interface Nodes {
 export interface DropdownConfig {
   dataUrl?: string;
   country?: string;
+  language?: string;
   placeholder?: string;
   username?: string;
   password?: string;
