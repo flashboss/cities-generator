@@ -23,7 +23,7 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * Tuttitalia provider
+ * Wikipedia provider
  * 
  * @author lucastancapiano
  */
@@ -37,7 +37,7 @@ public class Wikipedia extends HTMLTemplate {
 	private Map<Node, List<String>> associations = new HashMap<Node, List<String>>();
 
 	/**
-	 * Tuttitalia
+	 * Wikipedia
 	 * 
 	 * @param caseSensitive   the case sensitive parameter
 	 * @param duplicatedNames the duplicated names parameter

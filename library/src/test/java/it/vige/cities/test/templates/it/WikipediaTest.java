@@ -17,7 +17,7 @@ import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
 /**
- * Tuttitalia tests
+ * Wikipedia tests
  * 
  * @author lucastancapiano
  */

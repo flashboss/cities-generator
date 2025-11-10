@@ -4,7 +4,7 @@ Generates a descriptor file for the cities choosing:
 - **-c:** the country of the generated cities named by the first two characters for example **gb** and **it**. If not specified the default locale of the machine is used.
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false.
-- **-p:** choose the first provider to create the file descriptor. You can choose for **gb**: BRITANNICA or GEONAMES. For **it**: COMUNIITALIANI, TUTTITALIA or EXTRAGEONAMES. For all other coutries the provider is GEONAMES. Else start a default.
+- **-p:** choose the first provider to create the file descriptor. You can choose for **gb**: BRITANNICA or GEONAMES. For **it**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
 
 To generate the cities, you can choose between 3 modes:

@@ -7,7 +7,7 @@ package it.vige.cities.templates.it;
 public enum Providers {
 	
 	/**
-	 * TUTTITALIA
+	 * WIKIPEDIA
 	 */
 	WIKIPEDIA, 
 	

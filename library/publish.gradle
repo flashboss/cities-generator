@@ -37,7 +37,7 @@ publishing {
                 scm {
                     connection = 'scm:git:https://github.com/flashboss/cities-generator.git'
                     developerConnection = 'scm:git:https://github.com/flashboss/cities-generator.git'
-                    tag = '1.2.6'
+                    tag = "${citiesVersion}"
                     url = 'https://github.com/flashboss/cities-generator'
                 }
             }

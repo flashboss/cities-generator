@@ -41,7 +41,8 @@ public abstract class Template extends FileGenerator {
 		Nodes nodes = null;
 		try {
 			nodes = generate().getNodes();
-			writeFile(nodes);
+			String templateName = this.getClass().getSimpleName();
+			writeFile(nodes, templateName);
 		} catch (Exception ex) {
 			return new ResultNodes(KO, nodes, this);
 		}

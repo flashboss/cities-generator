@@ -1,6 +1,16 @@
 buildscript {
     ext {
-        citiesVersion = '1.2.6'
+        // Read version from version.properties file
+        def versionProps = new Properties()
+        def versionFile = file('src/main/resources/it/vige/cities/version.properties')
+        if (!versionFile.exists()) {
+            throw new GradleException("version.properties file not found at: ${versionFile.absolutePath}")
+        }
+        versionFile.withInputStream { versionProps.load(it) }
+        citiesVersion = versionProps.getProperty('version')
+        if (citiesVersion == null || citiesVersion.isEmpty()) {
+            throw new GradleException("version property not found in version.properties file")
+        }
         slf4jVersion = '2.0.17'
         jsoupVersion = '1.21.2'
         commonsCliVersion = '1.10.0'
@@ -57,9 +67,11 @@ java {
     withSourcesJar()
 }
 
+
 jar {
     manifest {
         attributes("Main-Class": "it.vige.cities.Generator")
+        attributes("Implementation-Version": "${citiesVersion}")
     }
     from {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
