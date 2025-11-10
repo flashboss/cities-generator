@@ -25,7 +25,20 @@ public class ExtraGeoNames extends GeoNames {
 	 * @param username        the username
 	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
-		super(country, caseSensitive, duplicatedNames, username);
+		this(country, caseSensitive, duplicatedNames, username, null);
+	}
+
+	/**
+	 * ExtraGeoNames
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames true if it accepts duplicated names
+	 * @param username        the username
+	 * @param language        the language code (e.g., "it", "en")
+	 */
+	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
+		super(country, caseSensitive, duplicatedNames, username, language);
 		firstLevel = 1;
 	}
 

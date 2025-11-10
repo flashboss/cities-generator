@@ -36,6 +36,7 @@ public class GeoNames extends Template {
 	protected boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String username;
+	private String language;
 
 	/**
 	 * First level
@@ -52,9 +53,23 @@ public class GeoNames extends Template {
 	 * @param username        the user name
 	 */
 	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
+		this(country, caseSensitive, duplicatedNames, username, null);
+	}
+
+	/**
+	 * GeoNames
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames the duplicated names parameter
+	 * @param username        the user name
+	 * @param language        the language code (e.g., "it", "en")
+	 */
+	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = country;
+		this.language = language;
 		if (username != null)
 			this.username = username;
 		else
@@ -71,7 +86,11 @@ public class GeoNames extends Template {
 	protected Response getPageCountry(String country) throws Exception {
 		client = newClient();
 		WebTarget target = client.target(URL_COUNTRY);
-		Response response = target.queryParam("country", country).queryParam("username", username).request().get();
+		target = target.queryParam("country", country).queryParam("username", username);
+		if (language != null && !language.isEmpty()) {
+			target = target.queryParam("lang", language);
+		}
+		Response response = target.request().get();
 		return response;
 	}
 
@@ -85,7 +104,11 @@ public class GeoNames extends Template {
 	protected Response getPageChildren(int id) throws Exception {
 		client = newClient();
 		WebTarget target = client.target(URL_CHILDREN);
-		Response response = target.queryParam("geonameId", id).queryParam("username", username).request().get();
+		target = target.queryParam("geonameId", id).queryParam("username", username);
+		if (language != null && !language.isEmpty()) {
+			target = target.queryParam("lang", language);
+		}
+		Response response = target.request().get();
 		return response;
 	}
 

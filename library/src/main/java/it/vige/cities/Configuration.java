@@ -16,6 +16,8 @@ public class Configuration {
 
 	private String username;
 	
+	private String language;
+	
 	/**
 	 * Default configuration
 	 */
@@ -101,5 +103,25 @@ public class Configuration {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * Language
+	 * @return the language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
+	 * Language
+	 * @param language the language code (e.g., "it", "en"). Defaults to "it" if null or empty.
+	 */
+	public void setLanguage(String language) {
+		if (language != null && !language.isEmpty()) {
+			this.language = language.toLowerCase();
+		} else {
+			this.language = "it";
+		}
 	}
 }

@@ -80,6 +80,11 @@ public class FileGenerator {
 	 * Country
 	 */
 	protected String country = getDefault().getCountry().toUpperCase();
+	
+	/**
+	 * Language (default: "it", e.g., "it", "en")
+	 */
+	protected String language = "it";
 
 	private Logger logger = getLogger(FileGenerator.class);
 
@@ -109,7 +114,13 @@ public class FileGenerator {
 	 */
 	protected void writeFile(Nodes nodes, String templateName) throws Exception {
 		new File(CITIES_HOME).mkdir();
-		String name = CITIES_HOME + country.toUpperCase() + ".json";
+		String fileName;
+		if (language != null && !language.isEmpty()) {
+			fileName = language.toLowerCase() + "_" + country.toUpperCase() + ".json";
+		} else {
+			fileName = country.toUpperCase() + ".json";
+		}
+		String name = CITIES_HOME + fileName;
 		
 		// Serialize nodes to JSON
 		JsonNode jsonNode = mapper.valueToTree(nodes);
@@ -147,8 +158,25 @@ public class FileGenerator {
 	 * @throws Exception if there is a problem
 	 */
 	protected Nodes readFile(String country) throws Exception {
+		return readFile(country, language);
+	}
+	
+	/**
+	 * Read file
+	 * @param country the country
+	 * @param language the language (optional)
+	 * @return the nodes of the country
+	 * @throws Exception if there is a problem
+	 */
+	protected Nodes readFile(String country, String language) throws Exception {
 		new File(CITIES_HOME).mkdir();
-		return mapper.readValue(new File(CITIES_HOME + country.toUpperCase() + ".json"), Nodes.class);
+		String fileName;
+		if (language != null && !language.isEmpty()) {
+			fileName = language.toLowerCase() + "_" + country.toUpperCase() + ".json";
+		} else {
+			fileName = country.toUpperCase() + ".json";
+		}
+		return mapper.readValue(new File(CITIES_HOME + fileName), Nodes.class);
 	}
 
 	/**
@@ -156,7 +184,14 @@ public class FileGenerator {
 	 * @return true if the file exists
 	 */
 	protected boolean exists() {
-		return new File(CITIES_HOME).exists() && new File(CITIES_HOME + country.toUpperCase() + ".json").exists();
+		new File(CITIES_HOME).mkdir();
+		String fileName;
+		if (language != null && !language.isEmpty()) {
+			fileName = language.toLowerCase() + "_" + country.toUpperCase() + ".json";
+		} else {
+			fileName = country.toUpperCase() + ".json";
+		}
+		return new File(CITIES_HOME).exists() && new File(CITIES_HOME + fileName).exists();
 	}
 
 }
