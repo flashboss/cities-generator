@@ -55,12 +55,19 @@ public class Wikipedia extends HTMLTemplate {
 	public ResultNodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		Document level1 = getPage(URL);
-		Elements lines1 = level1.select("div div ul li a[title^=Comuni del]");
+		Elements lines1 = level1.select("div div ul li a[title^=Comuni del], div div ul li a[title^=Comuni della]");
 		int counter = addLevel0(nodes, caseSensitive, associations);
 		for (Node node0 : nodes.getZones()) {
 			for (Element head1 : lines1) {
-				String[] words = head1.text().split("del |della |'");
-				String name = words[words.length - 1];
+				String linkText = head1.text();
+				String name = null;
+				// Handle special case for "Valle d'Aosta"
+				if (linkText.contains("Valle d'Aosta")) {
+					name = "Valle d'Aosta";
+				} else {
+					String[] words = linkText.split("del |della |'");
+					name = words[words.length - 1];
+				}
 				if (associations.get(node0).contains(name)) {
 					Node node1 = new Node();
 					node1.setId(node0.getId() + ID_SEPARATOR + counter++);
@@ -69,25 +76,47 @@ public class Wikipedia extends HTMLTemplate {
 					node0.getZones().add(node1);
 					Document level2 = getPage(head1.absUrl("href"));
 					Elements lines2 = level2.select(
-							"div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Città metropolitana], div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia]");
+							"div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Città metropolitana], div > table.wikitable > tbody > tr > td:eq(1) > a[title^=Provincia], div > table.wikitable > tbody > tr > td:eq(0) > a[title^=Città metropolitana], div > table.wikitable > tbody > tr > td:eq(0) > a[title^=Provincia]");
 					List<Element> linksNoDuplicated = filterDuplicated(lines2);
-					for (Element head2 : linksNoDuplicated) {
-						Node node2 = new Node();
-						node2.setId(node1.getId() + ID_SEPARATOR + counter++);
-						node2.setLevel(2);
-						String text = head2.text();
-						setName(caseSensitive, duplicatedNames, text, nodes.getZones(), node2);
-						node1.getZones().add(node2);
-						String escapedName = Selector.escapeCssIdentifier(node2.getName());
-						Elements lines3 = level2.select(
-								"div > table.wikitable > tbody > tr:has(td:eq(1) a:matchesOwn((?i)" + escapedName
-										+ ")) > td:eq(0) > a");
-						for (Element head3 : lines3) {
-							Node node3 = new Node();
-							node3.setId(node2.getId() + ID_SEPARATOR + counter++);
-							node3.setLevel(3);
-							setName(caseSensitive, duplicatedNames, head3.text(), nodes.getZones(), node3);
-							node2.getZones().add(node3);
+					
+					// If no provinces found (e.g., Valle d'Aosta), treat the region as having direct municipalities
+					if (linksNoDuplicated.isEmpty() && (name.equals("Valle d'Aosta") || name.equals("Sicilia") || name.equals("Sardegna"))) {
+						// For regions without provinces, get municipalities directly from the table
+						Elements directComuni = level2.select("div > table.wikitable > tbody > tr > td:eq(0) > a");
+						for (Element comune : directComuni) {
+							String comuneText = comune.text();
+							// Skip header links and special pages
+							if (comuneText != null && !comuneText.isEmpty() && 
+								!comuneText.equals("Comune") && 
+								!comuneText.startsWith("Comuni") &&
+								!comuneText.contains("Categoria")) {
+								Node node2 = new Node();
+								node2.setId(node1.getId() + ID_SEPARATOR + counter++);
+								node2.setLevel(2);
+								setName(caseSensitive, duplicatedNames, comuneText, nodes.getZones(), node2);
+								node1.getZones().add(node2);
+							}
+						}
+					} else {
+						// Normal flow: provinces -> municipalities
+						for (Element head2 : linksNoDuplicated) {
+							Node node2 = new Node();
+							node2.setId(node1.getId() + ID_SEPARATOR + counter++);
+							node2.setLevel(2);
+							String text = head2.text();
+							setName(caseSensitive, duplicatedNames, text, nodes.getZones(), node2);
+							node1.getZones().add(node2);
+							String escapedName = Selector.escapeCssIdentifier(node2.getName());
+							Elements lines3 = level2.select(
+									"div > table.wikitable > tbody > tr:has(td:eq(1) a:matchesOwn((?i)" + escapedName
+											+ ")) > td:eq(0) > a");
+							for (Element head3 : lines3) {
+								Node node3 = new Node();
+								node3.setId(node2.getId() + ID_SEPARATOR + counter++);
+								node3.setLevel(3);
+								setName(caseSensitive, duplicatedNames, head3.text(), nodes.getZones(), node3);
+								node2.getZones().add(node3);
+							}
 						}
 					}
 				}
