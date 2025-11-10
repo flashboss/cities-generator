@@ -1,6 +1,6 @@
 package it.vige.cities.test.templates.it;
 
-import static it.vige.cities.Countries.it;
+import static it.vige.cities.Countries.IT;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.templates.it.Providers.WIKIPEDIA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,14 +38,14 @@ public class WikipediaTest extends FileGenerator {
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();
-		configuration.setCountry(it.name());
+		configuration.setCountry(IT.name());
 		configuration.setProvider(WIKIPEDIA.name());
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
 		Generator generator = new Generator(configuration, true);
 		ResultNodes result = generator.generate();
 		assertTrue(result.getResult() == OK);
-		Nodes nodes = readFile(it.name());
+		Nodes nodes = readFile(IT.name());
 		assertNotNull(nodes);
 		Node northWest = nodes.getZones().get(0);
 		Node liguria = northWest.getZones().get(0);
@@ -73,7 +73,7 @@ public class WikipediaTest extends FileGenerator {
 	@Test
 	public void testCopyright() throws Exception {
 		Configuration configuration = new Configuration();
-		configuration.setCountry(it.name());
+		configuration.setCountry(IT.name());
 		configuration.setProvider(WIKIPEDIA.name());
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
@@ -82,7 +82,7 @@ public class WikipediaTest extends FileGenerator {
 		assertTrue(result.getResult() == OK);
 
 		// Read JSON file as JsonNode to access copyright field
-		File jsonFile = new File(FileGenerator.CITIES_HOME + it.name() + ".json");
+		File jsonFile = new File(FileGenerator.CITIES_HOME + IT.name() + ".json");
 		assertTrue(jsonFile.exists(), "JSON file should exist");
 
 		ObjectMapper mapper = new ObjectMapper();

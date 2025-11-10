@@ -1,6 +1,6 @@
 package it.vige.cities.test.templates.en;
 
-import static it.vige.cities.Countries.gb;
+import static it.vige.cities.Countries.GB;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.templates.en.Providers.BRITANNICA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,14 +31,14 @@ public class BritannicaTest extends FileGenerator {
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();
-		configuration.setCountry(gb.name());
+		configuration.setCountry(GB.name());
 		configuration.setProvider(BRITANNICA.name());
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
 		Generator generator = new Generator(configuration, true);
 		ResultNodes result = generator.generate();
 		assertTrue(result.getResult() == OK);
-		Nodes nodes = readFile(gb.name());
+		Nodes nodes = readFile(GB.name());
 		assertNotNull(nodes);
 		Node england = nodes.getZones().get(0);
 		Node northIreland = nodes.getZones().get(1);

@@ -142,35 +142,35 @@ public class Generator extends Template {
 		if (provider != null && provider.equals(it.vige.cities.templates.Providers.NONE.name())) {
 			templates.add(new None());
 		} else {
-			if (country.equals(Countries.it.name())) {
+			if (country.equals(Countries.IT.name())) {
 				if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
-					templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
-					templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.WIKIPEDIA.name())) {
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
-					templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
-					templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
-					templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
-					templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.EXTRA_GEONAMES.name())) {
-					templates.add(new ExtraGeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
-					templates.add(new GeoNames(Countries.it.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username));
 				}
-			} else if (country.equals(Countries.gb.name())) {
+			} else if (country.equals(Countries.GB.name())) {
 				if (provider == null || provider.equals(it.vige.cities.templates.en.Providers.GEONAMES.name())) {
-					templates.add(new GeoNames(Countries.gb.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username));
 					templates.add(new Britannica(caseSensitive, duplicatedNames));
 				} else if (provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
 					templates.add(new Britannica(caseSensitive, duplicatedNames));
-					templates.add(new GeoNames(Countries.gb.name(), caseSensitive, duplicatedNames, username));
+					templates.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username));
 				}
 			} else
 				templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username));
@@ -292,9 +292,9 @@ public class Generator extends Template {
 			String country = null;
 			Object fromCountry = cmd.getParsedOptionValue(SINGLE_COUNTRY);
 			if (fromCountry == null)
-				country = getDefault().getCountry().toLowerCase();
+				country = getDefault().getCountry().toUpperCase();
 			else
-				country = fromCountry + "";
+				country = (fromCountry + "").toUpperCase();
 			String provider = cmd.hasOption(SINGLE_PROVIDER) ? cmd.getParsedOptionValue(SINGLE_PROVIDER) + "" : null;
 			boolean caseSensitive = cmd.hasOption(SINGLE_CASE_SENSITIVE);
 			boolean duplicatedNames = cmd.hasOption(SINGLE_DUPLICATED_NAMES);

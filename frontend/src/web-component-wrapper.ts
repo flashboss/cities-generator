@@ -42,7 +42,7 @@ class CitiesDropdownElement extends HTMLElement {
       return;
     }
 
-    const country = this.getAttribute('country') || 'it';
+    const country = this.getAttribute('country') || 'IT';
     const dataUrl = this.getAttribute('data-url');
     const placeholder = this.getAttribute('placeholder') || 'Select location...';
     const username = this.getAttribute('username');

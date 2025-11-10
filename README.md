@@ -1,23 +1,23 @@
 # Cities Generator
 Generates a descriptor file for the cities choosing:
 
-- **-c:** the country of the generated cities named by the first two characters for example **gb** and **it**. If not specified the default locale of the machine is used.
+- **-c:** the country of the generated cities named by the first two characters for example **GB** and **IT**. If not specified the default locale of the machine is used.
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false.
-- **-p:** choose the first provider to create the file descriptor. You can choose for **gb**: BRITANNICA or GEONAMES. For **it**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
+- **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA or GEONAMES. For **IT**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
 
 To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:
 ```
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.6:jar -DoutputDirectory=. && java -jar cities-generator-1.2.6.jar -c gb
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.6:jar -DoutputDirectory=. && java -jar cities-generator-1.2.6.jar -c GB
 ```
 It will return a json file inside the ${user.home}/cities-generator dir
 
 - Download the source and execute:
 ```
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
 ```
 
 - Through api java follow the instructions:
@@ -44,7 +44,7 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c it
 	import it.vige.cities.result.Nodes;
 	...
 	Configuration configuration = new Configuration();
-	configuration.setCountry(Countries.it.name());
+	configuration.setCountry(Countries.IT.name());
 	Generator generator = new Generator(configuration, true);
 	Nodes result = generator.generate();
 	System.out.println(result.getZones());
@@ -56,7 +56,7 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c it
 	...
 	Result result = generator.generateFile();
 ```
-You will find the file it.json in the ${user.home}/cities-generator directory
+You will find the file IT.json in the ${user.home}/cities-generator directory
 
 ## Geonames registration
 
@@ -70,12 +70,12 @@ A REST service can be installed in your machine. This returns a json format with
 ```
 And then start it through the command:
 ```
-java -jar build/libs/cities-generator-service-1.2.6.jar --country=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.2.6.jar --country=IT --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to http://cities-generator-service.vige.it:8380/swagger-ui/index.html
 In a production environment you could use https so:
 ```
-java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.6.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.6.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 ### Docker development image
@@ -86,9 +86,9 @@ docker pull vige/cities-generator
 ```
 To run the image use the command:
 ```
-docker run -d --name cities-generator -p8380:8080 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
+docker run -d --name cities-generator -p8380:8080 -eCOUNTRY=IT -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
-Where it is the chosen country. You can choose gb,it or other else country using the first two characters of the code.
+Where IT is the chosen country. You can choose GB,IT or other else country using the first two characters of the code.
 Over the country, optionally as for the library you can add the following param:
 
 - REALM
@@ -104,13 +104,13 @@ This image starts without SSO server, so it is not complete. For a sample comple
 ```
 COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} AUTHURL=${AUTHURL} docker compose up
 ```
-Where ${COUNTRY} is the choosen language, it or en. While ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8380 .
+Where ${COUNTRY} is the choosen country, IT or GB. While ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8380 .
 ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8080
 It will allow to download a keycloak instance where the server can be connected. 
 After you can connect to keycloak through the url http://auth-ct.vige.it:8080
 
 Here a sample:
-COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=http://auth-ct.vige.it:8080 docker compose up
+COUNTRY=IT REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380 AUTHURL=http://auth-ct.vige.it:8080 docker compose up
 
 Add the following DNS in your /etc/hosts file:
 ```
@@ -134,9 +134,9 @@ docker pull vige/cities-generator
 ```
 To run the image use the command:
 ```
-docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=it -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
+docker run -d --name cities-generator -p8743:8443 -eCOUNTRY=IT -eREALM=${realm} -eAUTHURL=${url} -eRESOURCE=${resource} vige/cities-generator
 ```
-Where it is the chosen country. You can choose gb,it or other else country using the first two characters of the code.
+Where IT is the chosen country. You can choose GB,IT or other else country using the first two characters of the code.
 Over the country, optionally as for the library you can add the following param:
 
 - REALM
@@ -152,7 +152,7 @@ This image starts without SSO server, so it is not complete. For a sample comple
 ```
 COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} HOST_NAME=${HOST_NAME} AUTHURL=${AUTHURL} PASSWORD_STORE=${PASSWORD_STORE} docker compose up
 ```
-Where ${COUNTRY} is the choosen language, it or en. While ${HOST_NAME} is the external keycloak url, for example auth-ct.vige.it .
+Where ${COUNTRY} is the choosen country, IT or GB. While ${HOST_NAME} is the external keycloak url, for example auth-ct.vige.it .
 ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8743
 ${AUTHURL} is the keycloak address url like https://auth-ct.vige.it:8443
 ${PASSWORD_STORE} is the password for the SSL/TLS keystore files. Default: `password`.
@@ -160,7 +160,7 @@ It will allow to download a keycloak instance where the server can be connected.
 After you can connect to keycloak through the url https://auth-ct.vige.it:8443
 
 Here a sample:
-COUNTRY=it REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8743 HOST_NAME=auth-ct.vige.it AUTHURL=https://auth-ct.vige.it:8443 docker compose up
+COUNTRY=IT REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8743 HOST_NAME=auth-ct.vige.it AUTHURL=https://auth-ct.vige.it:8443 docker compose up
 
 Add the following DNS in your /etc/hosts file:
 ```
@@ -190,8 +190,8 @@ keytool -import -alias trustedCA -file mytrustCA.cer -keystore ./docker/prod/vol
 
 Actually two samples of generated cities can be found online:
 
-https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/it.json
-https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/gb.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/IT.json
+https://raw.githubusercontent.com/flashboss/cities-generator/master/cities/GB.json
 
 ## Frontend
 
@@ -264,13 +264,13 @@ Works in **any** platform without framework dependencies. Simply include the scr
 
 <!-- Using default URL -->
 <cities-dropdown 
-  country="it" 
+  country="IT" 
   placeholder="Select location...">
 </cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /it.json) -->
+<!-- Using custom base URL (automatically appends /IT.json) -->
 <cities-dropdown 
-  country="it" 
+  country="IT" 
   data-url="https://example.com/cities"
   placeholder="Select location...">
 </cities-dropdown>
@@ -300,16 +300,16 @@ Use when you can't include React separately. The standalone bundle includes Reac
 
   // Using default URL
   CitiesGenerator.render('#my-dropdown', {
-    country: 'it',
+    country: 'IT',
     placeholder: 'Select location...',
     onSelect: (node) => {
       console.log('Selected:', node);
     }
   });
   
-  // Using custom base URL (automatically appends /it.json)
+  // Using custom base URL (automatically appends /IT.json)
   CitiesGenerator.render('#my-dropdown', {
-    country: 'it',
+    country: 'IT',
     dataUrl: 'https://example.com/cities',
     placeholder: 'Select location...',
     onSelect: (node) => {
@@ -319,7 +319,7 @@ Use when you can't include React separately. The standalone bundle includes Reac
   
   // Using search functionality
   CitiesGenerator.render('#my-dropdown', {
-    country: 'it',
+    country: 'IT',
     placeholder: 'Select location...',
     enableSearch: true,
     searchPlaceholder: 'Search location...',
@@ -345,14 +345,14 @@ function MyComponent() {
 
       {/* Using default URL */}
       <CitiesDropdown
-        country="it"
+        country="IT"
         placeholder="Select location..."
         onSelect={(node) => console.log(node)}
       />
       
-      {/* Using custom base URL (automatically appends /it.json) */}
+      {/* Using custom base URL (automatically appends /IT.json) */}
       <CitiesDropdown
-        country="it"
+        country="IT"
         dataUrl="https://example.com/cities"
         placeholder="Select location..."
         onSelect={(node) => console.log(node)}
@@ -360,7 +360,7 @@ function MyComponent() {
       
       {/* Using search functionality */}
       <CitiesDropdown
-        country="it"
+        country="IT"
         placeholder="Select location..."
         enableSearch={true}
         searchPlaceholder="Search location..."
@@ -376,8 +376,8 @@ function MyComponent() {
 - `data` (Nodes, optional): Direct data object (optional)
 - `onSelect` (function, optional): Callback when a leaf node is selected
 - `className` (string, optional): Additional CSS classes
-- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
-- `country` (string, optional): Country code, e.g., "it", "gb" (default: "it")
+- `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/{country}.json`. If specified, treated as base URL and automatically appends `/{country}.json` (any `.json` extension in the URL is automatically removed)
+- `country` (string, optional): Country code, e.g., "IT", "GB" (default: "IT")
 - `placeholder` (string, optional): Placeholder text (default: "Select location...")
 - `username` (string, optional): Username for HTTP Basic Authentication
 - `password` (string, optional): Password for HTTP Basic Authentication
@@ -420,11 +420,11 @@ add_action('wp_enqueue_scripts', 'enqueue_cities_dropdown');
 <cities-dropdown />
 
 <!-- Using default URL -->
-<cities-dropdown country="it"></cities-dropdown>
+<cities-dropdown country="IT"></cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /it.json) -->
+<!-- Using custom base URL (automatically appends /IT.json) -->
 <cities-dropdown 
-  country="it" 
+  country="IT" 
   data-url="<?php echo get_template_directory_uri(); ?>/data">
 </cities-dropdown>
 ```
@@ -455,10 +455,10 @@ cities_dropdown:
 <cities-dropdown />
 
 {# Using default URL #}
-<cities-dropdown country="it"></cities-dropdown>
+<cities-dropdown country="IT"></cities-dropdown>
 
-{# Using custom base URL (automatically appends /it.json) #}
-<cities-dropdown country="it" data-url="/sites/default/files/cities"></cities-dropdown>
+{# Using custom base URL (automatically appends /IT.json) #}
+<cities-dropdown country="IT" data-url="/sites/default/files/cities"></cities-dropdown>
 ```
 
 #### Liferay
@@ -481,13 +481,13 @@ js.fast.load=true
 <cities-dropdown />
 
 <%-- Using default URL --%>
-<cities-dropdown country="it"></cities-dropdown>
+<cities-dropdown country="IT"></cities-dropdown>
 
 <%-- Using default URL --%>
-<cities-dropdown country="it"></cities-dropdown>
+<cities-dropdown country="IT"></cities-dropdown>
 
-<%-- Using custom base URL (automatically appends /it.json) --%>
-<cities-dropdown country="it" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data"></cities-dropdown>
+<%-- Using custom base URL (automatically appends /IT.json) --%>
+<cities-dropdown country="IT" data-url="<%= themeDisplay.getCDNBaseURL() %>/o/cities-generator/data"></cities-dropdown>
 ```
 
 #### Joomla
@@ -509,10 +509,10 @@ $document->addStyleSheet(JURI::root() . 'templates/your-template/js/style.css');
 <cities-dropdown />
 
 <!-- Using default URL -->
-<cities-dropdown country="it"></cities-dropdown>
+<cities-dropdown country="IT"></cities-dropdown>
 
-<!-- Using custom base URL (automatically appends /it.json) -->
-<cities-dropdown country="it" data-url="<?php echo JURI::root(); ?>data"></cities-dropdown>
+<!-- Using custom base URL (automatically appends /IT.json) -->
+<cities-dropdown country="IT" data-url="<?php echo JURI::root(); ?>data"></cities-dropdown>
 ```
 
 ### Data Format

@@ -36,7 +36,7 @@ public class Configuration {
 	 * @param country the country
 	 */
 	public void setCountry(String country) {
-		this.country = country;
+		this.country = country != null ? country.toUpperCase() : null;
 	}
 
 	/**

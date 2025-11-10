@@ -1,6 +1,6 @@
 package it.vige.cities.templates.en;
 
-import static it.vige.cities.Countries.gb;
+import static it.vige.cities.Countries.GB;
 import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
@@ -35,7 +35,7 @@ public class Britannica extends HTMLTemplate {
 	public Britannica(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
-		this.country = gb.name();
+		this.country = GB.name();
 	}
 
 	/**

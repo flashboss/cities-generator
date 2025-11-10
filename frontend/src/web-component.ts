@@ -26,7 +26,7 @@ class CitiesDropdownElement extends HTMLElement {
   }
 
   private render() {
-    const country = this.getAttribute('country') || 'it';
+    const country = this.getAttribute('country') || 'IT';
     const dataUrl = this.getAttribute('data-url');
     const placeholder = this.getAttribute('placeholder') || 'Select location...';
 

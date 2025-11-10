@@ -35,7 +35,7 @@ public class ComuniItaliani extends HTMLTemplate {
 	public ComuniItaliani(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
-		this.country = Countries.it.name();
+		this.country = Countries.IT.name();
 	}
 
 	/**

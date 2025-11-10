@@ -33,7 +33,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   // Load available countries from remote URL by checking which JSON files exist
   useEffect(() => {
     const loadCountries = async () => {
-      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu';
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
       const baseUrl = (config.dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
 
       setLoadingCountries(true);
@@ -110,7 +110,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 className="dropdown-config-remote-url"
                 value={config.dataUrl || ''}
                 onChange={(e) => updateConfig({ dataUrl: e.target.value })}
-                placeholder="https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu"
+                placeholder="https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU"
               />
             </label>
             <small>Base URL for remote data source (default: GitHub repository)</small>

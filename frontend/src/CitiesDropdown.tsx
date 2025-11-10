@@ -13,7 +13,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   onSelect,
   className = '',
   dataUrl,
-  country = 'it',
+  country = 'IT',
   placeholder = 'Select location...',
   username,
   password,
@@ -42,7 +42,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       setNodes(null);
       
       // Build URL
-      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/eu';
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
       const baseUrl = (dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
       const url = `${baseUrl}/${country}.json`;
       

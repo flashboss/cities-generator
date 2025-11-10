@@ -19,7 +19,7 @@ ENV TERM=xterm
 ENV REALM=cities
 ENV AUTHURL=https://auth-ct.vige.it:8443
 ENV RESOURCE=citiesGenerator
-ENV COUNTRY=it
+ENV COUNTRY=IT
 ENV DUPLICATEDNAMES=false
 ENV CASESENSITIVE=false
 VOLUME /root/cities-generator

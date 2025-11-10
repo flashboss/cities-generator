@@ -7,7 +7,7 @@ FIELDS="$FIELDS -Djavax.net.ssl.trustStorePassword=${PASSWORD_STORE:-password}"
 FIELDS="$FIELDS -Dkeycloak.realm=${REALM:-cities}"
 FIELDS="$FIELDS -Dkeycloak.auth-server-url=${AUTHURL:-https://auth-ct.vige.it:8443}"
 FIELDS="$FIELDS -Dkeycloak.resource=${RESOURCE:-citiesGenerator}"
-FIELDS="$FIELDS -Dcountry=${COUNTRY:-it}"
+FIELDS="$FIELDS -Dcountry=${COUNTRY:-IT}"
 FIELDS="$FIELDS -DduplicatedNames=${DUPLICATEDNAMES:-false}"
 
 # Add optional provider if set

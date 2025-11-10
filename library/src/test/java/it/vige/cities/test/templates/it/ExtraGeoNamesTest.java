@@ -1,6 +1,6 @@
 package it.vige.cities.test.templates.it;
 
-import static it.vige.cities.Countries.it;
+import static it.vige.cities.Countries.IT;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.templates.it.Providers.EXTRA_GEONAMES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,14 +31,14 @@ public class ExtraGeoNamesTest extends FileGenerator {
 	@Test
 	public void testCities() throws Exception {
 		Configuration configuration = new Configuration();
-		configuration.setCountry(it.name());
+		configuration.setCountry(IT.name());
 		configuration.setProvider(EXTRA_GEONAMES.name());
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
 		Generator generator = new Generator(configuration, true);
 		ResultNodes result = generator.generate();
 		assertTrue(result.getResult() == OK);
-		Nodes nodes = readFile(it.name());
+		Nodes nodes = readFile(IT.name());
 		assertNotNull(nodes);
 		Node northWest = nodes.getZones().get(0);
 		Node regioneAutonomaValleDaosta = northWest.getZones().get(0);

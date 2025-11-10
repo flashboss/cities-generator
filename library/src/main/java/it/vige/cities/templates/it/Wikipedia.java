@@ -1,6 +1,6 @@
 package it.vige.cities.templates.it;
 
-import static it.vige.cities.Countries.it;
+import static it.vige.cities.Countries.IT;
 import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
@@ -45,7 +45,7 @@ public class Wikipedia extends HTMLTemplate {
 	public Wikipedia(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
-		this.country = it.name();
+		this.country = IT.name();
 	}
 
 	/**
