@@ -16,7 +16,7 @@ public class Configuration {
 
 	private String username;
 	
-	private String language;
+	private Languages language = Languages.getDefault();
 	
 	/**
 	 * Default configuration
@@ -107,21 +107,33 @@ public class Configuration {
 
 	/**
 	 * Language
-	 * @return the language
+	 * @return the language enum
 	 */
-	public String getLanguage() {
+	public Languages getLanguage() {
 		return language;
 	}
 
 	/**
 	 * Language
+	 * @param language the language enum
+	 */
+	public void setLanguage(Languages language) {
+		this.language = language != null ? language : Languages.getDefault();
+	}
+
+	/**
+	 * Language (convenience method accepting String)
 	 * @param language the language code (e.g., "it", "en"). Defaults to "it" if null or empty.
 	 */
 	public void setLanguage(String language) {
-		if (language != null && !language.isEmpty()) {
-			this.language = language.toLowerCase();
-		} else {
-			this.language = "it";
-		}
+		this.language = Languages.fromCode(language);
+	}
+
+	/**
+	 * Get language code as String (lowercase)
+	 * @return the language code (e.g., "it", "en")
+	 */
+	public String getLanguageCode() {
+		return language.getCode();
 	}
 }

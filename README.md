@@ -2,7 +2,7 @@
 Generates a descriptor file for the cities choosing:
 
 - **-c:** the country of the generated cities named by the first two characters for example **GB** and **IT**. If not specified the default locale of the machine is used.
-- **-l:** the language code for the location names (e.g., "it", "en"). If not specified, defaults to "it".
+- **-l:** the language code for the location names (e.g., "it", "en", "fr", "de", "es", "pt"). Supported languages: IT (Italian, default), EN (English), FR (French), DE (German), ES (Spanish), PT (Portuguese). If not specified, defaults to "it".
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false.
 - **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA or GEONAMES. For **IT**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
@@ -42,11 +42,13 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
 ```
 	import it.vige.cities.Generator;
 	import it.vige.cities.Countries;
+	import it.vige.cities.Languages;
 	import it.vige.cities.result.Nodes;
 	...
 	Configuration configuration = new Configuration();
 	configuration.setCountry(Countries.IT.name());
-	configuration.setLanguage("it"); // Optional, defaults to "it"
+	configuration.setLanguage(Languages.IT); // Using enum (recommended)
+	// Or use string: configuration.setLanguage("it"); // Optional, defaults to "it"
 	Generator generator = new Generator(configuration, true);
 	Nodes result = generator.generate();
 	System.out.println(result.getZones());
@@ -394,7 +396,7 @@ function MyComponent() {
 - `className` (string, optional): Additional CSS classes
 - `dataUrl` (string, optional): Base URL for remote data source. If not specified, uses default GitHub URL: `https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/{country}/{language}.json`. If specified, treated as base URL and automatically appends `/{country}/{language}.json` (any `.json` extension in the URL is automatically removed)
 - `country` (string, optional): Country code, e.g., "IT", "GB" (default: "IT")
-- `language` (string, optional): Language code, e.g., "it", "en" (default: "it")
+- `language` (string, optional): Language code, e.g., "it", "en", "fr", "de", "es", "pt". Supported languages: IT (Italian, default), EN (English), FR (French), DE (German), ES (Spanish), PT (Portuguese). In Java API, you can use `Languages` enum: `Languages.IT`, `Languages.EN`, etc.
 - `placeholder` (string, optional): Placeholder text (default: "Select location...")
 - `username` (string, optional): Username for HTTP Basic Authentication
 - `password` (string, optional): Password for HTTP Basic Authentication

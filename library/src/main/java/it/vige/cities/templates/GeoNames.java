@@ -8,6 +8,7 @@ import static java.lang.Integer.parseInt;
 
 import java.util.List;
 
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
@@ -36,7 +37,7 @@ public class GeoNames extends Template {
 	protected boolean caseSensitive;
 	private boolean duplicatedNames;
 	private String username;
-	private String language;
+	private Languages language;
 
 	/**
 	 * First level
@@ -53,7 +54,7 @@ public class GeoNames extends Template {
 	 * @param username        the user name
 	 */
 	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
-		this(country, caseSensitive, duplicatedNames, username, null);
+		this(country, caseSensitive, duplicatedNames, username, Languages.getDefault());
 	}
 
 	/**
@@ -63,17 +64,30 @@ public class GeoNames extends Template {
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames the duplicated names parameter
 	 * @param username        the user name
-	 * @param language        the language code (e.g., "it", "en")
+	 * @param language        the language enum
 	 */
-	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
+	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, Languages language) {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = country;
-		this.language = language;
+		this.language = language != null ? language : Languages.getDefault();
 		if (username != null)
 			this.username = username;
 		else
 			this.username = DEFAULT_USERNAME;
+	}
+
+	/**
+	 * GeoNames (convenience method accepting String)
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames the duplicated names parameter
+	 * @param username        the user name
+	 * @param language        the language code (e.g., "it", "en")
+	 */
+	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
+		this(country, caseSensitive, duplicatedNames, username, Languages.fromCode(language));
 	}
 
 	/**
@@ -87,8 +101,8 @@ public class GeoNames extends Template {
 		client = newClient();
 		WebTarget target = client.target(URL_COUNTRY);
 		target = target.queryParam("country", country).queryParam("username", username);
-		if (language != null && !language.isEmpty()) {
-			target = target.queryParam("lang", language);
+		if (language != null) {
+			target = target.queryParam("lang", language.getCode());
 		}
 		Response response = target.request().get();
 		return response;
@@ -105,8 +119,8 @@ public class GeoNames extends Template {
 		client = newClient();
 		WebTarget target = client.target(URL_CHILDREN);
 		target = target.queryParam("geonameId", id).queryParam("username", username);
-		if (language != null && !language.isEmpty()) {
-			target = target.queryParam("lang", language);
+		if (language != null) {
+			target = target.queryParam("lang", language.getCode());
 		}
 		Response response = target.request().get();
 		return response;

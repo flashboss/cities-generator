@@ -82,9 +82,9 @@ public class FileGenerator {
 	protected String country = getDefault().getCountry().toUpperCase();
 	
 	/**
-	 * Language (default: "it", e.g., "it", "en")
+	 * Language (default: IT - Italian)
 	 */
-	protected String language = "it";
+	protected Languages language = Languages.getDefault();
 
 	private Logger logger = getLogger(FileGenerator.class);
 
@@ -116,7 +116,7 @@ public class FileGenerator {
 		new File(CITIES_HOME).mkdir();
 		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
 		String countryDir = country.toUpperCase();
-		String lang = (language != null && !language.isEmpty()) ? language.toLowerCase() : "it";
+		String lang = this.language.getCode();
 		File countryFolder = new File(CITIES_HOME + countryDir);
 		countryFolder.mkdirs();
 		String fileName = lang + ".json";
@@ -164,17 +164,28 @@ public class FileGenerator {
 	/**
 	 * Read file
 	 * @param country the country
-	 * @param language the language (optional)
+	 * @param language the language enum
+	 * @return the nodes of the country
+	 * @throws Exception if there is a problem
+	 */
+	protected Nodes readFile(String country, Languages language) throws Exception {
+		new File(CITIES_HOME).mkdir();
+		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		String countryDir = country.toUpperCase();
+		Languages lang = language != null ? language : Languages.getDefault();
+		String fileName = lang.getCode() + ".json";
+		return mapper.readValue(new File(CITIES_HOME + countryDir + File.separator + fileName), Nodes.class);
+	}
+
+	/**
+	 * Read file (convenience method accepting String)
+	 * @param country the country
+	 * @param language the language code (e.g., "it", "en")
 	 * @return the nodes of the country
 	 * @throws Exception if there is a problem
 	 */
 	protected Nodes readFile(String country, String language) throws Exception {
-		new File(CITIES_HOME).mkdir();
-		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
-		String countryDir = country.toUpperCase();
-		String lang = (language != null && !language.isEmpty()) ? language.toLowerCase() : "it";
-		String fileName = lang + ".json";
-		return mapper.readValue(new File(CITIES_HOME + countryDir + File.separator + fileName), Nodes.class);
+		return readFile(country, Languages.fromCode(language));
 	}
 
 	/**
@@ -185,7 +196,7 @@ public class FileGenerator {
 		new File(CITIES_HOME).mkdir();
 		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
 		String countryDir = country.toUpperCase();
-		String lang = (language != null && !language.isEmpty()) ? language.toLowerCase() : "it";
+		String lang = this.language.getCode();
 		String fileName = lang + ".json";
 		return new File(CITIES_HOME).exists() && new File(CITIES_HOME + countryDir + File.separator + fileName).exists();
 	}

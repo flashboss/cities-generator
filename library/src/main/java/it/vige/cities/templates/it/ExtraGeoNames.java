@@ -4,6 +4,7 @@ import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -25,7 +26,7 @@ public class ExtraGeoNames extends GeoNames {
 	 * @param username        the username
 	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
-		this(country, caseSensitive, duplicatedNames, username, null);
+		this(country, caseSensitive, duplicatedNames, username, Languages.getDefault());
 	}
 
 	/**
@@ -35,11 +36,24 @@ public class ExtraGeoNames extends GeoNames {
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames true if it accepts duplicated names
 	 * @param username        the username
+	 * @param language        the language enum
+	 */
+	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, Languages language) {
+		super(country, caseSensitive, duplicatedNames, username, language);
+		firstLevel = 1;
+	}
+
+	/**
+	 * ExtraGeoNames (convenience method accepting String)
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames true if it accepts duplicated names
+	 * @param username        the username
 	 * @param language        the language code (e.g., "it", "en")
 	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
-		super(country, caseSensitive, duplicatedNames, username, language);
-		firstLevel = 1;
+		this(country, caseSensitive, duplicatedNames, username, Languages.fromCode(language));
 	}
 
 	/**

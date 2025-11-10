@@ -99,7 +99,7 @@ public class Generator extends Template {
 	private boolean duplicatedNames;
 	private String provider;
 	private String username;
-	private String language;
+	private Languages language;
 	private boolean overwrite;
 
 	/**
