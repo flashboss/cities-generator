@@ -17,8 +17,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.vige.cities.Configuration;
+import it.vige.cities.Continents;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -82,7 +84,9 @@ public class WikipediaTest extends FileGenerator {
 		assertTrue(result.getResult() == OK);
 
 		// Read JSON file as JsonNode to access copyright field
-		File jsonFile = new File(FileGenerator.CITIES_HOME + IT.name() + ".json");
+		// File structure is now: {continent}/{country}/{language}.json
+		Continents continent = Continents.fromCountryCode(IT.name());
+		File jsonFile = new File(FileGenerator.CITIES_HOME + continent.getCode() + File.separator + IT.name() + File.separator + Languages.IT.getCode() + ".json");
 		assertTrue(jsonFile.exists(), "JSON file should exist");
 
 		ObjectMapper mapper = new ObjectMapper();
