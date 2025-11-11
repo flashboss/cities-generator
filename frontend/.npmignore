@@ -1,0 +1,39 @@
+# Development files
+node_modules/
+.vite/
+*.log
+.DS_Store
+
+# Source maps (optional - you can include them if you want)
+*.map
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Development config
+vite.config.js
+tsconfig.json
+tsconfig.node.json
+index.html
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts that aren't needed
+dist/assets/
+dist/*.html
+
+# Public folder (only keep README if needed)
+public/
+
+# Git
+.git/
+.gitignore
+

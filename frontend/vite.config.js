@@ -5,10 +5,11 @@ import react from '@vitejs/plugin-react';
 const umdConfig = defineConfig({
   plugins: [react()],
   build: {
+    emptyOutDir: false, // Don't clean dist between builds
     lib: {
       entry: 'src/standalone.tsx',
       name: 'CitiesGenerator',
-      fileName: 'cities-generator',
+      fileName: (format) => `cities-generator.${format}.js`,
       formats: ['umd'],
     },
     rollupOptions: {
@@ -19,6 +20,8 @@ const umdConfig = defineConfig({
           'react-dom': 'ReactDOM',
         },
         entryFileNames: 'cities-generator.umd.js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]',
         format: 'umd',
       },
     },
@@ -29,15 +32,19 @@ const umdConfig = defineConfig({
 const standaloneConfig = defineConfig({
   plugins: [react()],
   build: {
+    emptyOutDir: false, // Don't clean dist between builds
     lib: {
       entry: 'src/standalone.tsx',
       name: 'CitiesGenerator',
-      fileName: 'cities-generator-standalone',
+      fileName: (format) => `cities-generator-standalone.${format}.js`,
       formats: ['iife'],
     },
     rollupOptions: {
       output: {
         inlineDynamicImports: true,
+        entryFileNames: 'cities-generator-standalone.iife.js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]',
       },
     },
   },
@@ -47,11 +54,19 @@ const standaloneConfig = defineConfig({
 const webComponentConfig = defineConfig({
   plugins: [react()],
   build: {
+    emptyOutDir: false, // Don't clean dist between builds (only clean on first build)
     lib: {
       entry: 'src/index.tsx',
       name: 'CitiesGenerator',
-      fileName: 'cities-generator-wc',
+      fileName: (format) => `cities-generator-wc.${format}.js`,
       formats: ['es'],
+    },
+    rollupOptions: {
+      output: {
+        entryFileNames: 'cities-generator-wc.js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]',
+      },
     },
   },
 });
