@@ -1,7 +1,11 @@
 package it.vige.cities;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.List;
 import java.util.function.Predicate;
+
+import org.slf4j.Logger;
 
 import it.vige.cities.result.Node;
 
@@ -12,6 +16,8 @@ import it.vige.cities.result.Node;
  * @author lucastancapiano
  */
 public class Normalizer {
+
+	private static final Logger logger = getLogger(Normalizer.class);
 
 	/**
 	 * default Normalizer
@@ -31,15 +37,22 @@ public class Normalizer {
 	 */
 	public static void setName(boolean caseSensitive, boolean duplicatedNames, final String text, List<Node> zones,
 			Node node) {
+		logger.debug("Setting name - original: {}, caseSensitive: {}, duplicatedNames: {}", text, caseSensitive, duplicatedNames);
 		String newText = text;
-		if (!caseSensitive)
+		if (!caseSensitive) {
 			newText = newText.toUpperCase();
+			logger.debug("Converted to uppercase: {}", newText);
+		}
 		if (!duplicatedNames) {
 			long count = countDuplicatesByName(zones, newText);
-			if (count > 0)
+			logger.debug("Duplicate count for '{}': {}", newText, count);
+			if (count > 0) {
 				newText = newText + " (" + count + ")";
+				logger.debug("Added duplicate suffix: {}", newText);
+			}
 		}
 		node.setName(newText);
+		logger.debug("Final name set: {}", newText);
 	}
 
 	/**

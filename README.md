@@ -8,6 +8,44 @@ Generates a descriptor file for the cities choosing:
 - **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA or GEONAMES. For **IT**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
 
+### Enabling DEBUG logs
+
+To see DEBUG level logs (more detailed information), use the system property `-Dorg.slf4j.simpleLogger.defaultLogLevel=debug`:
+
+```bash
+java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT
+```
+
+Available log levels: `trace`, `debug`, `info`, `warn`, `error` (default: `info`)
+
+### Remote Debugging
+
+To enable remote debugging, use the `-agentlib:jdwp` parameter:
+
+```bash
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT -l en
+```
+
+Or with quotes (for zsh compatibility):
+```bash
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address='*:5005' -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT -l en
+```
+
+Parameters:
+- `transport=dt_socket`: uses socket transport
+- `server=y`: JVM acts as debug server (waits for debugger to connect)
+- `suspend=n`: starts immediately (use `suspend=y` to wait for debugger before starting)
+- `address=5005`: listens on port 5005 on all interfaces (default)
+- `address=localhost:5005`: listens only on localhost
+- `address='*:5005'`: listens on all interfaces (requires quotes in zsh)
+
+Then connect your IDE debugger to `localhost:5005`.
+
+**Example with DEBUG logs and remote debugging:**
+```bash
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT -l en
+```
+
 To generate the cities, you can choose between 3 modes:
 
 - By a command line shell digit:

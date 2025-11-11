@@ -68,6 +68,7 @@ java {
 }
 
 
+// JAR configuration - includes all dependencies (shaded)
 jar {
     manifest {
         attributes("Main-Class": "it.vige.cities.Generator")
@@ -77,8 +78,10 @@ jar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         sourceSets.main.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
-    exclude 'META-INF/*'
-    exclude 'META-INF/services/*'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/versions/**'
     exclude 'module-info.class'
     exclude 'javax/activation/**.class'
 }

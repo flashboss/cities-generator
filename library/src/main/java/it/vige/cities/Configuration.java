@@ -1,10 +1,16 @@
 package it.vige.cities;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
+import org.slf4j.Logger;
+
 /**
  * All the configuration parameters are here
  * @author lucastancapiano
  */
 public class Configuration {
+
+	private static final Logger logger = getLogger(Configuration.class);
 
 	private String country;
 
@@ -22,7 +28,7 @@ public class Configuration {
 	 * Default configuration
 	 */
 	public Configuration() {
-		
+		logger.debug("Creating default configuration");
 	}
 
 	/**
@@ -38,7 +44,9 @@ public class Configuration {
 	 * @param country the country
 	 */
 	public void setCountry(String country) {
+		logger.debug("Setting country: {}", country);
 		this.country = country != null ? country.toUpperCase() : null;
+		logger.info("Country set to: {}", this.country);
 	}
 
 	/**
@@ -54,7 +62,9 @@ public class Configuration {
 	 * @param caseSensitive true if it is case sensitive
 	 */
 	public void setCaseSensitive(boolean caseSensitive) {
+		logger.debug("Setting case sensitive: {}", caseSensitive);
 		this.caseSensitive = caseSensitive;
+		logger.info("Case sensitive set to: {}", caseSensitive);
 	}
 
 	/**
@@ -70,7 +80,9 @@ public class Configuration {
 	 * @param duplicatedNames the duplicated names
 	 */
 	public void setDuplicatedNames(boolean duplicatedNames) {
+		logger.debug("Setting duplicated names: {}", duplicatedNames);
 		this.duplicatedNames = duplicatedNames;
+		logger.info("Duplicated names set to: {}", duplicatedNames);
 	}
 
 	/**
@@ -86,7 +98,9 @@ public class Configuration {
 	 * @param provider the name of the provider
 	 */
 	public void setProvider(String provider) {
+		logger.debug("Setting provider: {}", provider);
 		this.provider = provider;
+		logger.info("Provider set to: {}", provider);
 	}
 
 	/**
@@ -102,7 +116,9 @@ public class Configuration {
 	 * @param username the user name
 	 */
 	public void setUsername(String username) {
+		logger.debug("Setting username: {}", username != null ? "***" : null);
 		this.username = username;
+		logger.info("Username set: {}", username != null ? "configured" : "not set");
 	}
 
 	/**
@@ -118,7 +134,9 @@ public class Configuration {
 	 * @param language the language enum
 	 */
 	public void setLanguage(Languages language) {
+		logger.debug("Setting language: {}", language != null ? language.getCode() : Languages.getDefault().getCode());
 		this.language = language != null ? language : Languages.getDefault();
+		logger.info("Language set to: {}", this.language.getCode());
 	}
 
 	/**
@@ -126,7 +144,9 @@ public class Configuration {
 	 * @param language the language code (e.g., "it", "en"). Defaults to "it" if null or empty.
 	 */
 	public void setLanguage(String language) {
+		logger.debug("Setting language from string: {}", language);
 		this.language = Languages.fromCode(language);
+		logger.info("Language set from string to: {}", this.language.getCode());
 	}
 
 	/**

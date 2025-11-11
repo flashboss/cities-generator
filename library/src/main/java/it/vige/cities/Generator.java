@@ -151,12 +151,15 @@ public class Generator extends Template {
 	 * @return the list of templates
 	 */
 	private List<Template> getTemplates() {
+		logger.debug("Getting templates for country: {}, provider: {}", country, provider);
 		List<Template> templates = new ArrayList<Template>();
 
 		if (provider != null && provider.equals(it.vige.cities.templates.Providers.NONE.name())) {
+			logger.debug("Using NONE provider");
 			templates.add(new None());
 		} else {
 			if (country.equals(Countries.IT.name())) {
+				logger.debug("Country is IT, configuring Italian templates");
 				if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
@@ -199,20 +202,35 @@ public class Generator extends Template {
 	 * @return the generated nodes
 	 */
 	private Nodes overwrite(List<Template> templates) {
+		logger.debug("Starting overwrite with {} templates", templates.size());
 		Nodes result = null;
 		Iterator<Template> iterator = templates.iterator();
+		int templateIndex = 0;
 		while (iterator.hasNext() && result == null) {
+			templateIndex++;
 			try {
 				Template template = iterator.next();
+				logger.debug("Trying template {}: {}", templateIndex, template.getClass().getSimpleName());
 				// Set language and country on template
 				template.language = this.language;
 				template.country = this.country;
+				logger.debug("Template configured - country: {}, language: {}", this.country, this.language != null ? this.language.getCode() : Languages.getDefault().getCode());
 				ResultNodes resultG = template.generateFile();
-				if (resultG.getResult() == OK)
+				logger.debug("Template {} generation result: {}", template.getClass().getSimpleName(), resultG.getResult());
+				if (resultG.getResult() == OK) {
+					logger.info("Template {} succeeded, reading file", template.getClass().getSimpleName());
 					result = template.readFile();
+					logger.info("Successfully generated nodes using template: {}", template.getClass().getSimpleName());
+				} else {
+					logger.debug("Template {} failed, trying next template", template.getClass().getSimpleName());
+				}
 			} catch (Exception ex) {
+				logger.debug("Template {} threw exception: {}", templateIndex, ex.getMessage(), ex);
 				result = null;
 			}
+		}
+		if (result == null) {
+			logger.warn("All {} templates failed to generate nodes", templates.size());
 		}
 		return result;
 	}
@@ -225,20 +243,33 @@ public class Generator extends Template {
 		logger.info(
 				"Start object generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
 						+ caseSensitive + ", duplicatedNames: " + duplicatedNames + ", username: " + username
-						+ ", language: " + language + ", overwrite: " + overwrite);
+						+ ", language: " + (language != null ? language.getCode() : Languages.getDefault().getCode()) + ", overwrite: " + overwrite);
+		logger.debug("Generation parameters - country: {}, provider: {}, caseSensitive: {}, duplicatedNames: {}, language: {}, overwrite: {}", 
+				country, provider, caseSensitive, duplicatedNames, language != null ? language.getCode() : Languages.getDefault().getCode(), overwrite);
 		Nodes result = null;
 		List<Template> templates = getTemplates();
-		if (overwrite)
+		logger.debug("Retrieved {} templates for generation", templates.size());
+		if (overwrite) {
+			logger.debug("Overwrite mode enabled, generating new data");
 			result = overwrite(templates);
-		else if (exists())
+		} else if (exists()) {
+			logger.debug("File exists, attempting to read from file");
 			try {
 				result = readFile();
+				logger.info("Successfully read existing file");
 			} catch (Exception e) {
+				logger.warn("Failed to read existing file: {}, will generate new data", e.getMessage(), e);
 				result = null;
 			}
-		else
+		} else {
+			logger.debug("File does not exist, generating new data");
 			result = overwrite(templates);
-		logger.info("End object generation");
+		}
+		if (result != null) {
+			logger.info("End object generation - SUCCESS (nodes: {})", result.getZones() != null ? result.getZones().size() : 0);
+		} else {
+			logger.warn("End object generation - FAILED (no nodes generated)");
+		}
 		return result == null ? new ResultNodes(KO, result, this) : new ResultNodes(OK, result, this);
 	}
 

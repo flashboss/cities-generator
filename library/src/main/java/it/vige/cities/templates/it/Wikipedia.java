@@ -6,6 +6,7 @@ import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.jsoup.select.Selector;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
 
 import it.vige.cities.HTMLTemplate;
 import it.vige.cities.ResultNodes;
@@ -28,6 +30,8 @@ import it.vige.cities.result.Nodes;
  * @author lucastancapiano
  */
 public class Wikipedia extends HTMLTemplate {
+
+	private static final Logger logger = getLogger(Wikipedia.class);
 
 	private final static String URL = "https://it.wikipedia.org/wiki/Comuni_d%27Italia";
 
@@ -43,9 +47,11 @@ public class Wikipedia extends HTMLTemplate {
 	 * @param duplicatedNames the duplicated names parameter
 	 */
 	public Wikipedia(boolean caseSensitive, boolean duplicatedNames) {
+		logger.debug("Creating Wikipedia template - caseSensitive: {}, duplicatedNames: {}", caseSensitive, duplicatedNames);
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = IT.name();
+		logger.info("Wikipedia template initialized for country: {}", this.country);
 	}
 
 	/**
@@ -53,10 +59,14 @@ public class Wikipedia extends HTMLTemplate {
 	 */
 	@Override
 	public ResultNodes generate() throws Exception {
+		logger.info("Starting Wikipedia generation for country: {}", country);
 		Nodes nodes = new Nodes();
+		logger.debug("Fetching Wikipedia page: {}", URL);
 		Document level1 = getPage(URL);
 		Elements lines1 = level1.select("div div ul li a[title^=Comuni del], div div ul li a[title^=Comuni della]");
+		logger.debug("Found {} level 1 links", lines1.size());
 		int counter = addLevel0(nodes, caseSensitive, associations);
+		logger.info("Added {} level 0 nodes", counter);
 		for (Node node0 : nodes.getZones()) {
 			for (Element head1 : lines1) {
 				String linkText = head1.text();
