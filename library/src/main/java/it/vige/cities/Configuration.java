@@ -42,7 +42,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Case sensistive
+	 * Case sensitive
 	 * @return the case sensitive configuration
 	 */
 	public boolean isCaseSensitive() {
@@ -50,7 +50,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Case sensistive
+	 * Case sensitive
 	 * @param caseSensitive true if it is case sensitive
 	 */
 	public void setCaseSensitive(boolean caseSensitive) {
