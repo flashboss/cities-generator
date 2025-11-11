@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DropdownConfig } from './types';
 import i18nCountries from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
+import { getContinentFromCountry } from './continentUtils';
 import './DropdownConfig.css';
 
 // Register English locale for country names
@@ -39,10 +40,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   };
 
   // Load available countries by reading directories from the data URL
-  // Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+  // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
   useEffect(() => {
     const loadCountries = async () => {
-      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db';
       const dataUrl = config.dataUrl || DEFAULT_GITHUB_URL;
       const baseUrl = dataUrl.replace(/\.json$/, '').replace(/\/$/, '');
 
@@ -56,11 +57,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
         let countryCodes: string[] = [];
         
         if (isGitHub) {
-          // Use GitHub API to list directories
+          // Use GitHub API to list continent directories, then country directories within each continent
           // Convert raw.githubusercontent.com URL to api.github.com URL
           // Example: https://raw.githubusercontent.com/user/repo/branch/path
           // To: https://api.github.com/repos/user/repo/contents/path
-          // Also handle: https://raw.githubusercontent.com/user/repo/branch/path/ (with trailing slash)
           const githubMatch = baseUrl.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?(.*)/);
           if (githubMatch) {
             const [, user, repo, branch, path] = githubMatch;
@@ -72,11 +72,31 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               const response = await fetch(apiUrl);
               if (response.ok) {
                 const contents = await response.json();
-                // Filter for directories (type === 'dir')
-                const directories = Array.isArray(contents) 
+                // Filter for continent directories (type === 'dir')
+                const continentDirs = Array.isArray(contents) 
                   ? contents.filter((item: any) => item.type === 'dir')
                   : [];
-                countryCodes = directories.map((dir: any) => dir.name.toUpperCase());
+                
+                // For each continent, get country directories
+                const countryPromises = continentDirs.map(async (continentDir: any) => {
+                  const continentApiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${cleanPath ? `${cleanPath}/` : ''}${continentDir.name}?ref=${branch}`;
+                  try {
+                    const continentResponse = await fetch(continentApiUrl);
+                    if (continentResponse.ok) {
+                      const countryContents = await continentResponse.json();
+                      const countryDirs = Array.isArray(countryContents)
+                        ? countryContents.filter((item: any) => item.type === 'dir')
+                        : [];
+                      return countryDirs.map((dir: any) => dir.name.toUpperCase());
+                    }
+                  } catch {
+                    // Skip if continent directory can't be read
+                  }
+                  return [];
+                });
+                
+                const countryArrays = await Promise.all(countryPromises);
+                countryCodes = countryArrays.flat();
               } else {
                 console.error('GitHub API error:', response.status, response.statusText);
               }
@@ -86,8 +106,6 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           } else {
             console.warn('GitHub URL detected but regex did not match:', baseUrl);
           }
-          // For GitHub, NEVER use fallback - raw.githubusercontent.com doesn't support directory listing
-          // The presence of the directory (from GitHub API) is sufficient to show it in the list
         } else {
           // Fallback for non-GitHub servers: try to verify which directories exist
           // IMPORTANT: Never use this for GitHub URLs - they don't support directory listing
@@ -153,7 +171,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   }, [config.dataUrl, showAdvanced]);
 
   // Load available languages for the selected country
-  // Files are in format {language}_{country}.json (e.g., it_IT.json, en_IT.json)
+  // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
   useEffect(() => {
     const loadLanguages = async () => {
       if (!config.country) {
@@ -161,9 +179,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
         return;
       }
 
-      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db';
       const baseUrl = (config.dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
       const countryCode = config.country.toUpperCase();
+      const continent = getContinentFromCountry(countryCode);
 
       setLoadingLanguages(true);
       setLanguagesError(null);
@@ -180,7 +199,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
         ];
         
         // Check which languages are available for the selected country
-        // Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+        // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
         const isGitHub = baseUrl.includes('github.com') || baseUrl.includes('raw.githubusercontent.com');
         
         let foundLanguages: LanguageOption[] = [];
@@ -195,7 +214,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
             const [, user, repo, branch, path] = githubMatch;
             // Remove trailing slash from path if present
             const cleanPath = path.replace(/\/$/, '');
-            const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${cleanPath ? `${cleanPath}/` : ''}${countryCode}?ref=${branch}`;
+            const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${cleanPath ? `${cleanPath}/` : ''}${continent}/${countryCode}?ref=${branch}`;
             
             try {
               const response = await fetch(apiUrl);
@@ -226,16 +245,16 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           }
           
           const checkPromises = languageCodes.map(async (lang) => {
-            try {
-              const testUrl = `${baseUrl}/${countryCode}/${lang.code}.json`;
-              const testResponse = await fetch(testUrl, { method: 'HEAD' });
+              try {
+                const testUrl = `${baseUrl}/${continent}/${countryCode}/${lang.code}.json`;
+                const testResponse = await fetch(testUrl, { method: 'HEAD' });
               if (testResponse.ok) {
                 return lang;
               }
             } catch {
               // Try GET with Range header as fallback
               try {
-                const testUrl = `${baseUrl}/${countryCode}/${lang.code}.json`;
+                const testUrl = `${baseUrl}/${continent}/${countryCode}/${lang.code}.json`;
                 const testResponse = await fetch(testUrl, { method: 'GET', headers: { 'Range': 'bytes=0-0' } });
                 if (testResponse.ok || testResponse.status === 206) {
                   return lang;

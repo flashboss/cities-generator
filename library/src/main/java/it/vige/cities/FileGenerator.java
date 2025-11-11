@@ -116,13 +116,17 @@ public class FileGenerator {
 	protected void writeFile(Nodes nodes, String templateName) throws Exception {
 		logger.debug("Starting writeFile - country: {}, language: {}, template: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode(), templateName);
 		new File(CITIES_HOME).mkdir();
-		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		// Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
+		Continents continent = Continents.fromCountryCode(country);
+		String continentDir = continent.getCode();
 		String countryDir = country.toUpperCase();
 		String lang = this.language.getCode();
-		File countryFolder = new File(CITIES_HOME + countryDir);
+		File continentFolder = new File(CITIES_HOME + continentDir);
+		continentFolder.mkdirs();
+		File countryFolder = new File(CITIES_HOME + continentDir + File.separator + countryDir);
 		countryFolder.mkdirs();
 		String fileName = lang + ".json";
-		String name = CITIES_HOME + countryDir + File.separator + fileName;
+		String name = CITIES_HOME + continentDir + File.separator + countryDir + File.separator + fileName;
 		logger.debug("File path: {}", name);
 		
 		// Serialize nodes to JSON
@@ -177,11 +181,13 @@ public class FileGenerator {
 	protected Nodes readFile(String country, Languages language) throws Exception {
 		logger.debug("Reading file - country: {}, language: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode());
 		new File(CITIES_HOME).mkdir();
-		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		// Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
+		Continents continent = Continents.fromCountryCode(country);
+		String continentDir = continent.getCode();
 		String countryDir = country.toUpperCase();
 		Languages lang = language != null ? language : Languages.getDefault();
 		String fileName = lang.getCode() + ".json";
-		String filePath = CITIES_HOME + countryDir + File.separator + fileName;
+		String filePath = CITIES_HOME + continentDir + File.separator + countryDir + File.separator + fileName;
 		logger.debug("Reading from file: {}", filePath);
 		Nodes nodes = mapper.readValue(new File(filePath), Nodes.class);
 		logger.info("File read successfully from: {}", filePath);
@@ -207,11 +213,13 @@ public class FileGenerator {
 	protected boolean exists() {
 		logger.debug("Checking if file exists - country: {}, language: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode());
 		new File(CITIES_HOME).mkdir();
-		// Structure: {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+		// Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
+		Continents continent = Continents.fromCountryCode(country);
+		String continentDir = continent.getCode();
 		String countryDir = country.toUpperCase();
 		String lang = this.language.getCode();
 		String fileName = lang + ".json";
-		String filePath = CITIES_HOME + countryDir + File.separator + fileName;
+		String filePath = CITIES_HOME + continentDir + File.separator + countryDir + File.separator + fileName;
 		boolean exists = new File(CITIES_HOME).exists() && new File(filePath).exists();
 		logger.debug("File existence check - path: {}, exists: {}", filePath, exists);
 		return exists;

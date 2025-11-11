@@ -21,7 +21,7 @@ function App() {
     <CitiesDropdown
       country="IT"
       language="it"
-      dataUrl="https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU"
+      dataUrl="https://raw.githubusercontent.com/flashboss/cities-generator/master/_db"
       onSelect={(node) => console.log('Selected:', node)}
     />
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Node, Nodes, DropdownConfig } from './types';
+import { getContinentFromCountry } from './continentUtils';
 import './CitiesDropdown.css';
 
 interface CitiesDropdownProps extends DropdownConfig {
@@ -42,12 +43,14 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
       setError(null);
       setNodes(null);
       
-      // Build URL: format is {country}/{language}.json (e.g., IT/it.json, GB/en.json)
-      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU';
+      // Build URL: format is {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
+      const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db';
       const baseUrl = (dataUrl || DEFAULT_GITHUB_URL).replace(/\.json$/, '').replace(/\/$/, '');
       const lang = (language || 'it').toLowerCase();
       const countryCode = country.toUpperCase();
-      const url = `${baseUrl}/${countryCode}/${lang}.json`;
+      // Determine continent from country code
+      const continent = getContinentFromCountry(countryCode);
+      const url = `${baseUrl}/${continent}/${countryCode}/${lang}.json`;
       
       // Load data with current config
       const loadData = async () => {

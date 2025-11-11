@@ -52,7 +52,7 @@ To generate the cities, you can choose between 3 modes:
 ```
 mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.6:jar -DoutputDirectory=. && java -jar cities-generator-1.2.6.jar -c GB -l en
 ```
-It will return a json file inside the ${user.home}/cities-generator/GB/en.json (structure: {country}/{language}.json)
+It will return a json file inside the ${user.home}/cities-generator/EU/GB/en.json (structure: {continent}/{country}/{language}.json)
 
 - Download the source and execute:
 ```
@@ -98,7 +98,7 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
 	...
 	Result result = generator.generateFile();
 ```
-You will find the file IT/it.json in the ${user.home}/cities-generator directory (structure: {country}/{language}.json)
+You will find the file EU/IT/it.json in the ${user.home}/cities-generator directory (structure: {continent}/{country}/{language}.json)
 
 ## Geonames registration
 
@@ -239,7 +239,7 @@ https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/IT/en
 https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/GB/it.json
 https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/GB/en.json
 
-The structure is {country}/{language}.json (e.g., IT/it.json, GB/en.json)
+The structure is {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
 
 ## Frontend
 
