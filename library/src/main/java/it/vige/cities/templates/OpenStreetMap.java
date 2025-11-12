@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -245,7 +246,7 @@ public class OpenStreetMap extends Template {
 		logger.debug("Overpass query: {}", query);
 		
 		// Use HttpURLConnection directly to avoid RESTEasy writer issues
-		URL url = new URL(OVERPASS_API_URL);
+		URL url = URI.create(OVERPASS_API_URL).toURL();
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
