@@ -281,14 +281,24 @@ public class OpenStreetMap extends Template {
 	private String executeOverpassQuery(String query, int maxRetries) throws Exception {
 		int attempt = 0;
 		long baseDelayMs = 2000; // Start with 2 seconds delay
+		boolean lastWasRateLimit = false;
 		
 		while (attempt < maxRetries) {
 			try {
 				if (attempt > 0) {
-					long delayMs = baseDelayMs * (1L << (attempt - 1)); // Exponential backoff: 2s, 4s, 8s
+					long delayMs;
+					if (lastWasRateLimit) {
+						// For rate limiting (429), use longer delays: 30s, 60s, 120s
+						delayMs = 30000L * (1L << (attempt - 1)); // 30s, 60s, 120s
+						logger.warn("Rate limited detected, using longer delay: {}ms ({} seconds)", delayMs, delayMs / 1000);
+					} else {
+						// For other errors, use exponential backoff: 2s, 4s, 8s
+						delayMs = baseDelayMs * (1L << (attempt - 1));
+					}
 					logger.info("Retrying Overpass query (attempt {}/{}) after {}ms delay", 
 							attempt + 1, maxRetries, delayMs);
 					Thread.sleep(delayMs);
+					lastWasRateLimit = false; // Reset after delay
 				}
 				
 				logger.info("Executing Overpass query (attempt {}/{}): {}", attempt + 1, maxRetries, query);
@@ -323,6 +333,13 @@ public class OpenStreetMap extends Template {
 						}
 					}
 					return response.toString();
+				} else if (responseCode == 429 && attempt < maxRetries - 1) {
+					// Rate limiting - retry with longer delay
+					logger.warn("Overpass API returned status code 429 (Rate Limited), will retry with longer delay");
+					lastWasRateLimit = true;
+					connection.disconnect();
+					attempt++;
+					continue;
 				} else if (responseCode == 504 && attempt < maxRetries - 1) {
 					// Gateway timeout - retry
 					logger.warn("Overpass API returned status code 504 (Gateway Timeout), will retry");
@@ -351,10 +368,18 @@ public class OpenStreetMap extends Template {
 				Thread.currentThread().interrupt();
 				throw new Exception("Interrupted while waiting to retry Overpass query", e);
 			} catch (Exception e) {
-				if (attempt < maxRetries - 1 && e.getMessage() != null && e.getMessage().contains("504")) {
-					logger.warn("Overpass query failed, will retry: {}", e.getMessage());
-					attempt++;
-					continue;
+				if (attempt < maxRetries - 1) {
+					String errorMsg = e.getMessage();
+					if (errorMsg != null && (errorMsg.contains("504") || errorMsg.contains("429"))) {
+						if (errorMsg.contains("429")) {
+							lastWasRateLimit = true;
+							logger.warn("Overpass query failed with rate limiting, will retry with longer delay: {}", errorMsg);
+						} else {
+							logger.warn("Overpass query failed, will retry: {}", errorMsg);
+						}
+						attempt++;
+						continue;
+					}
 				}
 				throw e;
 			}
