@@ -20,6 +20,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 
 import it.vige.cities.HTMLTemplate;
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -52,6 +53,24 @@ public class Wikipedia extends HTMLTemplate {
 		this.duplicatedNames = duplicatedNames;
 		this.country = IT.name();
 		logger.info("Wikipedia template initialized for country: {}", this.country);
+	}
+
+	/**
+	 * Check if the template supports the given language
+	 * Wikipedia template only supports Italian (IT)
+	 */
+	@Override
+	public boolean isLanguageSupported(Languages language) {
+		return language == Languages.IT;
+	}
+
+	/**
+	 * Check if the template supports the given country
+	 * Wikipedia template only supports Italy (IT)
+	 */
+	@Override
+	public boolean isCountrySupported(String country) {
+		return IT.name().equalsIgnoreCase(country);
 	}
 
 	/**

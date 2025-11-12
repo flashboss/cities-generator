@@ -1,9 +1,11 @@
 package it.vige.cities.test.templates.it;
 
 import static it.vige.cities.Countries.IT;
+import static it.vige.cities.Languages.EN;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.templates.it.Providers.WIKIPEDIA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,6 +26,7 @@ import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
+import it.vige.cities.templates.it.Wikipedia;
 
 /**
  * Wikipedia tests
@@ -126,6 +129,43 @@ public class WikipediaTest extends FileGenerator {
 		assertTrue(copyright.contains("template: Wikipedia"), "Copyright should contain 'template: Wikipedia'");
 		assertTrue(copyright.contains("Copyright (c) Vige"), "Copyright should contain 'Copyright (c) Vige'");
 		assertTrue(copyright.contains("Apache License"), "Copyright should contain 'Apache License'");
+	}
+
+	/**
+	 * Test that Wikipedia template only supports Italian
+	 */
+	@Test
+	public void testLanguageSupport() {
+		Wikipedia wikipedia = new Wikipedia(false, false);
+		
+		// Should support Italian
+		assertTrue(wikipedia.isLanguageSupported(Languages.IT), "Wikipedia should support Italian");
+		
+		// Should not support other languages
+		assertFalse(wikipedia.isLanguageSupported(EN), "Wikipedia should not support English");
+		assertFalse(wikipedia.isLanguageSupported(Languages.FR), "Wikipedia should not support French");
+		assertFalse(wikipedia.isLanguageSupported(Languages.DE), "Wikipedia should not support German");
+		assertFalse(wikipedia.isLanguageSupported(Languages.ES), "Wikipedia should not support Spanish");
+		assertFalse(wikipedia.isLanguageSupported(Languages.PT), "Wikipedia should not support Portuguese");
+	}
+
+	/**
+	 * Test that Wikipedia template only supports Italy (IT)
+	 */
+	@Test
+	public void testCountrySupport() {
+		Wikipedia wikipedia = new Wikipedia(false, false);
+		
+		// Should support Italy
+		assertTrue(wikipedia.isCountrySupported(IT.name()), "Wikipedia should support Italy");
+		assertTrue(wikipedia.isCountrySupported("it"), "Wikipedia should support Italy (lowercase)");
+		assertTrue(wikipedia.isCountrySupported("IT"), "Wikipedia should support Italy (uppercase)");
+		
+		// Should not support other countries
+		assertFalse(wikipedia.isCountrySupported("GB"), "Wikipedia should not support Great Britain");
+		assertFalse(wikipedia.isCountrySupported("US"), "Wikipedia should not support United States");
+		assertFalse(wikipedia.isCountrySupported("FR"), "Wikipedia should not support France");
+		assertFalse(wikipedia.isCountrySupported("DE"), "Wikipedia should not support Germany");
 	}
 
 }

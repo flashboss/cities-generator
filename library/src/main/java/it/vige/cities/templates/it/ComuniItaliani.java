@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 
 import it.vige.cities.Countries;
 import it.vige.cities.HTMLTemplate;
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -36,6 +37,24 @@ public class ComuniItaliani extends HTMLTemplate {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = Countries.IT.name();
+	}
+
+	/**
+	 * Check if the template supports the given language
+	 * ComuniItaliani template only supports Italian (IT)
+	 */
+	@Override
+	public boolean isLanguageSupported(Languages language) {
+		return language == Languages.IT;
+	}
+
+	/**
+	 * Check if the template supports the given country
+	 * ComuniItaliani template only supports Italy (IT)
+	 */
+	@Override
+	public boolean isCountrySupported(String country) {
+		return Countries.IT.name().equalsIgnoreCase(country);
 	}
 
 	/**

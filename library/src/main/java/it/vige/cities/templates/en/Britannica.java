@@ -9,7 +9,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import it.vige.cities.Countries;
 import it.vige.cities.HTMLTemplate;
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
@@ -36,6 +38,24 @@ public class Britannica extends HTMLTemplate {
 		this.caseSensitive = caseSensitive;
 		this.duplicatedNames = duplicatedNames;
 		this.country = GB.name();
+	}
+
+	/**
+	 * Check if the template supports the given language
+	 * Britannica template only supports English (EN)
+	 */
+	@Override
+	public boolean isLanguageSupported(Languages language) {
+		return language == Languages.EN;
+	}
+
+	/**
+	 * Check if the template supports the given country
+	 * Britannica template only supports Great Britain (GB)
+	 */
+	@Override
+	public boolean isCountrySupported(String country) {
+		return Countries.GB.name().equalsIgnoreCase(country);
 	}
 
 	/**

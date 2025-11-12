@@ -1,9 +1,11 @@
 package it.vige.cities.test.templates.it;
 
 import static it.vige.cities.Countries.IT;
+import static it.vige.cities.Languages.EN;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.templates.it.Providers.COMUNI_ITALIANI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,9 +14,11 @@ import org.junit.jupiter.api.Test;
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
+import it.vige.cities.Languages;
 import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
+import it.vige.cities.templates.it.ComuniItaliani;
 
 /**
  * Comuni italiani tests
@@ -55,6 +59,43 @@ public class ComuniItalianiTest extends FileGenerator {
 		assertEquals(3, arenzano.getLevel());
 		assertEquals("ARENZANO", arenzano.getName());
 
+	}
+
+	/**
+	 * Test that ComuniItaliani template only supports Italian
+	 */
+	@Test
+	public void testLanguageSupport() {
+		ComuniItaliani comuniItaliani = new ComuniItaliani(false, false);
+		
+		// Should support Italian
+		assertTrue(comuniItaliani.isLanguageSupported(Languages.IT), "ComuniItaliani should support Italian");
+		
+		// Should not support other languages
+		assertFalse(comuniItaliani.isLanguageSupported(EN), "ComuniItaliani should not support English");
+		assertFalse(comuniItaliani.isLanguageSupported(Languages.FR), "ComuniItaliani should not support French");
+		assertFalse(comuniItaliani.isLanguageSupported(Languages.DE), "ComuniItaliani should not support German");
+		assertFalse(comuniItaliani.isLanguageSupported(Languages.ES), "ComuniItaliani should not support Spanish");
+		assertFalse(comuniItaliani.isLanguageSupported(Languages.PT), "ComuniItaliani should not support Portuguese");
+	}
+
+	/**
+	 * Test that ComuniItaliani template only supports Italy (IT)
+	 */
+	@Test
+	public void testCountrySupport() {
+		ComuniItaliani comuniItaliani = new ComuniItaliani(false, false);
+		
+		// Should support Italy
+		assertTrue(comuniItaliani.isCountrySupported(IT.name()), "ComuniItaliani should support Italy");
+		assertTrue(comuniItaliani.isCountrySupported("it"), "ComuniItaliani should support Italy (lowercase)");
+		assertTrue(comuniItaliani.isCountrySupported("IT"), "ComuniItaliani should support Italy (uppercase)");
+		
+		// Should not support other countries
+		assertFalse(comuniItaliani.isCountrySupported("GB"), "ComuniItaliani should not support Great Britain");
+		assertFalse(comuniItaliani.isCountrySupported("US"), "ComuniItaliani should not support United States");
+		assertFalse(comuniItaliani.isCountrySupported("FR"), "ComuniItaliani should not support France");
+		assertFalse(comuniItaliani.isCountrySupported("DE"), "ComuniItaliani should not support Germany");
 	}
 
 }

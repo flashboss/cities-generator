@@ -13,5 +13,10 @@ public enum Providers {
 	/**
 	 * GEONAMES
 	 */
-	GEONAMES
+	GEONAMES,
+	
+	/**
+	 * OPENSTREETMAP
+	 */
+	OPENSTREETMAP
 }

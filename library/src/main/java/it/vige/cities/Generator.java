@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
 import it.vige.cities.templates.None;
+import it.vige.cities.templates.OpenStreetMap;
 import it.vige.cities.templates.en.Britannica;
 import it.vige.cities.templates.it.ComuniItaliani;
 import it.vige.cities.templates.it.ExtraGeoNames;
@@ -163,34 +164,66 @@ public class Generator extends Template {
 				if (provider == null || provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
-					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(
+							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates
+							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.WIKIPEDIA.name())) {
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
-					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-				} else if (provider.equals(it.vige.cities.templates.it.Providers.COMUNI_ITALIANI.name())) {
-					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
-					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
-					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(
+							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates
+							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.EXTRA_GEONAMES.name())) {
-					templates.add(new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(
+							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
-					templates.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates
+							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
+				} else if (provider.equals(it.vige.cities.templates.it.Providers.OPENSTREETMAP.name())) {
+					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
+					templates.add(
+							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates
+							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
+					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 				}
 			} else if (country.equals(Countries.GB.name())) {
 				if (provider == null || provider.equals(it.vige.cities.templates.en.Providers.GEONAMES.name())) {
-					templates.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username, language));
+					templates
+							.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username, language));
 					templates.add(new Britannica(caseSensitive, duplicatedNames));
+					templates.add(new OpenStreetMap(Countries.GB.name(), caseSensitive, duplicatedNames, language));
 				} else if (provider.equals(it.vige.cities.templates.en.Providers.BRITANNICA.name())) {
 					templates.add(new Britannica(caseSensitive, duplicatedNames));
-					templates.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username, language));
+					templates
+							.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(new OpenStreetMap(Countries.GB.name(), caseSensitive, duplicatedNames, language));
+				} else if (provider.equals(it.vige.cities.templates.en.Providers.OPENSTREETMAP.name())) {
+					templates.add(new OpenStreetMap(Countries.GB.name(), caseSensitive, duplicatedNames, language));
+					templates
+							.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username, language));
+					templates.add(new Britannica(caseSensitive, duplicatedNames));
 				}
-			} else
-				templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
+			} else {
+				// For other countries, add GeoNames and OpenStreetMap as fallbacks
+				if (provider == null || provider.equals(it.vige.cities.templates.Providers.GEONAMES.name())) {
+					templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
+					templates.add(new OpenStreetMap(country, caseSensitive, duplicatedNames, language));
+				} else if (provider.equals(it.vige.cities.templates.Providers.OPENSTREETMAP.name())) {
+					templates.add(new OpenStreetMap(country, caseSensitive, duplicatedNames, language));
+					templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
+				} else {
+					templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
+					templates.add(new OpenStreetMap(country, caseSensitive, duplicatedNames, language));
+				}
+			}
 		}
 		return templates;
 	}
@@ -214,9 +247,11 @@ public class Generator extends Template {
 				// Set language and country on template
 				template.language = this.language;
 				template.country = this.country;
-				logger.debug("Template configured - country: {}, language: {}", this.country, this.language != null ? this.language.getCode() : Languages.getDefault().getCode());
+				logger.debug("Template configured - country: {}, language: {}", this.country,
+						this.language != null ? this.language.getCode() : Languages.getDefault().getCode());
 				ResultNodes resultG = template.generateFile();
-				logger.debug("Template {} generation result: {}", template.getClass().getSimpleName(), resultG.getResult());
+				logger.debug("Template {} generation result: {}", template.getClass().getSimpleName(),
+						resultG.getResult());
 				if (resultG.getResult() == OK) {
 					logger.info("Template {} succeeded, reading file", template.getClass().getSimpleName());
 					result = template.readFile();
@@ -243,9 +278,12 @@ public class Generator extends Template {
 		logger.info(
 				"Start object generation for country: " + country + ", provider: " + provider + ", caseSensitive: "
 						+ caseSensitive + ", duplicatedNames: " + duplicatedNames + ", username: " + username
-						+ ", language: " + (language != null ? language.getCode() : Languages.getDefault().getCode()) + ", overwrite: " + overwrite);
-		logger.debug("Generation parameters - country: {}, provider: {}, caseSensitive: {}, duplicatedNames: {}, language: {}, overwrite: {}", 
-				country, provider, caseSensitive, duplicatedNames, language != null ? language.getCode() : Languages.getDefault().getCode(), overwrite);
+						+ ", language: " + (language != null ? language.getCode() : Languages.getDefault().getCode())
+						+ ", overwrite: " + overwrite);
+		logger.debug(
+				"Generation parameters - country: {}, provider: {}, caseSensitive: {}, duplicatedNames: {}, language: {}, overwrite: {}",
+				country, provider, caseSensitive, duplicatedNames,
+				language != null ? language.getCode() : Languages.getDefault().getCode(), overwrite);
 		Nodes result = null;
 		List<Template> templates = getTemplates();
 		logger.debug("Retrieved {} templates for generation", templates.size());
@@ -266,7 +304,8 @@ public class Generator extends Template {
 			result = overwrite(templates);
 		}
 		if (result != null) {
-			logger.info("End object generation - SUCCESS (nodes: {})", result.getZones() != null ? result.getZones().size() : 0);
+			logger.info("End object generation - SUCCESS (nodes: {})",
+					result.getZones() != null ? result.getZones().size() : 0);
 		} else {
 			logger.warn("End object generation - FAILED (no nodes generated)");
 		}
