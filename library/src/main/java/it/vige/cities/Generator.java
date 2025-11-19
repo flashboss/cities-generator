@@ -235,18 +235,6 @@ public class Generator extends Template {
 							.add(new GeoNames(Countries.GB.name(), caseSensitive, duplicatedNames, username, language));
 					templates.add(new Britannica(caseSensitive, duplicatedNames));
 				}
-			} else {
-				// For other countries, add GeoNames and OpenStreetMap as fallbacks
-				if (provider == null || provider.equals(it.vige.cities.templates.Providers.GEONAMES.name())) {
-					templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
-					templates.add(new OpenStreetMap(country, caseSensitive, duplicatedNames, language));
-				} else if (provider.equals(it.vige.cities.templates.Providers.OPENSTREETMAP.name())) {
-					templates.add(new OpenStreetMap(country, caseSensitive, duplicatedNames, language));
-					templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
-				} else {
-					templates.add(new GeoNames(country, caseSensitive, duplicatedNames, username, language));
-					templates.add(new OpenStreetMap(country, caseSensitive, duplicatedNames, language));
-				}
 			}
 		}
 		return templates;
