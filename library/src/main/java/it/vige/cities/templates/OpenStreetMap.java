@@ -2,8 +2,6 @@ package it.vige.cities.templates;
 
 import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
-import static it.vige.cities.result.Nodes.ID_SEPARATOR;
-import static jakarta.ws.rs.client.ClientBuilder.newClient;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -28,14 +26,8 @@ import it.vige.cities.ResultNodes;
 import it.vige.cities.Template;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
-import it.vige.cities.result.osm.NominatimResult;
 import it.vige.cities.result.osm.OsmElement;
 import it.vige.cities.result.osm.OsmResponse;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 /**
  * The OpenStreetMap generator using Overpass API
@@ -47,7 +39,6 @@ public class OpenStreetMap extends Template {
 	private static final Logger logger = getLogger(OpenStreetMap.class);
 
 	private final static String OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
-	private final static String NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/search";
 
 	/**
 	 * Case sensitive
@@ -60,13 +51,12 @@ public class OpenStreetMap extends Template {
 	protected Languages language;
 
 	/**
-	 * Map of admin_level to OSM ID for the country
+	 * Map of admin_level to OSM ID for the country (not used for regions-only mode)
 	 */
 	private Map<Integer, Long> countryOsmIds = new HashMap<>();
-	private NominatimResult countryNominatimResult;
-
+	
 	/**
-	 * Bounding box for the country (minLat, minLon, maxLat, maxLon)
+	 * Bounding box for the country (not used for regions-only mode with area query)
 	 */
 	private double[] countryBbox = null;
 
@@ -74,7 +64,6 @@ public class OpenStreetMap extends Template {
 	 * First level
 	 */
 	protected int firstLevel = 0;
-	private Client client;
 
 	/**
 	 * OpenStreetMap
@@ -109,65 +98,6 @@ public class OpenStreetMap extends Template {
 		this(country, caseSensitive, duplicatedNames, Languages.fromCode(language));
 	}
 
-	/**
-	 * Get country OSM ID using Nominatim
-	 * Note: This is optional as Overpass queries work directly with country codes.
-	 * 
-	 * @param countryCode the country code (ISO 3166-1 alpha-2)
-	 * @return the OSM ID of the country
-	 * @throws Exception if there is a problem
-	 */
-	private NominatimResult getCountryFromNominatim(String countryCode) throws Exception {
-		logger.debug("Getting country OSM ID for: {} with language: {}", countryCode, language.getCode());
-		client = newClient();
-		WebTarget target = client.target(NOMINATIM_API_URL);
-		// Search for country as administrative boundary relation
-		// Use q parameter to search for the country name, or use countrycodes with more
-		// specific parameters
-		target = target.queryParam("q", countryCode)
-				.queryParam("countrycodes", countryCode.toLowerCase())
-				.queryParam("format", "json")
-				.queryParam("limit", "1")
-				.queryParam("addressdetails", "1")
-				.queryParam("extratags", "1")
-				.queryParam("namedetails", "1");
-		if (language != null) {
-			target = target.queryParam("accept-language", language.getCode());
-		}
-		logger.debug("Requesting Nominatim URL: {}", target.getUri());
-		Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
-		logger.debug("Response status: {}", response.getStatus());
-
-		if (response.getStatus() == 200) {
-			// Use RESTEasy automatic deserialization with NominatimResult class
-			GenericType<List<NominatimResult>> listType = new GenericType<List<NominatimResult>>() {
-			};
-			List<NominatimResult> results = response.readEntity(listType);
-			client.close();
-
-			if (results != null && !results.isEmpty()) {
-				// Try to find a relation with admin_level=2 (country level)
-				for (NominatimResult result : results) {
-					// Prefer relations (countries are usually relations)
-					if ("relation".equals(result.getOsmType()) && result.getOsmId() != null) {
-						logger.info("Found country OSM ID: {} (relation) for country: {}", result.getOsmId(),
-								countryCode);
-						return result;
-					}
-				}
-
-				// Fallback: use first result if no relation found
-				NominatimResult firstResult = results.get(0);
-				if (firstResult.getOsmId() != null) {
-					logger.info("Found country OSM ID: {} for country: {}", firstResult.getOsmId(), countryCode);
-					return firstResult;
-				}
-			}
-		}
-		client.close();
-		logger.warn("Could not find OSM ID for country: {}", countryCode);
-		throw new Exception("Could not find OSM ID for country: " + countryCode);
-	}
 
 	/**
 	 * Get administrative boundaries using Overpass API
@@ -428,12 +358,10 @@ public class OpenStreetMap extends Template {
 								"out body;",
 						adminLevel, country.toUpperCase());
 			}
-		} else if (adminLevel == 4 && countryOsmIds.containsKey(2)) {
+		} else if (adminLevel == 4) {
 			// For regions (admin_level=4): use area-based query with country ISO code
-			// This uses the area derived from the country relation, which is more precise than bounding box
-			// and avoids including regions from neighboring countries
-			Long countryOsmId = countryOsmIds.get(2);
-			logger.debug("Using area-based query for regions - country: {}, country OSM ID: {}", country, countryOsmId);
+			// This is the most efficient and precise method - no need for countryOsmId or bounding box
+			logger.debug("Using area-based query for regions - country: {}", country);
 			query = String.format(
 					"[out:json][timeout:60];\n" +
 							"area[\"ISO3166-1\"=\"%s\"]->.searchArea;\n" +
@@ -549,7 +477,7 @@ public class OpenStreetMap extends Template {
 	}
 
 	/**
-	 * Add nodes recursively
+	 * Add nodes - only regions (admin_level=4) for the country
 	 * 
 	 * @param zones       the zones
 	 * @param numberLevel the number level
@@ -560,74 +488,12 @@ public class OpenStreetMap extends Template {
 	private void addNodes(List<Node> zones, int numberLevel, String parentId, int adminLevel) throws Exception {
 		logger.debug("Adding nodes - level: {}, parentId: {}, adminLevel: {}", numberLevel, parentId, adminLevel);
 
-		if (numberLevel > MAX_LEVEL) {
-			logger.debug("Max level ({}) reached, stopping recursion", MAX_LEVEL);
-			return;
-		}
+		// Only get regions (admin_level=4) - no country, no provinces, no municipalities
+		int queryAdminLevel = 4; // Region/State only
 
-		// Map admin_level to OSM query level
-		// admin_level=2: country, admin_level=4: region, admin_level=6: province
-		// Note: stopping at provinces level, excluding municipalities
-		int queryAdminLevel;
-		switch (numberLevel) {
-			case 0:
-				queryAdminLevel = 2; // Country
-				break;
-			case 1:
-				queryAdminLevel = 4; // Region/State
-				break;
-			case 2:
-				queryAdminLevel = 6; // Province/County
-				break;
-			default:
-				logger.debug("Stopping at level {} (provinces level reached, municipalities excluded)", numberLevel);
-				return;
-		}
-
-		// Get parent relation ID if available (for hierarchical queries)
-		Long parentRelationId = null;
-		if (adminLevel > 2) {
-			parentRelationId = countryOsmIds.get(adminLevel - 2);
-		}
-
-		// Bounding box should already be extracted in generate() method
-		// If not, try to extract it now (fallback)
-		if (countryBbox == null && queryAdminLevel == 2 && countryOsmIds.containsKey(2)) {
-			extractCountryBbox();
-		}
-
-		// For country level (admin_level=2), use Nominatim data directly to avoid
-		// Overpass timeout
-		if (queryAdminLevel == 2 && countryNominatimResult != null) {
-			logger.debug("Using Nominatim data directly for country level to avoid Overpass timeout");
-			String countryName = countryNominatimResult.getDisplayName();
-			// Extract country name from display_name (format: "CountryName, ...")
-			if (countryName != null && countryName.contains(",")) {
-				countryName = countryName.split(",")[0].trim();
-			}
-			if (countryName == null || countryName.isEmpty()) {
-				countryName = country.toUpperCase(); // Fallback to country code
-			}
-
-			Node node = new Node();
-			String countryNodeId = String.valueOf(countryNominatimResult.getOsmId());
-			node.setId(countryNodeId);
-			node.setLevel(numberLevel);
-			setName(caseSensitive, duplicatedNames, countryName, zones, node);
-			zones.add(node);
-			logger.debug("Added country node: {} (level: {}, OSM ID: {})", countryName, numberLevel,
-					countryNominatimResult.getOsmId());
-
-			// Store OSM ID for hierarchical queries
-			countryOsmIds.put(queryAdminLevel, countryNominatimResult.getOsmId());
-
-			// Recursively add child nodes (regions, provinces, municipalities)
-			addNodes(node.getZones(), numberLevel + 1, node.getId(), queryAdminLevel + 2);
-		} else {
-			// Check if we're using bounding box or hierarchical query (more reliable than country tag filtering)
-			boolean usingBbox = (countryBbox != null && queryAdminLevel > 2);
-			boolean usingHierarchicalQuery = (queryAdminLevel == 4 && countryOsmIds.containsKey(2));
-			String jsonResponse = getAdministrativeBoundaries(queryAdminLevel, parentRelationId, usingBbox);
+		// Get regions directly (admin_level=4) - single Overpass query using area
+		{
+			String jsonResponse = getAdministrativeBoundaries(queryAdminLevel, null, false);
 			ObjectMapper mapper = new ObjectMapper();
 			OsmResponse osmResponse = mapper.readValue(jsonResponse, OsmResponse.class);
 
@@ -699,9 +565,9 @@ public class OpenStreetMap extends Template {
 						continue;
 					}
 
-					// Filter by country only if NOT using bounding box or hierarchical query
-					// (bbox and hierarchical query already limit geographically/hierarchically)
-					if (queryAdminLevel > 2 && !usingBbox && !usingHierarchicalQuery) {
+					// Filter by country only if NOT using area query (area query already limits geographically)
+					// For admin_level=4, we use area query which doesn't need country filtering
+					if (queryAdminLevel > 2 && queryAdminLevel != 4) {
 						String countryTag = element.getTag("ISO3166-1:alpha2");
 						if (countryTag == null) {
 							countryTag = element.getTag("country");
@@ -725,31 +591,15 @@ public class OpenStreetMap extends Template {
 						continue;
 					}
 
-					String noFirstLevelId = "";
-					if (numberLevel > 0) {
-						noFirstLevelId = parentId + ID_SEPARATOR;
-					}
+					// Add region node directly (no parent, no recursion)
 					Node node = new Node();
-					node.setId(noFirstLevelId + element.getId());
-					node.setLevel(numberLevel);
+					node.setId(String.valueOf(element.getId()));
+					node.setLevel(0); // All regions at level 0 (flat list)
 					setName(caseSensitive, duplicatedNames, name, zones, node);
 					zones.add(node);
 					added++;
 
-					// Store relation ID for potential future use
-					if (element.getType().equals("relation")) {
-						countryOsmIds.put(queryAdminLevel, element.getId());
-					}
-
-					logger.debug("Added node: {} (level: {}, OSM ID: {})", name, numberLevel, element.getId());
-
-					// Recursively add child nodes (stop at provinces level, exclude municipalities)
-					if (queryAdminLevel < 6) {
-						addNodes(node.getZones(), numberLevel + 1, node.getId(), queryAdminLevel + 2);
-					} else {
-						logger.debug("Stopping recursion at provinces level (level {}), municipalities excluded",
-								numberLevel);
-					}
+					logger.debug("Added region node: {} (level: 0, OSM ID: {})", name, element.getId());
 				}
 
 				logger.info(
@@ -771,36 +621,9 @@ public class OpenStreetMap extends Template {
 		Nodes nodes = new Nodes();
 
 		try {
-			// Try to get country OSM ID (optional - not required for Overpass queries)
-			// Overpass queries work directly with country codes (ISO3166-1:alpha2)
-			try {
-				countryNominatimResult = getCountryFromNominatim(country);
-				long countryOsmId = countryNominatimResult.getOsmId();
-				countryOsmIds.put(2, countryOsmId);
-				logger.info("Found country OSM ID: {} for country: {}", countryOsmId, country);
-
-				// Extract bounding box early so it's available for all sub-national levels
-				// Note: This may timeout, but we have hardcoded fallback values
-				try {
-					extractCountryBbox();
-				} catch (Exception e2) {
-					logger.debug("Could not extract bounding box from Overpass (will use hardcoded values): {}",
-							e2.getMessage());
-				}
-			} catch (Exception e) {
-				logger.debug("Could not get country OSM ID from Nominatim (not critical): {}", e.getMessage());
-				// Continue anyway - Overpass queries work with country codes directly
-				// Try to extract bounding box anyway (uses hardcoded values if OSM ID not
-				// available)
-				try {
-					extractCountryBbox();
-				} catch (Exception e2) {
-					logger.debug("Could not extract bounding box: {}", e2.getMessage());
-				}
-			}
-
-			// Start recursive node addition
-			addNodes(nodes.getZones(), firstLevel, "", 2);
+			// Get only regions (admin_level=4) - single Overpass query using area
+			// No need for Nominatim or bounding box - area query is self-contained
+			addNodes(nodes.getZones(), 0, "", 4);
 			logger.info("OpenStreetMap generation completed - total zones: {}",
 					nodes.getZones() != null ? nodes.getZones().size() : 0);
 		} catch (Exception e) {
