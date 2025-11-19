@@ -478,12 +478,12 @@ public class OpenStreetMap extends Template {
 	}
 
 	/**
-	 * Add nodes recursively - regions and provinces
+	 * Add nodes recursively - regions, provinces, and municipalities
 	 * 
 	 * @param zones       the zones
 	 * @param numberLevel the number level
 	 * @param parentId    the parent ID
-	 * @param adminLevel  the administrative level (4=regions, 6=provinces)
+	 * @param adminLevel  the administrative level (4=regions, 6=provinces, 8=municipalities)
 	 * @throws Exception if there is a problem
 	 */
 	private void addNodes(List<Node> zones, int numberLevel, String parentId, int adminLevel) throws Exception {
@@ -503,8 +503,11 @@ public class OpenStreetMap extends Template {
 			case 1:
 				queryAdminLevel = 6; // Provinces/Metropolitan cities
 				break;
+			case 2:
+				queryAdminLevel = 8; // Municipalities/Comuni
+				break;
 			default:
-				logger.debug("Stopping at level {} (provinces level reached)", numberLevel);
+				logger.debug("Stopping at level {} (max level reached)", numberLevel);
 				return;
 		}
 
@@ -534,9 +537,30 @@ public class OpenStreetMap extends Template {
 				regionOsmId);
 			logger.debug("Querying provinces for region {}: {}", regionOsmId, query);
 			jsonResponse = executeOverpassQuery(query);
+		} else if (queryAdminLevel == 8 && !parentId.isEmpty()) {
+			// Municipalities: query within parent province
+			// Extract province OSM ID from parentId
+			String provinceOsmId = parentId;
+			if (parentId.contains(ID_SEPARATOR)) {
+				provinceOsmId = parentId.substring(parentId.lastIndexOf(ID_SEPARATOR) + 1);
+			}
+			
+			// Query municipalities within the province using area
+			// First get the province relation, then get municipalities within it
+			String query = String.format(
+				"[out:json][timeout:60];\n" +
+				"relation(%s);\n" +
+				"map_to_area;\n" +
+				"(\n" +
+				"  relation[\"boundary\"=\"administrative\"][\"admin_level\"=\"8\"](area);\n" +
+				");\n" +
+				"out body;",
+				provinceOsmId);
+			logger.debug("Querying municipalities for province {}: {}", provinceOsmId, query);
+			jsonResponse = executeOverpassQuery(query);
 		} else {
-			logger.debug("Cannot query provinces without a parent region");
-			return; // Cannot query provinces without a parent region
+			logger.debug("Cannot query without a parent (level: {}, parentId: {})", numberLevel, parentId);
+			return; // Cannot query without a parent
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -602,9 +626,13 @@ public class OpenStreetMap extends Template {
 
 				logger.debug("Added node: {} (level: {}, OSM ID: {})", name, numberLevel, element.getId());
 
-				// Recursively add provinces if we're at region level
+				// Recursively add children: regions -> provinces -> municipalities
 				if (queryAdminLevel == 4) {
+					// Add provinces for regions
 					addNodes(node.getZones(), numberLevel + 1, nodeId, 6);
+				} else if (queryAdminLevel == 6) {
+					// Add municipalities for provinces
+					addNodes(node.getZones(), numberLevel + 1, nodeId, 8);
 				}
 			}
 
@@ -625,7 +653,7 @@ public class OpenStreetMap extends Template {
 		Nodes nodes = new Nodes();
 
 		try {
-			// Start recursive node addition: regions (level 0) -> provinces (level 1)
+			// Start recursive node addition: regions (level 0) -> provinces (level 1) -> municipalities (level 2)
 			// No need for Nominatim or bounding box - area query is self-contained
 			addNodes(nodes.getZones(), 0, "", 4);
 			logger.info("OpenStreetMap generation completed - total zones: {}",
