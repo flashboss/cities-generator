@@ -8,11 +8,6 @@ public enum Providers {
 	/**
 	 * BRITANNICA
 	 */
-	WIKIPEDIA, 
-	
-	/**
-	 * BRITANNICA
-	 */
 	BRITANNICA, 
 	
 	/**

@@ -25,6 +25,7 @@ import it.vige.cities.templates.OpenStreetMap;
 import it.vige.cities.templates.en.Britannica;
 import it.vige.cities.templates.it.ComuniItaliani;
 import it.vige.cities.templates.it.ExtraGeoNames;
+import it.vige.cities.templates.it.ExtraOpenStreetMap;
 import it.vige.cities.templates.it.Wikipedia;
 
 /**
@@ -168,7 +169,7 @@ public class Generator extends Template {
 							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
 					templates
 							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
+					templates.add(new ExtraOpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.WIKIPEDIA.name())) {
 					templates.add(new Wikipedia(caseSensitive, duplicatedNames));
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
@@ -176,7 +177,7 @@ public class Generator extends Template {
 							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
 					templates
 							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
+					templates.add(new ExtraOpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
 				} else if (provider.equals(it.vige.cities.templates.it.Providers.EXTRA_GEONAMES.name())) {
 					templates.add(
 							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
@@ -184,9 +185,9 @@ public class Generator extends Template {
 					templates.add(new ComuniItaliani(caseSensitive, duplicatedNames));
 					templates
 							.add(new GeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
-					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
-				} else if (provider.equals(it.vige.cities.templates.it.Providers.OPENSTREETMAP.name())) {
-					templates.add(new OpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
+					templates.add(new ExtraOpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
+				} else if (provider.equals(it.vige.cities.templates.it.Providers.EXTRA_OPENSTREETMAP.name())) {
+					templates.add(new ExtraOpenStreetMap(Countries.IT.name(), caseSensitive, duplicatedNames, language));
 					templates.add(
 							new ExtraGeoNames(Countries.IT.name(), caseSensitive, duplicatedNames, username, language));
 					templates

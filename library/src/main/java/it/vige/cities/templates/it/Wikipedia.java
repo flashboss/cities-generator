@@ -4,7 +4,6 @@ import static it.vige.cities.Countries.IT;
 import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -223,7 +222,7 @@ public class Wikipedia extends HTMLTemplate {
 	}
 
 	/**
-	 * Level0
+	 * Level0 - uses centralized utility
 	 * 
 	 * @param nodes         the nodes
 	 * @param caseSensitive true if it is case sensitive
@@ -231,40 +230,7 @@ public class Wikipedia extends HTMLTemplate {
 	 * @return the number of level 0 nodes
 	 */
 	private int addLevel0(Nodes nodes, boolean caseSensitive, Map<Node, List<String>> associations) {
-		int counter = 1;
-		Node northWest = new Node();
-		northWest.setId("" + counter++);
-		northWest.setLevel(0);
-		setName(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null, northWest);
-		nodes.getZones().add(northWest);
-		associations.put(northWest, asList(new String[] { "Piemonte", "Liguria", "Valle d'Aosta", "Lombardia" }));
-		Node northEast = new Node();
-		northEast.setId("" + counter++);
-		northEast.setLevel(0);
-		setName(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null, northEast);
-		nodes.getZones().add(northEast);
-		associations.put(northEast,
-				asList(new String[] { "Emilia Romagna", "Veneto", "Trentino Alto Adige", "Friuli Venezia Giulia" }));
-		Node centre = new Node();
-		centre.setId("" + counter++);
-		centre.setLevel(0);
-		setName(caseSensitive, true, "III: ITALIA CENTRALE", null, centre);
-		nodes.getZones().add(centre);
-		associations.put(centre, asList(new String[] { "Lazio", "Marche", "Umbria", "Toscana" }));
-		Node south = new Node();
-		south.setId("" + counter++);
-		south.setLevel(0);
-		setName(caseSensitive, true, "IV: ITALIA MERIDIONALE", null, south);
-		nodes.getZones().add(south);
-		associations.put(south,
-				asList(new String[] { "Abruzzo", "Campania", "Basilicata", "Molise", "Calabria", "Puglia" }));
-		Node islands = new Node();
-		islands.setId("" + counter++);
-		islands.setLevel(0);
-		setName(caseSensitive, true, "V: ITALIA INSULARE", null, islands);
-		nodes.getZones().add(islands);
-		associations.put(islands, asList(new String[] { "Sardegna", "Sicilia" }));
-		return counter;
+		return ItalianMacroregions.addLevel0(nodes, caseSensitive, associations);
 	}
 
 	private List<Element> filterDuplicated(List<Element> list) {

@@ -1,6 +1,5 @@
 package it.vige.cities.templates.it;
 
-import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static java.lang.Integer.parseInt;
@@ -166,154 +165,13 @@ public class ExtraGeoNames extends GeoNames {
 	}
 
 	/**
-	 * Get translated name for a macroregion
-	 * @param macroregion the macroregion identifier (1-5)
-	 * @return the translated name
-	 */
-	private String getMacroregionName(int macroregion) {
-		Languages lang = language != null ? language : Languages.getDefault();
-		switch (lang) {
-		case IT:
-			switch (macroregion) {
-			case 1:
-				return "I: ITALIA NORD-OCCIDENTALE";
-			case 2:
-				return "II: ITALIA NORD-ORIENTALE";
-			case 3:
-				return "III: ITALIA CENTRALE";
-			case 4:
-				return "IV: ITALIA MERIDIONALE";
-			case 5:
-				return "V: ITALIA INSULARE";
-			default:
-				return "";
-			}
-		case EN:
-			switch (macroregion) {
-			case 1:
-				return "I: NORTH-WEST ITALY";
-			case 2:
-				return "II: NORTH-EAST ITALY";
-			case 3:
-				return "III: CENTRAL ITALY";
-			case 4:
-				return "IV: SOUTHERN ITALY";
-			case 5:
-				return "V: INSULAR ITALY";
-			default:
-				return "";
-			}
-		case FR:
-			switch (macroregion) {
-			case 1:
-				return "I: ITALIE DU NORD-OUEST";
-			case 2:
-				return "II: ITALIE DU NORD-EST";
-			case 3:
-				return "III: ITALIE CENTRALE";
-			case 4:
-				return "IV: ITALIE MÉRIDIONALE";
-			case 5:
-				return "V: ITALIE INSULAIRE";
-			default:
-				return "";
-			}
-		case DE:
-			switch (macroregion) {
-			case 1:
-				return "I: NORDWESTITALIEN";
-			case 2:
-				return "II: NORDOSTITALIEN";
-			case 3:
-				return "III: ZENTRALITALIEN";
-			case 4:
-				return "IV: SÜDITALIEN";
-			case 5:
-				return "V: INSELITALIEN";
-			default:
-				return "";
-			}
-		case ES:
-			switch (macroregion) {
-			case 1:
-				return "I: ITALIA NOROCCIDENTAL";
-			case 2:
-				return "II: ITALIA NORORIENTAL";
-			case 3:
-				return "III: ITALIA CENTRAL";
-			case 4:
-				return "IV: ITALIA MERIDIONAL";
-			case 5:
-				return "V: ITALIA INSULAR";
-			default:
-				return "";
-			}
-		case PT:
-			switch (macroregion) {
-			case 1:
-				return "I: ITÁLIA DO NOROESTE";
-			case 2:
-				return "II: ITÁLIA DO NORDESTE";
-			case 3:
-				return "III: ITÁLIA CENTRAL";
-			case 4:
-				return "IV: ITÁLIA MERIDIONAL";
-			case 5:
-				return "V: ITÁLIA INSULAR";
-			default:
-				return "";
-			}
-		default:
-			// Fallback to Italian
-			switch (macroregion) {
-			case 1:
-				return "I: ITALIA NORD-OCCIDENTALE";
-			case 2:
-				return "II: ITALIA NORD-ORIENTALE";
-			case 3:
-				return "III: ITALIA CENTRALE";
-			case 4:
-				return "IV: ITALIA MERIDIONALE";
-			case 5:
-				return "V: ITALIA INSULARE";
-			default:
-				return "";
-			}
-		}
-	}
-
-	/**
+	 * Add level 0 nodes (macroregions) using centralized utility
 	 * 
 	 * @param nodes         the nodes
 	 * @param caseSensitive true if it is case sensitive
 	 */
 	private void addLevel0(Nodes nodes, boolean caseSensitive) {
-		int counter = 1;
-		Node northWest = new Node();
-		northWest.setId("" + counter++);
-		northWest.setLevel(0);
-		setName(caseSensitive, true, getMacroregionName(1), null, northWest);
-		nodes.getZones().add(northWest);
-		Node northEast = new Node();
-		northEast.setId("" + counter++);
-		northEast.setLevel(0);
-		setName(caseSensitive, true, getMacroregionName(2), null, northEast);
-		nodes.getZones().add(northEast);
-		Node centre = new Node();
-		centre.setId("" + counter++);
-		centre.setLevel(0);
-		setName(caseSensitive, true, getMacroregionName(3), null, centre);
-		nodes.getZones().add(centre);
-		Node south = new Node();
-		south.setId("" + counter++);
-		south.setLevel(0);
-		setName(caseSensitive, true, getMacroregionName(4), null, south);
-		nodes.getZones().add(south);
-		Node islands = new Node();
-		islands.setId("" + counter++);
-		islands.setLevel(0);
-		setName(caseSensitive, true, getMacroregionName(5), null, islands);
-		nodes.getZones().add(islands);
+		ItalianMacroregions.addLevel0(nodes, caseSensitive, language);
 	}
 
 }
