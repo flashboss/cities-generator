@@ -2,6 +2,7 @@ package it.vige.cities.templates;
 
 import static it.vige.cities.Normalizer.setName;
 import static it.vige.cities.Result.OK;
+import static it.vige.cities.result.Nodes.ID_SEPARATOR;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -477,138 +478,141 @@ public class OpenStreetMap extends Template {
 	}
 
 	/**
-	 * Add nodes - only regions (admin_level=4) for the country
+	 * Add nodes recursively - regions and provinces
 	 * 
 	 * @param zones       the zones
 	 * @param numberLevel the number level
 	 * @param parentId    the parent ID
-	 * @param adminLevel  the administrative level
+	 * @param adminLevel  the administrative level (4=regions, 6=provinces)
 	 * @throws Exception if there is a problem
 	 */
 	private void addNodes(List<Node> zones, int numberLevel, String parentId, int adminLevel) throws Exception {
 		logger.debug("Adding nodes - level: {}, parentId: {}, adminLevel: {}", numberLevel, parentId, adminLevel);
 
-		// Only get regions (admin_level=4) - no country, no provinces, no municipalities
-		int queryAdminLevel = 4; // Region/State only
+		if (numberLevel > MAX_LEVEL) {
+			logger.debug("Max level ({}) reached, stopping recursion", MAX_LEVEL);
+			return;
+		}
 
-		// Get regions directly (admin_level=4) - single Overpass query using area
-		{
-			String jsonResponse = getAdministrativeBoundaries(queryAdminLevel, null, false);
-			ObjectMapper mapper = new ObjectMapper();
-			OsmResponse osmResponse = mapper.readValue(jsonResponse, OsmResponse.class);
+		// Map admin_level to OSM query level
+		int queryAdminLevel;
+		switch (numberLevel) {
+			case 0:
+				queryAdminLevel = 4; // Regions
+				break;
+			case 1:
+				queryAdminLevel = 6; // Provinces/Metropolitan cities
+				break;
+			default:
+				logger.debug("Stopping at level {} (provinces level reached)", numberLevel);
+				return;
+		}
 
-			List<OsmElement> elements = osmResponse != null ? osmResponse.getElements() : null;
-			logger.debug("Retrieved {} OSM elements for level {} and adminLevel {}",
-					elements != null ? elements.size() : 0, numberLevel, queryAdminLevel);
+		// Build query based on admin level
+		String jsonResponse;
+		if (queryAdminLevel == 4) {
+			// Regions: use area-based query
+			jsonResponse = getAdministrativeBoundaries(queryAdminLevel, null, false);
+		} else if (queryAdminLevel == 6 && !parentId.isEmpty()) {
+			// Provinces: query within parent region
+			// Extract region OSM ID from parentId
+			String regionOsmId = parentId;
+			if (parentId.contains(ID_SEPARATOR)) {
+				regionOsmId = parentId.substring(parentId.lastIndexOf(ID_SEPARATOR) + 1);
+			}
+			
+			// Query provinces within the region using area
+			// First get the region relation, then get provinces within it
+			String query = String.format(
+				"[out:json][timeout:60];\n" +
+				"relation(%s);\n" +
+				"map_to_area;\n" +
+				"(\n" +
+				"  relation[\"boundary\"=\"administrative\"][\"admin_level\"=\"6\"](area);\n" +
+				");\n" +
+				"out body;",
+				regionOsmId);
+			logger.debug("Querying provinces for region {}: {}", regionOsmId, query);
+			jsonResponse = executeOverpassQuery(query);
+		} else {
+			logger.debug("Cannot query provinces without a parent region");
+			return; // Cannot query provinces without a parent region
+		}
 
-			if (elements != null && !elements.isEmpty()) {
-				logger.info("Processing {} OSM elements at level {} (queryAdminLevel: {})", elements.size(),
-						numberLevel, queryAdminLevel);
-				// Log admin_level distribution for debugging
-				Map<Integer, Integer> adminLevelCounts = new HashMap<>();
-				for (OsmElement element : elements) {
-					String adminLevelStr = element.getTag("admin_level");
-					if (adminLevelStr != null) {
-						try {
-							int actualAdminLevel = Integer.parseInt(adminLevelStr);
-							adminLevelCounts.put(actualAdminLevel,
-									adminLevelCounts.getOrDefault(actualAdminLevel, 0) + 1);
-						} catch (NumberFormatException e) {
-							// Ignore
-						}
-					}
+		ObjectMapper mapper = new ObjectMapper();
+		OsmResponse osmResponse = mapper.readValue(jsonResponse, OsmResponse.class);
+
+		List<OsmElement> elements = osmResponse != null ? osmResponse.getElements() : null;
+		logger.debug("Retrieved {} OSM elements for level {} and adminLevel {}",
+				elements != null ? elements.size() : 0, numberLevel, queryAdminLevel);
+
+		if (elements != null && !elements.isEmpty()) {
+			logger.info("Processing {} OSM elements at level {} (queryAdminLevel: {})", elements.size(),
+					numberLevel, queryAdminLevel);
+
+			int skippedAdminLevel = 0;
+			int skippedNoName = 0;
+			int added = 0;
+
+			for (OsmElement element : elements) {
+				// Verify admin_level matches what we're looking for
+				String actualAdminLevelStr = element.getTag("admin_level");
+				if (actualAdminLevelStr == null) {
+					logger.debug("Skipping element {} - no admin_level tag", element.getId());
+					skippedAdminLevel++;
+					continue;
 				}
-				if (!adminLevelCounts.isEmpty()) {
-					logger.info("Admin level distribution for queryAdminLevel {}: {}", queryAdminLevel,
-							adminLevelCounts);
-				}
-
-				// Log sample element names for debugging
-				int sampleCount = Math.min(5, elements.size());
-				logger.info("Sample of {} elements returned (showing first {}):", elements.size(), sampleCount);
-				for (int i = 0; i < sampleCount; i++) {
-					OsmElement element = elements.get(i);
-					String name = element.getName(language.getCode());
-					String adminLevelStr = element.getTag("admin_level");
-					String countryTag = element.getTag("ISO3166-1:alpha2");
-					logger.info("  - Element {}: name='{}', admin_level={}, country={}, type={}",
-							element.getId(), name, adminLevelStr, countryTag, element.getType());
-				}
-
-				int skippedAdminLevel = 0;
-				int skippedCountry = 0;
-				int skippedNoName = 0;
-				int added = 0;
-
-				for (OsmElement element : elements) {
-					// Verify admin_level matches what we're looking for
-					String actualAdminLevelStr = element.getTag("admin_level");
-					if (actualAdminLevelStr != null) {
-						try {
-							int actualAdminLevel = Integer.parseInt(actualAdminLevelStr);
-							if (actualAdminLevel != queryAdminLevel) {
-								logger.debug("Skipping element {} - admin_level {} doesn't match expected {}",
-										element.getId(), actualAdminLevel, queryAdminLevel);
-								skippedAdminLevel++;
-								continue;
-							}
-						} catch (NumberFormatException e) {
-							// If we can't parse admin_level, skip it
-							logger.debug("Skipping element {} - invalid admin_level: {}", element.getId(),
-									actualAdminLevelStr);
-							skippedAdminLevel++;
-							continue;
-						}
-					} else {
-						logger.debug("Skipping element {} - no admin_level tag", element.getId());
+				
+				try {
+					int actualAdminLevel = Integer.parseInt(actualAdminLevelStr);
+					if (actualAdminLevel != queryAdminLevel) {
+						logger.debug("Skipping element {} - admin_level {} doesn't match expected {}",
+								element.getId(), actualAdminLevel, queryAdminLevel);
 						skippedAdminLevel++;
 						continue;
 					}
-
-					// Filter by country only if NOT using area query (area query already limits geographically)
-					// For admin_level=4, we use area query which doesn't need country filtering
-					if (queryAdminLevel > 2 && queryAdminLevel != 4) {
-						String countryTag = element.getTag("ISO3166-1:alpha2");
-						if (countryTag == null) {
-							countryTag = element.getTag("country");
-						}
-						if (countryTag == null) {
-							countryTag = element.getTag("addr:country");
-						}
-						// Skip if country tag doesn't match (case-insensitive)
-						if (countryTag == null || !countryTag.equalsIgnoreCase(country)) {
-							logger.debug("Skipping element {} - country tag '{}' doesn't match '{}'",
-									element.getId(), countryTag, country);
-							skippedCountry++;
-							continue;
-						}
-					}
-
-					String name = element.getName(language.getCode());
-					if (name == null || name.isEmpty()) {
-						logger.debug("Skipping element {} with no name", element.getId());
-						skippedNoName++;
-						continue;
-					}
-
-					// Add region node directly (no parent, no recursion)
-					Node node = new Node();
-					node.setId(String.valueOf(element.getId()));
-					node.setLevel(0); // All regions at level 0 (flat list)
-					setName(caseSensitive, duplicatedNames, name, zones, node);
-					zones.add(node);
-					added++;
-
-					logger.debug("Added region node: {} (level: 0, OSM ID: {})", name, element.getId());
+				} catch (NumberFormatException e) {
+					logger.debug("Skipping element {} - invalid admin_level: {}", element.getId(),
+							actualAdminLevelStr);
+					skippedAdminLevel++;
+					continue;
 				}
 
-				logger.info(
-						"Filtering summary for level {} (queryAdminLevel {}): total={}, added={}, skipped_admin_level={}, skipped_country={}, skipped_no_name={}",
-						numberLevel, queryAdminLevel, elements.size(), added, skippedAdminLevel, skippedCountry,
-						skippedNoName);
-			} else {
-				logger.debug("No nodes found for level {} and adminLevel {}", numberLevel, queryAdminLevel);
+				String name = element.getName(language.getCode());
+				if (name == null || name.isEmpty()) {
+					logger.debug("Skipping element {} with no name", element.getId());
+					skippedNoName++;
+					continue;
+				}
+
+				// Build node ID
+				String nodeId;
+				if (parentId.isEmpty()) {
+					nodeId = String.valueOf(element.getId());
+				} else {
+					nodeId = parentId + ID_SEPARATOR + element.getId();
+				}
+
+				Node node = new Node();
+				node.setId(nodeId);
+				node.setLevel(numberLevel);
+				setName(caseSensitive, duplicatedNames, name, zones, node);
+				zones.add(node);
+				added++;
+
+				logger.debug("Added node: {} (level: {}, OSM ID: {})", name, numberLevel, element.getId());
+
+				// Recursively add provinces if we're at region level
+				if (queryAdminLevel == 4) {
+					addNodes(node.getZones(), numberLevel + 1, nodeId, 6);
+				}
 			}
+
+			logger.info(
+					"Filtering summary for level {} (queryAdminLevel {}): total={}, added={}, skipped_admin_level={}, skipped_no_name={}",
+					numberLevel, queryAdminLevel, elements.size(), added, skippedAdminLevel, skippedNoName);
+		} else {
+			logger.debug("No nodes found for level {} and adminLevel {}", numberLevel, queryAdminLevel);
 		}
 	}
 
@@ -621,7 +625,7 @@ public class OpenStreetMap extends Template {
 		Nodes nodes = new Nodes();
 
 		try {
-			// Get only regions (admin_level=4) - single Overpass query using area
+			// Start recursive node addition: regions (level 0) -> provinces (level 1)
 			// No need for Nominatim or bounding box - area query is self-contained
 			addNodes(nodes.getZones(), 0, "", 4);
 			logger.info("OpenStreetMap generation completed - total zones: {}",

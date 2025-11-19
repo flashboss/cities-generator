@@ -8,15 +8,5 @@ public enum Providers {
 	/**
 	 * BRITANNICA
 	 */
-	BRITANNICA, 
-	
-	/**
-	 * GEONAMES
-	 */
-	GEONAMES,
-	
-	/**
-	 * OPENSTREETMAP
-	 */
-	OPENSTREETMAP
+	BRITANNICA
 }

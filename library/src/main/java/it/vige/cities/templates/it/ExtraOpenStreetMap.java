@@ -125,12 +125,30 @@ public class ExtraOpenStreetMap extends OpenStreetMap {
 				int macroregionId = Integer.parseInt(node0.getId());
 				
 				if (matchesMacroregion(regionName, macroregionId)) {
+					// Increment level: regions should be level 1 (macroregions are level 0)
+					incrementLevels(node1, 1);
 					node0.getZones().add(node1);
 				}
 			}
 			changeIds(node0);
 		}
 		return new ResultNodes(OK, nodes, this);
+	}
+
+	/**
+	 * Recursively increment levels of a node and its children
+	 * @param node the node to increment
+	 * @param increment the amount to increment by
+	 */
+	private void incrementLevels(Node node, int increment) {
+		if (node != null) {
+			node.setLevel(node.getLevel() + increment);
+			if (node.getZones() != null) {
+				for (Node child : node.getZones()) {
+					incrementLevels(child, increment);
+				}
+			}
+		}
 	}
 
 	private void changeIds(Node node) {
