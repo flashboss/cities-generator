@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width,maximum-scale=2">
     <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/newbuttons.css">
+    <link rel="icon" type="image/x-icon" href="{{ '/assets/images/favicon.ico' | relative_url }}">
+    <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+    <link rel="apple-touch-icon" href="{{ '/assets/images/favicon.png' | relative_url }}">
 
 {% seo %}
     {% include head-custom.html %}
@@ -24,8 +27,14 @@
           <a id="contribution" href="https://www.paypal.com/paypalme/LStancapiano">Contribute</a>
 	  <a id="youtube" href="https://youtu.be/MP-jiQcQC4Q">Youtube</a>
 
-          <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
-          <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+          <div style="display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%; display: none;" onerror="this.style.display='none';">
+            <div style="flex: 1; min-width: 200px;">
+              <h1 id="project_title" style="margin: 0;">{{ site.title | default: site.github.repository_name }}</h1>
+              <h2 id="project_tagline" style="margin: 0;">{{ site.description | default: site.github.project_tagline }}</h2>
+            </div>
+          </div>
 
           {% if site.show_downloads %}
             <section id="downloads">
