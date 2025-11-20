@@ -26,7 +26,19 @@ const App: React.FC = () => {
 
   return (
     <div style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
-      <h1>Cities Generator - Dropdown Menu</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
+        <img 
+          src="https://raw.githubusercontent.com/flashboss/cities-generator/master/assets/images/logo.svg" 
+          alt="Cities Generator Logo" 
+          style={{ height: '60px', width: 'auto' }}
+          onError={(e) => {
+            // Fallback to PNG if SVG fails
+            const target = e.target as HTMLImageElement;
+            target.src = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/assets/images/logo.png';
+          }}
+        />
+        <h1 style={{ margin: 0 }}>Cities Generator - Dropdown Menu</h1>
+      </div>
       
       <DropdownConfigComponent
         config={config}
