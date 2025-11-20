@@ -6,7 +6,7 @@ Generates a descriptor file for the cities choosing:
 - **-l:** the language code for the location names (e.g., "it", "en", "fr", "de", "es", "pt"). Supported languages: IT (Italian, default), EN (English), FR (French), DE (German), ES (Spanish), PT (Portuguese). If not specified, defaults to "it".
 - **-s:** the case for the name of the cities. Can be true or false or none will be true as default.
 - **-d:** true if you allow duplicated names of cities. Else none or false.
-- **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA or GEONAMES. For **IT**: COMUNIITALIANI, WIKIPEDIA or EXTRAGEONAMES. For all other countries the provider is GEONAMES. Else start a default.
+- **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA, GEONAMES or OPENSTREETMAP. For **IT**: COMUNIITALIANI, WIKIPEDIA, EXTRAGEONAMES, EXTRA_OPENSTREETMAP or OPENSTREETMAP. For all other countries the provider is GEONAMES or OPENSTREETMAP. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
 
 ## Enabling DEBUG logs
@@ -115,6 +115,17 @@ You will find the file EU/IT/it.json in the ${user.home}/cities-generator direct
 ## Geonames registration
 
 If you use GEONAMES or EXTRAGEONAMES, you use a default username. In the long run this default username may be inactive, so you will need a new username to specify in the configuration field seen above. To get the new username you must register through the site: <https://www.geonames.org/login>
+
+## OpenStreetMap provider
+
+The OPENSTREETMAP provider uses the Overpass API to retrieve administrative boundaries (regions, provinces, and municipalities) from OpenStreetMap data. This provider:
+
+- **Works for all countries** supported by OpenStreetMap
+- **Includes 3 levels**: Regions (level 0), Provinces/Cities (level 1), and Municipalities (level 2)
+- **Supports multiple languages** for location names
+- **For Italy**: Use EXTRA_OPENSTREETMAP to get macroregions (level 0) grouping regions by geographical area, or OPENSTREETMAP for standard regions
+
+**Note**: OpenStreetMap queries may take longer than other providers due to the number of API calls required (approximately 1 + number of regions + number of provinces queries per country).
 
 ## REST Service
 
