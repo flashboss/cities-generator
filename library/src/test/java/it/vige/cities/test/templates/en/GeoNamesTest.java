@@ -4,7 +4,7 @@ import static it.vige.cities.Continents.EU;
 import static it.vige.cities.Countries.GB;
 import static it.vige.cities.Languages.EN;
 import static it.vige.cities.Result.OK;
-import static it.vige.cities.templates.en.Providers.GEONAMES;
+import static it.vige.cities.templates.Providers.GEONAMES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
