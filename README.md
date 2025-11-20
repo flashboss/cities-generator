@@ -184,7 +184,7 @@ COUNTRY=${COUNTRY} REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS} AUTHURL=${
 
 Where ${COUNTRY} is the choosen country, IT or GB. While ${REPLACER_CLIENT_ADDRESS} is the address of the cities-generator client, for example cities-generator-service.vige.it:8380 .
 
-${AUTHURL} is the keycloak address url like <https://auth-ct.vige.it:8080>
+${AUTHURL} is the keycloak address url like <http://auth-ct.vige.it:8080>
 
 It will allow to download a keycloak instance where the server can be connected.
 
@@ -303,10 +303,7 @@ keytool -import -alias trustedCA -file mytrustCA.cer -keystore ./docker/prod/vol
 
 Actually samples of generated cities can be found online:
 
-- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/IT/it.json>
-- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/IT/en.json>
-- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/GB/it.json>
-- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/GB/en.json>
+- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db
 
 The structure is {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
 
