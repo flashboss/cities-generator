@@ -1,7 +1,17 @@
 buildscript {
     ext {
         springBootVersion = '3.5.6'
-        citiesVersion = '1.2.6'
+        // Read version from library version.properties file
+        def versionProps = new Properties()
+        def versionFile = file('../library/src/main/resources/it/vige/cities/version.properties')
+        if (!versionFile.exists()) {
+            throw new GradleException("version.properties file not found at: ${versionFile.absolutePath}")
+        }
+        versionFile.withInputStream { versionProps.load(it) }
+        citiesVersion = versionProps.getProperty('version')
+        if (citiesVersion == null || citiesVersion.isEmpty()) {
+            throw new GradleException("version property not found in version.properties file")
+        }
         springdocVersion = '2.8.13'
     }
     repositories {
