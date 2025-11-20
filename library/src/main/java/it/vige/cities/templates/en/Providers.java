@@ -8,10 +8,5 @@ public enum Providers {
 	/**
 	 * BRITANNICA
 	 */
-	BRITANNICA, 
-	
-	/**
-	 * GEONAMES
-	 */
-	GEONAMES
+	BRITANNICA
 }

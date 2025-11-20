@@ -5,10 +5,13 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Nodes containing the informations of the cities from the providers
  * @author lucastancapiano
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Nodes implements Cloneable {
 
 	/**

@@ -1,13 +1,20 @@
-version: '3'
 services:
   auth-ct.vige.it:
     image: "vige/cities-generator-auth"
     ports:
       - "8080:8080"
+      - "8400:8787"
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - REPLACER_CLIENT_ADDRESS=${REPLACER_CLIENT_ADDRESS}
+      - DEBUG=true
+      - DEBUG_SUSPEND=n
+      - KC_LOG_LEVEL=DEBUG
+      - KC_LOG_LEVEL_ROOT=DEBUG
+      - KC_LOG_LEVEL_org.keycloak=DEBUG
+      - KC_LOG_LEVEL_org.keycloak.authentication=DEBUG
+      - KC_LOG_LEVEL_org.keycloak.authorization=DEBUG
   cities-generator-service.vige.it:
     image: "vige/cities-generator"
     ports:

@@ -9,10 +9,10 @@ public enum Countries {
 	/**
 	 * IT
 	 */
-	it,
+	IT,
 
 	/**
-	 * UK
+	 * GB
 	 */
-	uk
+	GB
 }

@@ -1,0 +1,76 @@
+{
+  "name": "cities-generator-frontend",
+  "version": "1.2.6",
+  "description": "Portable hierarchical dropdown menu for cities-generator JSON data",
+  "type": "module",
+  "main": "./dist/cities-generator.umd.js",
+  "module": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "import": "./src/index.tsx",
+      "require": "./dist/cities-generator.umd.js",
+      "types": "./src/index.tsx"
+    },
+    "./standalone": "./dist/cities-generator-standalone.iife.js",
+    "./webcomponent": "./dist/cities-generator-wc.js",
+    "./umd": "./dist/cities-generator.umd.js",
+    "./CitiesDropdown.css": "./src/CitiesDropdown.css",
+    "./DropdownConfig.css": "./src/DropdownConfig.css"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "cities",
+    "dropdown",
+    "react",
+    "hierarchical",
+    "location",
+    "geography",
+    "web-component"
+  ],
+  "author": "Vige",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flashboss/cities-generator.git",
+    "directory": "frontend"
+  },
+  "homepage": "https://github.com/flashboss/cities-generator#readme",
+  "bugs": {
+    "url": "https://github.com/flashboss/cities-generator/issues"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -rf dist && vite build && vite build --mode standalone && vite build --mode webcomponent",
+    "build:umd": "vite build",
+    "build:standalone": "vite build --mode standalone",
+    "build:webcomponent": "vite build --mode webcomponent",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build",
+    "publish:npm": "npm publish --access public",
+    "publish:dry-run": "npm publish --dry-run --access public"
+  },
+  "dependencies": {
+    "i18n-iso-countries": "^7.14.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

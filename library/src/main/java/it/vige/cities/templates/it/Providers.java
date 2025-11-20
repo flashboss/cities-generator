@@ -7,9 +7,9 @@ package it.vige.cities.templates.it;
 public enum Providers {
 	
 	/**
-	 * TUTTITALIA
+	 * WIKIPEDIA
 	 */
-	TUTTITALIA, 
+	WIKIPEDIA, 
 	
 	/**
 	 * COMUNI ITALIANI
@@ -19,5 +19,10 @@ public enum Providers {
 	/**
 	 * EXTRA GEONAMES
 	 */
-	EXTRA_GEONAMES
+	EXTRA_GEONAMES,
+	
+	/**
+	 * EXTRA OPENSTREETMAP
+	 */
+	EXTRA_OPENSTREETMAP
 }

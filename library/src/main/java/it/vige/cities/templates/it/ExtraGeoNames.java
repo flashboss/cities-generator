@@ -1,73 +1,155 @@
 package it.vige.cities.templates.it;
 
-import static it.vige.cities.Normalizer.execute;
+import static it.vige.cities.Result.OK;
 import static it.vige.cities.result.Nodes.ID_SEPARATOR;
+import static java.lang.Integer.parseInt;
 
+import java.util.Set;
+
+import it.vige.cities.Languages;
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 import it.vige.cities.templates.GeoNames;
 
 /**
  * Extra configuration for italian geonames
+ * 
  * @author lucastancapiano
  */
 public class ExtraGeoNames extends GeoNames {
 
+	// GeoNames IDs for Italian regions (language-independent)
+	private static final Set<Integer> NORD_OCCIDENTALE = Set.of(
+		3170831, // Piemonte
+		3174725, // Liguria
+		3164857, // Valle d'Aosta
+		3174618  // Lombardia
+	);
+	
+	private static final Set<Integer> NORD_ORIENTALE = Set.of(
+		3177401, // Emilia-Romagna
+		3164604, // Veneto
+		3165244, // Trentino-Alto Adige
+		3176525  // Friuli Venezia Giulia
+	);
+	
+	private static final Set<Integer> CENTRALE = Set.of(
+		3174976, // Lazio
+		3174004, // Marche
+		3165048, // Umbria
+		3165361  // Toscana
+	);
+	
+	private static final Set<Integer> MERIDIONALE = Set.of(
+		3183560, // Abruzzo
+		3181042, // Campania
+		3182306, // Basilicata
+		3173222, // Molise
+		2525468, // Calabria
+		3169778  // Puglia
+	);
+	
+	private static final Set<Integer> INSULARE = Set.of(
+		2523228, // Sardegna
+		2523119  // Sicilia
+	);
+
 	/**
 	 * ExtraGeoNames
+	 * 
 	 * @param country         the country
 	 * @param caseSensitive   true if it is case sensitive
 	 * @param duplicatedNames true if it accepts duplicated names
 	 * @param username        the username
 	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
-		super(country, caseSensitive, duplicatedNames, username);
+		this(country, caseSensitive, duplicatedNames, username, Languages.getDefault());
+	}
+
+	/**
+	 * ExtraGeoNames
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames true if it accepts duplicated names
+	 * @param username        the username
+	 * @param language        the language enum
+	 */
+	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, Languages language) {
+		super(country, caseSensitive, duplicatedNames, username, language);
 		firstLevel = 1;
+	}
+
+	/**
+	 * ExtraGeoNames (convenience method accepting String)
+	 * 
+	 * @param country         the country
+	 * @param caseSensitive   true if it is case sensitive
+	 * @param duplicatedNames true if it accepts duplicated names
+	 * @param username        the username
+	 * @param language        the language code (e.g., "it", "en")
+	 */
+	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
+		this(country, caseSensitive, duplicatedNames, username, Languages.fromCode(language));
+	}
+
+	/**
+	 * Extract geonameId from node ID
+	 * @param nodeId the node ID (format: "geonameId" or "parent-geonameId")
+	 * @return the geonameId as integer
+	 */
+	private int extractGeonameId(String nodeId) {
+		if (nodeId == null || nodeId.isEmpty()) {
+			return -1;
+		}
+		String[] parts = nodeId.split(ID_SEPARATOR);
+		return parseInt(parts[parts.length - 1]);
 	}
 
 	/**
 	 * Generate
 	 */
 	@Override
-	protected Nodes generate() throws Exception {
+	protected ResultNodes generate() throws Exception {
 		Nodes nodes = new Nodes();
 		addLevel0(nodes, caseSensitive);
-		Nodes nodesFromGeoname = super.generate();
+		Nodes nodesFromGeoname = super.generate().getNodes();
 		for (Node node0 : nodes.getZones()) {
 			for (Node node1 : nodesFromGeoname.getZones()) {
-				if (((node1.getName().equalsIgnoreCase("Piemonte") || node1.getName().equalsIgnoreCase("Liguria")
-						|| node1.getName().equalsIgnoreCase("Regione Autonoma Valle d'Aosta")
-						|| node1.getName().equalsIgnoreCase("Lombardia"))
-						&& node0.getName().equalsIgnoreCase("I: ITALIA NORD-OCCIDENTALE")) ||
-
-						(((node1.getName().equalsIgnoreCase("Emilia-Romagna")
-								|| node1.getName().equalsIgnoreCase("Veneto")
-								|| node1.getName().equalsIgnoreCase("Trentino-Alto Adige")
-								|| node1.getName().equalsIgnoreCase("Friuli Venezia Giulia"))
-								&& node0.getName().equalsIgnoreCase("II: ITALIA NORD-ORIENTALE")))
-						||
-
-						(((node1.getName().equalsIgnoreCase("Lazio") || node1.getName().equalsIgnoreCase("Marche")
-								|| node1.getName().equalsIgnoreCase("Umbria")
-								|| node1.getName().equalsIgnoreCase("Toscana"))
-								&& node0.getName().equalsIgnoreCase("III: ITALIA CENTRALE")))
-						||
-
-						(((node1.getName().equalsIgnoreCase("Abruzzo") || node1.getName().equalsIgnoreCase("Campania")
-								|| node1.getName().equalsIgnoreCase("Basilicata")
-								|| node1.getName().equalsIgnoreCase("Molise")
-								|| node1.getName().equalsIgnoreCase("Calabria")
-								|| node1.getName().equalsIgnoreCase("Puglia"))
-								&& node0.getName().equalsIgnoreCase("IV: ITALIA MERIDIONALE")))
-						||
-
-						(((node1.getName().equalsIgnoreCase("Sardegna") || node1.getName().equalsIgnoreCase("Sicilia"))
-								&& node0.getName().equalsIgnoreCase("V: ITALIA INSULARE"))))
+				int geonameId = extractGeonameId(node1.getId());
+				boolean matches = false;
+				
+				// Use node ID (1-5) to determine macroregion, language-independent
+				int macroregionId = parseInt(node0.getId());
+				switch (macroregionId) {
+				case 1:
+					matches = NORD_OCCIDENTALE.contains(geonameId);
+					break;
+				case 2:
+					matches = NORD_ORIENTALE.contains(geonameId);
+					break;
+				case 3:
+					matches = CENTRALE.contains(geonameId);
+					break;
+				case 4:
+					matches = MERIDIONALE.contains(geonameId);
+					break;
+				case 5:
+					matches = INSULARE.contains(geonameId);
+					break;
+				default:
+					matches = false;
+					break;
+				}
+				
+				if (matches) {
 					node0.getZones().add(node1);
+				}
 			}
 			changeIds(node0);
 		}
-		return nodes;
+		return new ResultNodes(OK, nodes, this);
 	}
 
 	private void changeIds(Node node) {
@@ -83,37 +165,13 @@ public class ExtraGeoNames extends GeoNames {
 	}
 
 	/**
+	 * Add level 0 nodes (macroregions) using centralized utility
 	 * 
 	 * @param nodes         the nodes
 	 * @param caseSensitive true if it is case sensitive
 	 */
 	private void addLevel0(Nodes nodes, boolean caseSensitive) {
-		int counter = 1;
-		Node northWest = new Node();
-		northWest.setId("" + counter++);
-		northWest.setLevel(0);
-		northWest.setName(execute(caseSensitive, true, "I: ITALIA NORD-OCCIDENTALE", null));
-		nodes.getZones().add(northWest);
-		Node northEast = new Node();
-		northEast.setId("" + counter++);
-		northEast.setLevel(0);
-		northEast.setName(execute(caseSensitive, true, "II: ITALIA NORD-ORIENTALE", null));
-		nodes.getZones().add(northEast);
-		Node south = new Node();
-		south.setId("" + counter++);
-		south.setLevel(0);
-		south.setName(execute(caseSensitive, true, "III: ITALIA CENTRALE", null));
-		nodes.getZones().add(south);
-		Node centre = new Node();
-		centre.setId("" + counter++);
-		centre.setLevel(0);
-		centre.setName(execute(caseSensitive, true, "IV: ITALIA MERIDIONALE", null));
-		nodes.getZones().add(centre);
-		Node islands = new Node();
-		islands.setId("" + counter++);
-		islands.setLevel(0);
-		islands.setName(execute(caseSensitive, true, "V: ITALIA INSULARE", null));
-		nodes.getZones().add(islands);
+		ItalianMacroregions.addLevel0(nodes, caseSensitive, language);
 	}
 
 }

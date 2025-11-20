@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
@@ -44,6 +45,9 @@ public class CitiesController {
 	@Value("${username:#{null}}")
 	private String username;
 
+	@Value("${language:it}")
+	private String language;
+
 	public void init() {
 		if (nodes.getZones().isEmpty())
 			try {
@@ -53,8 +57,9 @@ public class CitiesController {
 				configuration.setDuplicatedNames(duplicatedNames);
 				configuration.setProvider(provider);
 				configuration.setUsername(username);
+				configuration.setLanguage(language);
 				Generator generator = new Generator(configuration, false);
-				nodes.setZones(generator.generate().getZones());
+				nodes.setZones(generator.generate().getNodes().getZones());
 			} catch (Exception ex) {
 				logger.warn(ex.getMessage());
 			}
@@ -156,7 +161,9 @@ public class CitiesController {
 	@PostMapping(value = "/update")
 	public void update(@RequestBody Configuration configuration) throws Exception {
 		Generator generator = new Generator(configuration, true);
-		nodes.setZones(generator.generate().getZones());
+		Nodes resultNodes = generator.generate().getNodes();
+		if (resultNodes != null)
+			nodes.setZones(resultNodes.getZones());
 	}
 
 }

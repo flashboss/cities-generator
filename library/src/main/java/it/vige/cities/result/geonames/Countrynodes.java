@@ -1,13 +1,15 @@
 package it.vige.cities.result.geonames;
 
 import java.util.List;
-
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A set of geonames nodes
  * @author lucastancapiano
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Countrynodes {
 
 	private List<Country> geonames;
