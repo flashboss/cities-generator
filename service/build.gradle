@@ -45,17 +45,23 @@ repositories {
 }
 
 configurations {
-    all*.exclude group: 'org.slf4j'
-    all*.exclude group: 'ch.qos.logback'
+    all {
+        // Exclude Logback to avoid conflict with slf4j-simple in shaded JAR
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+    }
 }
 
 dependencies {
-    implementation("it.vige.cities:cities-generator:${citiesVersion}") {
-        exclude group: 'org.slf4j', module: 'slf4j-simple'
-    }
+    implementation("it.vige.cities:cities-generator:${citiesVersion}")
+    // Use slf4j-simple (already included in shaded JAR) instead of Logback
+    implementation "org.slf4j:slf4j-simple:2.0.17"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation("org.springframework.boot:spring-boot-starter-tomcat") {
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+    }
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.security:spring-security-oauth2-jose"
     testImplementation "org.springframework.boot:spring-boot-starter-test"

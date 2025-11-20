@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
+import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
@@ -160,7 +161,9 @@ public class CitiesController {
 	@PostMapping(value = "/update")
 	public void update(@RequestBody Configuration configuration) throws Exception {
 		Generator generator = new Generator(configuration, true);
-		nodes.setZones(generator.generate().getNodes().getZones());
+		Nodes resultNodes = generator.generate().getNodes();
+		if (resultNodes != null)
+			nodes.setZones(resultNodes.getZones());
 	}
 
 }
