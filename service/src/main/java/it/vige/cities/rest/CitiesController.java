@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
@@ -137,7 +140,9 @@ public class CitiesController {
 
 	@GetMapping(value = "/cities")
 	public Nodes getResult(
+			@Parameter(description = "Country code (e.g., 'IT', 'GB', 'FR')", example = "IT", schema = @Schema(type = "string"))
 			@RequestParam(required = false) String country,
+			@Parameter(description = "Language code (e.g., 'it', 'en', 'fr', 'de', 'es', 'pt')", example = "it", schema = @Schema(type = "string"))
 			@RequestParam(required = false) String language) {
 		init(country, language);
 		return nodes;
@@ -145,9 +150,12 @@ public class CitiesController {
 
 	@GetMapping(value = "/cities/{ids}")
 	public Nodes getResult(
-			@PathVariable("ids") String ids, 
+			@PathVariable("ids") String ids,
+			@Parameter(description = "Include all hierarchy levels", example = "all", schema = @Schema(type = "string"))
 			@RequestParam(required = false) String all,
+			@Parameter(description = "Country code (e.g., 'IT', 'GB', 'FR')", example = "IT", schema = @Schema(type = "string"))
 			@RequestParam(required = false) String country,
+			@Parameter(description = "Language code (e.g., 'it', 'en', 'fr', 'de', 'es', 'pt')", example = "it", schema = @Schema(type = "string"))
 			@RequestParam(required = false) String language) {
 		init(country, language);
 		List<String> iIds = getIds(ids);
