@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import it.vige.cities.Configuration;
 import it.vige.cities.FileGenerator;
 import it.vige.cities.Generator;
-import it.vige.cities.ResultNodes;
 import it.vige.cities.result.Node;
 import it.vige.cities.result.Nodes;
 
@@ -29,6 +28,10 @@ public class CitiesController {
 	private Logger logger = getLogger(FileGenerator.class);
 
 	public final static Nodes nodes = new Nodes();
+	
+	// Track last used country and language for regeneration logic
+	private String lastUsedCountry = null;
+	private String lastUsedLanguage = null;
 
 	@Value("${country}")
 	private String country;
@@ -49,20 +52,37 @@ public class CitiesController {
 	private String language;
 
 	public void init() {
-		if (nodes.getZones().isEmpty())
+		init(null, null);
+	}
+
+	private void init(String countryParam, String languageParam) {
+		// Use parameters if provided, otherwise use default values: IT and it
+		String effectiveCountry = countryParam != null ? countryParam : "IT";
+		String effectiveLanguage = languageParam != null ? languageParam : "it";
+		
+		// Check if we need to regenerate (empty nodes or different country/language)
+		boolean needsRegeneration = nodes.getZones().isEmpty() ||
+			!effectiveCountry.equals(lastUsedCountry) ||
+			!effectiveLanguage.equals(lastUsedLanguage);
+		
+		if (needsRegeneration) {
 			try {
 				Configuration configuration = new Configuration();
-				configuration.setCountry(country);
+				configuration.setCountry(effectiveCountry);
 				configuration.setCaseSensitive(caseSensitive);
 				configuration.setDuplicatedNames(duplicatedNames);
 				configuration.setProvider(provider);
 				configuration.setUsername(username);
-				configuration.setLanguage(language);
+				configuration.setLanguage(effectiveLanguage);
 				Generator generator = new Generator(configuration, false);
 				nodes.setZones(generator.generate().getNodes().getZones());
+				// Update last used values
+				lastUsedCountry = effectiveCountry;
+				lastUsedLanguage = effectiveLanguage;
 			} catch (Exception ex) {
 				logger.warn(ex.getMessage());
 			}
+		}
 	}
 
 	private Node find(Node node, String id) {
@@ -116,14 +136,20 @@ public class CitiesController {
 	}
 
 	@GetMapping(value = "/cities")
-	public Nodes getResult() {
-		init();
+	public Nodes getResult(
+			@RequestParam(required = false) String country,
+			@RequestParam(required = false) String language) {
+		init(country, language);
 		return nodes;
 	}
 
 	@GetMapping(value = "/cities/{ids}")
-	public Nodes getResult(@PathVariable("ids") String ids, @RequestParam(required = false) String all) {
-		init();
+	public Nodes getResult(
+			@PathVariable("ids") String ids, 
+			@RequestParam(required = false) String all,
+			@RequestParam(required = false) String country,
+			@RequestParam(required = false) String language) {
+		init(country, language);
 		List<String> iIds = getIds(ids);
 		List<Node> allFound = new ArrayList<Node>();
 		for (int j = 0; j < iIds.size(); j++) {

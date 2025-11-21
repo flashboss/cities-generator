@@ -30,7 +30,18 @@ public class AuthzResourceServerTest {
 
 	@Test
 	void testValidBearerToken() throws Exception {
+		// Test with default values
 		this.mvc.perform(get("/cities")).andExpect(status().isOk())
+				.andExpect(content().string(containsString("level")));
+		
+		// Test with explicit country and language parameters
+		this.mvc.perform(get("/cities").param("country", "IT").param("language", "it"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("level")));
+		
+		// Test with different country and language
+		this.mvc.perform(get("/cities").param("country", "GB").param("language", "en"))
+				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("level")));
 	}
 

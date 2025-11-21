@@ -26,25 +26,26 @@ public class GenerateITTest {
 	@Test
 	public void generateOk() throws Exception {
 		logger.info("start generation test");
-		Nodes nodes = citiesController.getResult();
+		// Test with default values (IT, it)
+		Nodes nodes = citiesController.getResult(null, null);
 		assertNotNull(nodes);
 		Node firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
 		String id = firstNode.getId();
-		nodes = citiesController.getResult(id, null);
+		nodes = citiesController.getResult(id, null, null, null);
 		assertNotNull(nodes);
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 
-		nodes = citiesController.getResult("3-4252-4287-4346,3-4252-4287-6543031", null);
+		nodes = citiesController.getResult("3-4252-4287-4346,3-4252-4287-6543031", null, null, null);
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
 		assertNotNull(firstNode);
 		assertEquals("3-4252-4287-4346", firstNode.getId());
 
-		nodes = citiesController.getResult("3-4252-4287-4346,3-4252-4287", "all");
+		nodes = citiesController.getResult("3-4252-4287-4346,3-4252-4287", "all", null, null);
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
@@ -57,7 +58,7 @@ public class GenerateITTest {
 		Node forthNode = thirdNode.getZones().get(0);
 		assertEquals("3-4252-4287-4346", forthNode.getId());
 
-		nodes = citiesController.getResult("3-4252-4287-4346,3-4252-4287-4293", "all");
+		nodes = citiesController.getResult("3-4252-4287-4346,3-4252-4287-4293", "all", null, null);
 		assertNotNull(nodes);
 		assertEquals(1, nodes.getZones().size());
 		firstNode = nodes.getZones().get(0);
@@ -71,6 +72,26 @@ public class GenerateITTest {
 		assertEquals("3-4252-4287-4346", forthNode.getId());
 		Node fifthNode = thirdNode.getZones().get(1);
 		assertEquals("3-4252-4287-4293", fifthNode.getId());
+	}
+
+	@Test
+	public void generateWithCountryAndLanguage() throws Exception {
+		logger.info("start generation test with country and language parameters");
+		// Test with explicit country and language parameters
+		Nodes nodes = citiesController.getResult("IT", "it");
+		assertNotNull(nodes);
+		assertNotNull(nodes.getZones());
+		
+		// Test with different country
+		nodes = citiesController.getResult("GB", "en");
+		assertNotNull(nodes);
+		
+		// Test with path parameter and query parameters
+		if (!nodes.getZones().isEmpty()) {
+			String id = nodes.getZones().get(0).getId();
+			nodes = citiesController.getResult(id, null, "GB", "en");
+			assertNotNull(nodes);
+		}
 	}
 
 }
