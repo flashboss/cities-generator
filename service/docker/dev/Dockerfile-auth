@@ -16,11 +16,12 @@ EXPOSE 8787
 ENV REPLACER_CLIENT_ADDRESS=cities-generator-service.vige.it:8380
 ENV HOST_NAME=auth-ct.vige.it
 VOLUME /opt/keycloak/data
-COPY /docker/dev/volume/import /opt/keycloak/data/import
+# Copy files (must be built from project root)
+COPY service/docker/dev/volume/import /opt/keycloak/data/import
 
 USER root
 RUN chmod -R 777 /opt/keycloak/data/import
-COPY --chmod=755 docker/dev/docker-entrypoint-auth.sh /usr/local/bin/docker-entrypoint-auth.sh
+COPY --chmod=755 service/docker/dev/docker-entrypoint-auth.sh /usr/local/bin/docker-entrypoint-auth.sh
 USER 1000
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-auth.sh"]

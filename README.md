@@ -14,7 +14,7 @@ Generates a descriptor file for the cities choosing:
 To see DEBUG level logs (more detailed information), use the system property `-Dorg.slf4j.simpleLogger.defaultLogLevel=debug`:
 
 ```bash
-java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT
+java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT
 ```
 
 Available log levels: `trace`, `debug`, `info`, `warn`, `error` (default: `info`)
@@ -24,13 +24,13 @@ Available log levels: `trace`, `debug`, `info`, `warn`, `error` (default: `info`
 To enable remote debugging, use the `-agentlib:jdwp` parameter:
 
 ```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT -l en
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT -l en
 ```
 
 Or with quotes (for zsh compatibility):
 
 ```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address='*:5005' -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT -l en
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address='*:5005' -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT -l en
 ```
 
 Parameters:
@@ -47,7 +47,7 @@ Then connect your IDE debugger to `localhost:5005`.
 **Example with DEBUG logs and remote debugging:**
 
 ```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.6.jar -p EXTRA_GEONAMES -c IT -l en
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT -l en
 ```
 
 To generate the cities, you can choose between 3 modes:
@@ -55,7 +55,7 @@ To generate the cities, you can choose between 3 modes:
 - By a command line shell digit:
 
 ```bash
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.6:jar -DoutputDirectory=. && java -jar cities-generator-1.2.6.jar -c GB -l en
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.7:jar -DoutputDirectory=. && java -jar cities-generator-1.2.7.jar -c GB -l en
 ```
 
 It will return a json file inside the ${user.home}/cities-generator/EU/GB/en.json (structure: {continent}/{country}/{language}.json)
@@ -63,7 +63,7 @@ It will return a json file inside the ${user.home}/cities-generator/EU/GB/en.jso
 - Download the source and execute:
 
 ```bash
-cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT -l it
+cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.7.jar -c IT -l it
 ```
 
 - Through api java follow the instructions:
@@ -74,14 +74,14 @@ cd library;./gradlew build;java -jar build/libs/cities-generator-1.2.6.jar -c IT
 <dependency>
     <groupId>it.vige.cities</groupId>
     <artifactId>cities-generator</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
 </dependency>
 ```
 
    or on gradle in the build.gradle file:
 
    ```gradle
-   compile('it.vige.cities:cities-generator:1.2.6')
+   compile('it.vige.cities:cities-generator:1.2.7')
    ```
 
 1. Execute the following java instructions:
@@ -138,7 +138,7 @@ A REST service can be installed in your machine. This returns a json format with
 And then start it through the command:
 
 ```bash
-java -jar build/libs/cities-generator-service-1.2.6.jar --country=IT --language=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.2.7.jar --country=IT --language=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to <http://cities-generator-service.vige.it:8380/swagger-ui/index.html>
@@ -146,7 +146,7 @@ Keycloak params are mandatory to connect to a custom keycloak server. It allows 
 In a production environment you could use https so:
 
 ```bash
-java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.6.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --language=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.7.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --language=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 ### Docker development image
