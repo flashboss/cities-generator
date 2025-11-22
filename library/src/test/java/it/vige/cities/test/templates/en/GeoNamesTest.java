@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.vige.cities.Configuration;
@@ -28,6 +29,14 @@ import it.vige.cities.result.Nodes;
  */
 public class GeoNamesTest extends FileGenerator {
 
+	/**
+	 * Init
+	 */
+	@BeforeEach
+	public void init() {
+		language = EN;
+	}
+	
 	/**
 	 * Cities
 	 * 
