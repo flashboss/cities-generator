@@ -47,7 +47,7 @@ public class ExtraGeoNamesTest extends FileGenerator {
 		Nodes nodes = readFile(IT.name());
 		assertNotNull(nodes);
 		Node northWest = nodes.getZones().get(0);
-		Node regioneAutonomaValleDaosta = northWest.getZones().get(0);
+		Node regioneAutonomaValleDaosta = northWest.getZones().get(3);
 		Node valleDaosta = regioneAutonomaValleDaosta.getZones().get(0);
 		Node allein = valleDaosta.getZones().get(0);
 		assertEquals("1", northWest.getId());

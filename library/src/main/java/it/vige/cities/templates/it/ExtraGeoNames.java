@@ -95,6 +95,20 @@ public class ExtraGeoNames extends GeoNames {
 	}
 
 	/**
+	 * Check if the template supports the given language
+	 * ExtraGeoNames template supports IT, EN, DE, FR, ES, PT
+	 */
+	@Override
+	public boolean isLanguageSupported(Languages language) {
+		return language == Languages.IT || 
+			   language == Languages.EN || 
+			   language == Languages.DE || 
+			   language == Languages.FR || 
+			   language == Languages.ES || 
+			   language == Languages.PT;
+	}
+
+	/**
 	 * Extract geonameId from node ID
 	 * @param nodeId the node ID (format: "geonameId" or "parent-geonameId")
 	 * @return the geonameId as integer

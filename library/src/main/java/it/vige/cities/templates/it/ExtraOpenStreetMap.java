@@ -66,6 +66,20 @@ public class ExtraOpenStreetMap extends OpenStreetMap {
 	}
 
 	/**
+	 * Check if the template supports the given language
+	 * ExtraOpenStreetMap template supports IT, EN, DE, FR, ES, PT
+	 */
+	@Override
+	public boolean isLanguageSupported(Languages language) {
+		return language == Languages.IT || 
+			   language == Languages.EN || 
+			   language == Languages.DE || 
+			   language == Languages.FR || 
+			   language == Languages.ES || 
+			   language == Languages.PT;
+	}
+
+	/**
 	 * Check if a region name matches a macroregion
 	 * @param regionName the region name (may be in different languages)
 	 * @param macroregionId the macroregion identifier (1-5)
