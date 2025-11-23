@@ -5,6 +5,7 @@ import static java.util.Locale.getDefault;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.time.Instant;
 
 import org.slf4j.Logger;
 
@@ -143,6 +144,7 @@ public class FileGenerator {
 		copyright += ". Copyright (c) Vige, Home of Professional Open Source. Licensed under the Apache License, Version 2.0.";
 		ObjectNode newObjectNode = mapper.createObjectNode();
 		newObjectNode.put("copyright", copyright);
+		newObjectNode.put("generationDate", Instant.now().toString());
 		newObjectNode.setAll(objectNode);
 		
 		// Write the modified JSON to file

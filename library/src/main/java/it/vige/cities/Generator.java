@@ -13,9 +13,9 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 
 import it.vige.cities.result.Nodes;
@@ -95,6 +95,16 @@ public class Generator extends Template {
 	 */
 	public final static String MULTI_LANGUAGE = "language";
 
+	/**
+	 * Single help
+	 */
+	public final static String SINGLE_HELP = "h";
+
+	/**
+	 * Multi help
+	 */
+	public final static String MULTI_HELP = "help";
+
 	private static Logger logger = getLogger(Generator.class);
 
 	private boolean caseSensitive;
@@ -121,31 +131,28 @@ public class Generator extends Template {
 	}
 
 	/**
-	 * Configure options
+	 * Create options
 	 * 
-	 * @param args the parameters
-	 * @return the command line
-	 * @throws ParseException
+	 * @return the options
 	 */
-	private static CommandLine configureOptions(String[] args) throws ParseException {
+	private static Options createOptions() {
 		Options options = new Options();
 		options.addOption(builder(SINGLE_CASE_SENSITIVE).longOpt(MULTI_CASE_SENSITIVE).type(Boolean.class)
-				.desc(MULTI_CASE_SENSITIVE).get());
+				.desc("Enable case-sensitive matching for city names. If not specified, defaults to false (case-insensitive).").get());
 		options.addOption(builder(SINGLE_COUNTRY).longOpt(MULTI_COUNTRY).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_COUNTRY).get());
+				.desc("Country code (ISO 3166-1 alpha-2) for the generated cities (e.g., GB, IT, US, FR). If not specified, uses the default locale of the machine.").get());
 		options.addOption(builder(SINGLE_PROVIDER).longOpt(MULTI_PROVIDER).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_PROVIDER).get());
+				.desc("Choose the primary data provider. For GB: BRITANNICA, GEONAMES, OPENSTREETMAP. For IT: COMUNI_ITALIANI, WIKIPEDIA, EXTRA_GEONAMES, EXTRA_OPENSTREETMAP, GEONAMES, OPENSTREETMAP. For other countries: GEONAMES, OPENSTREETMAP. If not specified, uses default provider order.").get());
 		options.addOption(builder(SINGLE_DUPLICATED_NAMES).longOpt(MULTI_DUPLICATED_NAMES).type(Boolean.class)
-				.desc(MULTI_DUPLICATED_NAMES).get());
+				.desc("Allow duplicate city names (e.g., 'Bedford (City)' and 'Bedford (Town)'). If not specified, defaults to false (no duplicates).").get());
 		options.addOption(builder(SINGLE_USER).longOpt(MULTI_USER).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_USER).get());
+				.desc("Optional username for GEONAMES and EXTRA_GEONAMES providers. If not specified, 'vota' is used as default.").get());
 		options.addOption(builder(SINGLE_LANGUAGE).longOpt(MULTI_LANGUAGE).type(String.class).hasArg().numberOfArgs(1)
-				.desc(MULTI_LANGUAGE).get());
-
-		CommandLineParser parser = new DefaultParser();
-		CommandLine cmd = parser.parse(options, args);
-		return cmd;
+				.desc("Language code for location names (e.g., 'it', 'en', 'fr', 'de', 'es', 'pt'). Supported: IT (Italian, default), EN (English), FR (French), DE (German), ES (Spanish), PT (Portuguese). If not specified, defaults to 'it'.").get());
+		options.addOption(builder(SINGLE_HELP).longOpt(MULTI_HELP).desc("Print this help message and exit.").get());
+		return options;
 	}
+
 
 	/**
 	 * Add template to list only if it supports the current language
@@ -415,7 +422,21 @@ public class Generator extends Template {
 	public static void main(String[] args) throws Exception {
 		CommandLine cmd = null;
 		try {
-			cmd = configureOptions(args);
+			Options options = createOptions();
+			CommandLineParser parser = new DefaultParser();
+			cmd = parser.parse(options, args);
+			
+			// Check if help was requested
+			if (cmd.hasOption(SINGLE_HELP) || cmd.hasOption(MULTI_HELP)) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("java -jar cities-generator-<version>.jar", 
+						"Generate cities data for different countries and languages", 
+						options, 
+						"\nFor more information, visit: https://cities-generator.vige.it", 
+						true);
+				return;
+			}
+			
 			String country = null;
 			Object fromCountry = cmd.getParsedOptionValue(SINGLE_COUNTRY);
 			if (fromCountry == null)
