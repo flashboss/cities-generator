@@ -8,12 +8,18 @@ import './index.css';
 // Default GitHub URL for cities data
 const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db';
 
+// Default values
+const DEFAULT_COUNTRY = 'IT';
+const DEFAULT_LANGUAGE = 'it';
+const DEFAULT_PLACEHOLDER = 'Select location...';
+const DEFAULT_SEARCH_PLACEHOLDER = 'Search location...';
+
 // Standalone demo app
 const App: React.FC = () => {
   const [config, setConfig] = useState<DropdownConfig>({
     dataUrl: DEFAULT_GITHUB_URL,
-    country: 'IT',
-    language: 'it',
+    country: DEFAULT_COUNTRY,
+    language: DEFAULT_LANGUAGE,
   });
 
   const handleSelect = (node: any) => {
@@ -61,22 +67,7 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<script src="./dist/cities-generator.umd.js"></script>
 
-<!-- Using default parameters -->
-<cities-dropdown />
-
-<!-- Using default URL -->
-<cities-dropdown 
-  country="IT" 
-  language="it"
-  placeholder="Select location...">
-</cities-dropdown>
-
-<!-- Using custom base URL (automatically appends /IT/it.json) -->
-<cities-dropdown 
-  country="IT" 
-  language="it"
-  data-url="https://example.com/cities"
-  placeholder="Select location...">
+<cities-dropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  data-url="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? '\n  enable-search' : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  search-placeholder="${config.searchPlaceholder}"` : ''}>
 </cities-dropdown>`}
         </pre>
 
@@ -84,33 +75,7 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`import { CitiesDropdown } from 'cities-generator-frontend';
 
-// Using default parameters
-<CitiesDropdown />
-
-// Using default URL
-<CitiesDropdown
-  country="IT"
-  language="it"
-  placeholder="Select location..."
-  onSelect={(node) => console.log(node)}
-/>
-
-// Using custom base URL (automatically appends /IT/it.json)
-<CitiesDropdown
-  country="IT"
-  language="it"
-  dataUrl="https://example.com/cities"
-  placeholder="Select location..."
-  onSelect={(node) => console.log(node)}
-/>
-
-// Using search functionality
-<CitiesDropdown
-  country="IT"
-  language="it"
-  placeholder="Select location..."
-  enableSearch={true}
-  searchPlaceholder="Search location..."
+<CitiesDropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  dataUrl="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? `\n  enableSearch={true}` : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  searchPlaceholder="${config.searchPlaceholder}"` : ''}
   onSelect={(node) => console.log(node)}
 />`}
         </pre>
@@ -119,34 +84,7 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<div id="cities-dropdown"></div>
 <script>
-
-  // Using default parameters
-  CitiesGenerator.render('#cities-dropdown');
-
-  // Using default URL
-  CitiesGenerator.render('#cities-dropdown', {
-    country: 'IT',
-    language: 'it',
-    placeholder: 'Select location...',
-    onSelect: (node) => console.log(node)
-  });
-
-  // Using custom base URL (automatically appends /IT/it.json)
-  CitiesGenerator.render('#cities-dropdown', {
-    country: 'IT',
-    language: 'it',
-    dataUrl: 'https://example.com/cities',
-    placeholder: 'Select location...',
-    onSelect: (node) => console.log(node)
-  });
-
-  // Using search functionality
-  CitiesGenerator.render('#cities-dropdown', {
-    country: 'IT',
-    language: 'it',
-    placeholder: 'Select location...',
-    enableSearch: true,
-    searchPlaceholder: 'Search location...',
+  CitiesGenerator.render('#cities-dropdown', {${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n    country: '${config.country}',` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n    language: '${config.language}',` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n    dataUrl: '${config.dataUrl}',` : ''}${config.username ? `\n    username: '${config.username}',` : ''}${config.password ? `\n    password: '${config.password}',` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n    placeholder: '${config.placeholder}',` : ''}${config.enableSearch === true ? `\n    enableSearch: true,` : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n    searchPlaceholder: '${config.searchPlaceholder}',` : ''}
     onSelect: (node) => console.log(node)
   });
 </script>`}
