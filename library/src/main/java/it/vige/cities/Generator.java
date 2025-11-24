@@ -648,7 +648,9 @@ public class Generator extends Template {
 				String gitToken = gitConfig.get("token");
 				
 				try {
-					generator.publishToGit(gitRepoUrl, gitBranch, gitDir, commitMessage, gitUsername, gitToken);
+					Languages lang = Languages.fromCode(language);
+					GitPublisher gitPublisher = new GitPublisher(country, lang, FileGenerator.CITIES_HOME);
+					gitPublisher.publish(gitRepoUrl, gitBranch, gitDir, commitMessage, gitUsername, gitToken);
 					logger.info("Successfully published to Git repository");
 				} catch (Exception e) {
 					logger.error("Failed to publish to Git: {}", e.getMessage(), e);

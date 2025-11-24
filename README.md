@@ -146,11 +146,13 @@ The `--git-config` parameter accepts a CSV string with key=value pairs:
 You can provide credentials in two ways:
 
 1. **Via command line:**
+
    ```bash
    java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,username=myuser,token=ghp_xxx"
    ```
 
 2. **Via environment variables:**
+
    ```bash
    export GIT_USERNAME=myuser
    export GIT_TOKEN=ghp_xxxxxxxxxxxxx
