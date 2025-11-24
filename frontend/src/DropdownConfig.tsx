@@ -429,7 +429,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 placeholder="Select location..."
               />
             </label>
-            <small>Placeholder text displayed in the dropdown (default: "Select location...")</small>
+            <small>Placeholder text displayed in the dropdown</small>
           </div>
 
           <div className="dropdown-config-section">
@@ -442,7 +442,14 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 value={config.model !== undefined ? config.model : 0}
                 onChange={(e) => {
                   const value = parseInt(e.target.value) || 0;
-                  updateConfig({ model: Math.min(Math.max(0, value), MAX_MODEL) });
+                  const newModel = Math.min(Math.max(0, value), MAX_MODEL);
+                  const updates: Partial<DropdownConfig> = { model: newModel };
+                  // If model is 1, disable search
+                  if (newModel === 1) {
+                    updates.enableSearch = false;
+                    updates.searchPlaceholder = undefined;
+                  }
+                  updateConfig(updates);
                 }}
                 style={{ width: '100px' }}
               />
@@ -460,19 +467,20 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 />
                 <span>Show popup on selection</span>
               </label>
-              <small>Show alert popup when a location is selected (default: false)</small>
+              <small>Show alert popup when a location is selected</small>
             </div>
 
             <div style={{ flex: '1', minWidth: '200px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: config.model === 1 ? 'not-allowed' : 'pointer' }}>
                 <input
                   type="checkbox"
                   checked={config.enableSearch || false}
                   onChange={(e) => updateConfig({ enableSearch: e.target.checked })}
+                  disabled={config.model === 1}
                 />
                 <span>Enable search</span>
               </label>
-              {config.enableSearch && (
+              {config.enableSearch && config.model !== 1 && (
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
                   <span style={{ whiteSpace: 'nowrap' }}>Search placeholder:</span>
                   <input
@@ -484,7 +492,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                   />
                 </label>
               )}
-              <small>Enable text search to find locations by name</small>
+              <small>Enable text search to find locations by name {config.model === 1 && '(not for model 1)'}</small>
             </div>
           </div>
         </div>
