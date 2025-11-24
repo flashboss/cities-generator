@@ -3,13 +3,27 @@ import { DropdownConfig } from './types';
 import i18nCountries from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
 import { getContinentFromCountry } from './continentUtils';
+import { ModelSelector } from './ModelSelector';
 import './DropdownConfig.css';
 
 // Register English locale for country names
 i18nCountries.registerLocale(enLocale);
 
-// Maximum available model number (0 = default, 1 = cascading dropdowns, etc.)
-const MAX_MODEL = 1;
+// Available dropdown models with their information
+const AVAILABLE_MODELS = [
+  {
+    id: 0,
+    name: 'Default Hierarchical',
+    description: 'Single dropdown with hierarchical navigation through breadcrumbs. Supports search functionality.',
+    gifUrl: 'https://raw.githubusercontent.com/flashboss/cities-generator/master/assets/gifs/model-0.gif',
+  },
+  {
+    id: 1,
+    name: 'Cascading Dropdowns',
+    description: 'Multiple sequential dropdowns where each level appears after selection. Higher level selections automatically update lower levels.',
+    gifUrl: 'https://raw.githubusercontent.com/flashboss/cities-generator/master/assets/gifs/model-1.gif',
+  },
+];
 
 interface DropdownConfigProps {
   config: DropdownConfig;
@@ -458,28 +472,19 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           </div>
 
           <div className="dropdown-config-section">
-            <label>
-              Model:
-              <input
-                type="number"
-                min="0"
-                max={MAX_MODEL}
-                value={config.model !== undefined ? config.model : 0}
-                onChange={(e) => {
-                  const value = parseInt(e.target.value) || 0;
-                  const newModel = Math.min(Math.max(0, value), MAX_MODEL);
-                  const updates: Partial<DropdownConfig> = { model: newModel };
-                  // If model is 1, disable search
-                  if (newModel === 1) {
-                    updates.enableSearch = false;
-                    updates.searchPlaceholder = undefined;
-                  }
-                  updateConfig(updates);
-                }}
-                style={{ width: '100px' }}
-              />
-            </label>
-            <small>Template model code (0 = default template, 1 = cascading dropdowns, max: {MAX_MODEL})</small>
+            <ModelSelector
+              selectedModel={config.model !== undefined ? config.model : 0}
+              onModelSelect={(modelId) => {
+                const updates: Partial<DropdownConfig> = { model: modelId };
+                // If model is 1, disable search
+                if (modelId === 1) {
+                  updates.enableSearch = false;
+                  updates.searchPlaceholder = undefined;
+                }
+                updateConfig(updates);
+              }}
+              availableModels={AVAILABLE_MODELS}
+            />
           </div>
 
           <div className="dropdown-config-section" style={{ display: 'flex', flexDirection: 'row', gap: '20px', flexWrap: 'wrap' }}>
