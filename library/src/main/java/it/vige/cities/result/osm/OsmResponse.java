@@ -11,16 +11,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OsmResponse {
 
+	/**
+	 * List of OSM elements returned by the Overpass API
+	 */
 	private List<OsmElement> elements;
 	
 	/**
-	 * Default OSM response
+	 * Default constructor for OsmResponse
+	 * Creates an empty OSM response
 	 */
 	public OsmResponse() {
 	}
 
 	/**
-	 * Elements
+	 * Get the list of OSM elements
+	 * 
 	 * @return the list of OSM elements
 	 */
 	public List<OsmElement> getElements() {
@@ -28,8 +33,9 @@ public class OsmResponse {
 	}
 
 	/**
-	 * Elements
-	 * @param elements the list of OSM elements
+	 * Set the list of OSM elements
+	 * 
+	 * @param elements the list of OSM elements to set
 	 */
 	public void setElements(List<OsmElement> elements) {
 		this.elements = elements;

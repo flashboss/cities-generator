@@ -23,16 +23,26 @@ import it.vige.cities.result.Nodes;
  */
 public class Britannica extends HTMLTemplate {
 
+	/**
+	 * Britannica URL for UK cities and towns list
+	 */
 	private final static String URL = "https://www.britannica.com/topic/list-of-cities-and-towns-in-the-United-Kingdom-2034188";
 
+	/**
+	 * Case sensitive flag for city name matching
+	 */
 	private boolean caseSensitive;
+	
+	/**
+	 * Duplicated names flag - allows duplicate city names
+	 */
 	private boolean duplicatedNames;
 
 	/**
-	 * Britannica
+	 * Constructor for Britannica template
 	 * 
-	 * @param caseSensitive   the case sensitive parameter
-	 * @param duplicatedNames the duplicated names parameter
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
 	 */
 	public Britannica(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
@@ -59,7 +69,11 @@ public class Britannica extends HTMLTemplate {
 	}
 
 	/**
-	 * Generate
+	 * Generate cities data from Britannica
+	 * Scrapes the Britannica website to extract UK cities and towns organized by regions
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem fetching or parsing the Britannica page
 	 */
 	@Override
 	public ResultNodes generate() throws Exception {

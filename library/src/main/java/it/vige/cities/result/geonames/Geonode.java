@@ -13,35 +13,50 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Geonode {
 
+	/**
+	 * GeoNames unique identifier
+	 */
 	private int geonameId;
+	
+	/**
+	 * Name of the location
+	 */
 	private String name;
+	
+	/**
+	 * List of child geonodes (hierarchical structure)
+	 */
 	private List<Geonode> geonames;
 	
 	/**
-	 * default geonode
+	 * Default constructor for Geonode
+	 * Creates an empty geonode
 	 */
 	public Geonode() {
 		
 	}
 
 	/**
-	 * Geoname id
-	 * @return the geoname id
+	 * Get the GeoNames unique identifier
+	 * 
+	 * @return the geoname ID
 	 */
 	public int getGeonameId() {
 		return geonameId;
 	}
 
 	/**
-	 * Geoname id
-	 * @param geonameId the geoname id
+	 * Set the GeoNames unique identifier
+	 * 
+	 * @param geonameId the geoname ID to set
 	 */
 	public void setGeonameId(int geonameId) {
 		this.geonameId = geonameId;
 	}
 
 	/**
-	 * Name
+	 * Get the name of the location
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -49,24 +64,27 @@ public class Geonode {
 	}
 
 	/**
-	 * Name
-	 * @param name the name
+	 * Set the name of the location
+	 * 
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Geonames
-	 * @return the geonames list
+	 * Get the list of child geonodes
+	 * 
+	 * @return the list of child geonodes
 	 */
 	public List<Geonode> getGeonames() {
 		return geonames;
 	}
 
 	/**
-	 * Geonames
-	 * @param geonames the geonames list
+	 * Set the list of child geonodes
+	 * 
+	 * @param geonames the list of child geonodes to set
 	 */
 	public void setGeonames(List<Geonode> geonames) {
 		this.geonames = geonames;

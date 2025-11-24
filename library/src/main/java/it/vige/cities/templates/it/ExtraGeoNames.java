@@ -19,7 +19,9 @@ import it.vige.cities.templates.GeoNames;
  */
 public class ExtraGeoNames extends GeoNames {
 
-	// GeoNames IDs for Italian regions (language-independent)
+	/**
+	 * GeoNames IDs for Italian regions in North-West macroregion (language-independent)
+	 */
 	private static final Set<Integer> NORD_OCCIDENTALE = Set.of(
 		3170831, // Piemonte
 		3174725, // Liguria
@@ -27,6 +29,9 @@ public class ExtraGeoNames extends GeoNames {
 		3174618  // Lombardia
 	);
 	
+	/**
+	 * GeoNames IDs for Italian regions in North-East macroregion (language-independent)
+	 */
 	private static final Set<Integer> NORD_ORIENTALE = Set.of(
 		3177401, // Emilia-Romagna
 		3164604, // Veneto
@@ -34,6 +39,9 @@ public class ExtraGeoNames extends GeoNames {
 		3176525  // Friuli Venezia Giulia
 	);
 	
+	/**
+	 * GeoNames IDs for Italian regions in Central macroregion (language-independent)
+	 */
 	private static final Set<Integer> CENTRALE = Set.of(
 		3174976, // Lazio
 		3174004, // Marche
@@ -41,6 +49,9 @@ public class ExtraGeoNames extends GeoNames {
 		3165361  // Toscana
 	);
 	
+	/**
+	 * GeoNames IDs for Italian regions in Southern macroregion (language-independent)
+	 */
 	private static final Set<Integer> MERIDIONALE = Set.of(
 		3183560, // Abruzzo
 		3181042, // Campania
@@ -50,31 +61,36 @@ public class ExtraGeoNames extends GeoNames {
 		3169778  // Puglia
 	);
 	
+	/**
+	 * GeoNames IDs for Italian regions in Insular macroregion (language-independent)
+	 */
 	private static final Set<Integer> INSULARE = Set.of(
 		2523228, // Sardegna
 		2523119  // Sicilia
 	);
 
 	/**
-	 * ExtraGeoNames
+	 * Constructor for ExtraGeoNames template
+	 * Uses default language (IT - Italian)
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames true if it accepts duplicated names
-	 * @param username        the username
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param username        the GeoNames API username (null to use default)
 	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
 		this(country, caseSensitive, duplicatedNames, username, Languages.getDefault());
 	}
 
 	/**
-	 * ExtraGeoNames
+	 * Constructor for ExtraGeoNames template with language
+	 * Adds Italian macroregions (level 0) grouping regions by geographical area
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames true if it accepts duplicated names
-	 * @param username        the username
-	 * @param language        the language enum
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param username        the GeoNames API username (null to use default)
+	 * @param language        the language enum for location name translations
 	 */
 	public ExtraGeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, Languages language) {
 		super(country, caseSensitive, duplicatedNames, username, language);
@@ -122,7 +138,11 @@ public class ExtraGeoNames extends GeoNames {
 	}
 
 	/**
-	 * Generate
+	 * Generate cities data with Italian macroregions
+	 * Adds macroregions (level 0) and groups regions from GeoNames under them based on GeoNames IDs
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem generating data from GeoNames
 	 */
 	@Override
 	protected ResultNodes generate() throws Exception {
@@ -166,6 +186,12 @@ public class ExtraGeoNames extends GeoNames {
 		return new ResultNodes(OK, nodes, this);
 	}
 
+	/**
+	 * Recursively change node IDs to include parent prefix
+	 * Modifies child node IDs to include the parent ID prefix separated by ID_SEPARATOR
+	 * 
+	 * @param node the parent node whose children's IDs should be modified
+	 */
 	private void changeIds(Node node) {
 		node.getZones().parallelStream().forEach(x -> {
 			String prefix = node.getId();

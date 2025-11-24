@@ -1,18 +1,20 @@
 package it.vige.cities;
 
 /**
- * The countries actually supported
+ * The countries actually supported by the generator
+ * Currently supports Italy (IT) and United Kingdom (GB)
+ * 
  * @author lucastancapiano
  */
 public enum Countries {
 
 	/**
-	 * IT
+	 * IT - Italy
 	 */
 	IT,
 
 	/**
-	 * GB
+	 * GB - United Kingdom (Great Britain)
 	 */
 	GB
 }

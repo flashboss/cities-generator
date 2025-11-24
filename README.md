@@ -8,6 +8,7 @@ Generates a descriptor file for the cities choosing:
 - **-d:** true if you allow duplicated names of cities. Else none or false.
 - **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA, GEONAMES or OPENSTREETMAP. For **IT**: COMUNIITALIANI, WIKIPEDIA, EXTRAGEONAMES, EXTRA_OPENSTREETMAP or OPENSTREETMAP. For all other countries the provider is GEONAMES or OPENSTREETMAP. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
+- **-g** or **--git-config:** publish generated JSON files to Git repository. Format: CSV with key=value pairs separated by commas. Keys: `repo` (repository URL, required), `branch` (default: master), `dir` (default: _db), `username`, `token`, `message` (commit message). Example: `--git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=user,token=xxx,message=Update"`. All fields except `repo` are optional. Default repository: https://github.com/flashboss/cities-generator.git. Username and token can also be set via `GIT_USERNAME` and `GIT_TOKEN` environment variables.
 
 ## Enabling DEBUG logs
 
@@ -111,6 +112,68 @@ Result result = generator.generateFile();
 ```
 
 You will find the file EU/IT/it.json in the ${user.home}/cities-generator directory (structure: {continent}/{country}/{language}.json)
+
+## Publishing to Git
+
+After generating the JSON files, you can automatically publish them to a Git repository using the `--git-config` parameter. This feature clones the repository, copies the generated JSON file, commits, and pushes the changes.
+
+### Basic Usage
+
+```bash
+# Publish with default repository (https://github.com/flashboss/cities-generator.git)
+java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git"
+
+# Publish with custom repository and branch
+java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,branch=main"
+
+# Publish with all options
+java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=myuser,token=ghp_xxxxxxxxxxxxx,message=Update cities data"
+```
+
+### Configuration Format
+
+The `--git-config` parameter accepts a CSV string with key=value pairs:
+
+- **repo** (required): Git repository URL
+- **branch** (optional, default: `master`): Git branch name
+- **dir** (optional, default: `_db`): Directory in repository where to publish files
+- **username** (optional): Git username for authentication
+- **token** (optional): Git token/password for authentication (GitHub Personal Access Token)
+- **message** (optional): Commit message (default: auto-generated based on country and language)
+
+### Authentication
+
+You can provide credentials in two ways:
+
+1. **Via command line:**
+   ```bash
+   java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,username=myuser,token=ghp_xxx"
+   ```
+
+2. **Via environment variables:**
+   ```bash
+   export GIT_USERNAME=myuser
+   export GIT_TOKEN=ghp_xxxxxxxxxxxxx
+   java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git"
+   ```
+
+For GitHub, use a Personal Access Token (PAT) as the token. Create one at: <https://github.com/settings/tokens>
+
+### Examples
+
+```bash
+# Minimal: only repository URL
+--git-config "repo=https://github.com/user/repo.git"
+
+# With branch and directory
+--git-config "repo=https://github.com/user/repo.git,branch=develop,dir=cities"
+
+# With authentication
+--git-config "repo=https://github.com/user/repo.git,username=myuser,token=ghp_xxx"
+
+# Complete example
+--git-config "repo=https://github.com/user/repo.git,branch=main,dir=_db,username=myuser,token=ghp_xxx,message=Update cities for GB"
+```
 
 ## Geonames registration
 

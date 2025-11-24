@@ -44,9 +44,22 @@ public enum Continents {
 	 */
 	AN("AN", "Antarctica");
 
+	/**
+	 * Continent code (e.g., "EU", "AS")
+	 */
 	private String code;
+	
+	/**
+	 * Continent name (e.g., "Europe", "Asia")
+	 */
 	private String name;
 
+	/**
+	 * Constructor for Continents enum
+	 * 
+	 * @param code the continent code
+	 * @param name the continent name
+	 */
 	private Continents(String code, String name) {
 		this.code = code;
 		this.name = name;
@@ -70,6 +83,7 @@ public enum Continents {
 
 	/**
 	 * Map of country codes to continents (ISO 3166-1 alpha-2)
+	 * Maps country codes to their corresponding continent
 	 */
 	private static final Map<String, Continents> COUNTRY_TO_CONTINENT = new HashMap<>();
 

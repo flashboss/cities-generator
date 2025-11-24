@@ -7,71 +7,89 @@ package it.vige.cities.result;
  */
 public class Node extends Nodes {
 
+	/**
+	 * Hierarchical level of the node (0 = region, 1 = province, 2 = municipality)
+	 */
 	private int level;
+	
+	/**
+	 * Name of the location
+	 */
 	private String name;
+	
+	/**
+	 * Unique identifier for the node
+	 */
 	private String id;
 
 	/**
-	 * default node
+	 * Default constructor for Node
+	 * Creates an empty node
 	 */
 	public Node() {
 
 	}
 
 	/**
-	 * Level
+	 * Get the hierarchical level of the node
 	 * 
-	 * @return the level
+	 * @return the level (0 = region, 1 = province, 2 = municipality)
 	 */
 	public int getLevel() {
 		return level;
 	}
 
 	/**
-	 * Level
+	 * Set the hierarchical level of the node
 	 * 
-	 * @param level the level
+	 * @param level the level to set (0 = region, 1 = province, 2 = municipality)
 	 */
 	public void setLevel(int level) {
 		this.level = level;
 	}
 
 	/**
-	 * Name
+	 * Get the name of the location
 	 * 
-	 * @return the name
+	 * @return the name of the location
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Name
+	 * Set the name of the location
 	 * 
-	 * @param name the name
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Id
+	 * Get the unique identifier of the node
 	 * 
-	 * @return the id
+	 * @return the unique identifier
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * Id
+	 * Set the unique identifier of the node
 	 * 
-	 * @param id the id
+	 * @param id the identifier to set
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * Clone this Node object
+	 * Creates a shallow copy of the node
+	 * 
+	 * @return a cloned Node object
+	 */
 	@Override
 	public Object clone() {
 		Node node = (Node) super.clone();

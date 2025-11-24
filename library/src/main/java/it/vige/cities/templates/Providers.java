@@ -1,22 +1,24 @@
 package it.vige.cities.templates;
 
 /**
- * The english providers actually supported
+ * The providers actually supported for all countries
+ * Generic providers that work for any country
+ * 
  * @author lucastancapiano
  */
 public enum Providers {
 	/**
-	 * NONE
+	 * NONE - Empty provider used for tests
 	 */
 	NONE, 
 	
 	/**
-	 * GEONAMES
+	 * GEONAMES - GeoNames API provider
 	 */
 	GEONAMES,
 	
 	/**
-	 * OPENSTREETMAP
+	 * OPENSTREETMAP - OpenStreetMap Overpass API provider
 	 */
 	OPENSTREETMAP
 }

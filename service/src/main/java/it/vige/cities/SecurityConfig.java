@@ -20,16 +20,37 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Spring Security configuration for OAuth2 resource server
+ * Configures JWT authentication and authorization using Keycloak
+ * 
+ * @author lucastancapiano
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+	/**
+	 * Keycloak authentication server URL
+	 */
 	@Value("${keycloak.auth-server-url}")
 	private String authServerUrl;
 
+	/**
+	 * Keycloak realm name
+	 */
 	@Value("${keycloak.realm}")
 	private String realm;
 	
+	/**
+	 * Configure security filter chain
+	 * Sets up OAuth2 resource server with JWT authentication
+	 * Requires "admin" role for /update* endpoints, permits all other requests
+	 * 
+	 * @param http the HttpSecurity to configure
+	 * @return the configured SecurityFilterChain
+	 * @throws Exception if there is a problem configuring security
+	 */
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
@@ -45,6 +66,12 @@ public class SecurityConfig {
 		return http.build();
 	}
 
+	/**
+	 * Create JWT authentication converter bean
+	 * Configures converter to extract roles from JWT realm_access claim
+	 * 
+	 * @return the configured JwtAuthenticationConverter
+	 */
 	@Bean
 	public JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
@@ -52,7 +79,18 @@ public class SecurityConfig {
 		return jwtAuthenticationConverter;
 	}
 
+	/**
+	 * Converter to extract realm roles from JWT and convert them to GrantedAuthority
+	 * Extracts roles from realm_access.roles claim and prefixes them with "ROLE_"
+	 */
 	private static class RealmRolesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+		/**
+		 * Convert JWT to collection of GrantedAuthority
+		 * Extracts roles from realm_access.roles claim
+		 * 
+		 * @param jwt the JWT token
+		 * @return collection of GrantedAuthority with roles prefixed with "ROLE_"
+		 */
 		@Override
 		public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
 			// Estrai realm_access dal JWT
@@ -75,9 +113,15 @@ public class SecurityConfig {
 		}
 	}
 
+	/**
+	 * Create JWT decoder bean
+	 * Builds JWK Set URI dynamically from Keycloak auth-server-url and realm
+	 * 
+	 * @return the configured JwtDecoder
+	 */
 	@Bean
 	JwtDecoder jwtDecoder() {
-		// Costruisci jwk-set-uri dinamicamente da auth-server-url e realm
+		// Build jwk-set-uri dynamically from auth-server-url and realm
 		String jwkSetUri = authServerUrl.replaceAll("/$", "") + "/realms/" + realm + "/protocol/openid-connect/certs";
 		return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
 	}

@@ -10,18 +10,39 @@ import org.slf4j.Logger;
  */
 public class Configuration {
 
+	/**
+	 * Logger for configuration operations
+	 */
 	private static final Logger logger = getLogger(Configuration.class);
 
+	/**
+	 * Country code (ISO 3166-1 alpha-2)
+	 */
 	private String country;
 
+	/**
+	 * Case sensitive flag for city name matching
+	 */
 	private boolean caseSensitive;
 
+	/**
+	 * Duplicated names flag - allows duplicate city names
+	 */
 	private boolean duplicatedNames;
 
+	/**
+	 * Provider name for data generation
+	 */
 	private String provider;
 
+	/**
+	 * Username for GeoNames API
+	 */
 	private String username;
 	
+	/**
+	 * Language for location names (default: IT - Italian)
+	 */
 	private Languages language = Languages.getDefault();
 	
 	/**

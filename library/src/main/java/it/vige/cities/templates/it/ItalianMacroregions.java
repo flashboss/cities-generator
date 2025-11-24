@@ -25,10 +25,12 @@ public class ItalianMacroregions {
 	}
 
 	/**
-	 * Get translated name for a macroregion
-	 * @param macroregion the macroregion identifier (1-5)
-	 * @param language the language enum
-	 * @return the translated name
+	 * Get translated name for an Italian macroregion
+	 * Returns the name of the macroregion in the specified language
+	 * 
+	 * @param macroregion the macroregion identifier (1-5): 1=North-West, 2=North-East, 3=Central, 4=Southern, 5=Insular
+	 * @param language the language enum for translation
+	 * @return the translated macroregion name, or empty string if invalid macroregion
 	 */
 	public static String getMacroregionName(int macroregion, Languages language) {
 		Languages lang = language != null ? language : Languages.getDefault();
@@ -144,10 +146,11 @@ public class ItalianMacroregions {
 
 	/**
 	 * Add level 0 nodes (macroregions) to the nodes list
+	 * Creates 5 macroregion nodes (North-West, North-East, Central, Southern, Insular) in the specified language
 	 * 
-	 * @param nodes the nodes list
-	 * @param caseSensitive true if it is case sensitive
-	 * @param language the language for translations
+	 * @param nodes the nodes list to add macroregions to
+	 * @param caseSensitive true if names should be case-sensitive
+	 * @param language the language for macroregion name translations
 	 */
 	public static void addLevel0(Nodes nodes, boolean caseSensitive, Languages language) {
 		int counter = 1;
@@ -161,13 +164,14 @@ public class ItalianMacroregions {
 	}
 
 	/**
-	 * Add level 0 nodes (macroregions) to the nodes list with associations
-	 * Used by Wikipedia provider
+	 * Add level 0 nodes (macroregions) to the nodes list with region associations
+	 * Creates 5 macroregion nodes and populates a map associating each macroregion with its regions
+	 * Used by Wikipedia provider to map regions to macroregions
 	 * 
-	 * @param nodes the nodes list
-	 * @param caseSensitive true if it is case sensitive
-	 * @param associations the map to populate with region associations
-	 * @return the number of level 0 nodes added
+	 * @param nodes the nodes list to add macroregions to
+	 * @param caseSensitive true if names should be case-sensitive
+	 * @param associations the map to populate with region associations (macroregion node -> list of region names)
+	 * @return the counter value after adding all macroregions (6, since 5 macroregions were added)
 	 */
 	public static int addLevel0(Nodes nodes, boolean caseSensitive, Map<Node, List<String>> associations) {
 		int counter = 1;

@@ -1,28 +1,30 @@
 package it.vige.cities.templates.it;
 
 /**
- * The italian providers actually supported
+ * The Italian-specific providers actually supported
+ * Providers that are specific to Italy and provide Italian administrative data
+ * 
  * @author lucastancapiano
  */
 public enum Providers {
 	
 	/**
-	 * WIKIPEDIA
+	 * WIKIPEDIA - Wikipedia-based provider for Italian cities
 	 */
 	WIKIPEDIA, 
 	
 	/**
-	 * COMUNI ITALIANI
+	 * COMUNI_ITALIANI - Official Italian municipalities database provider
 	 */
 	COMUNI_ITALIANI, 
 	
 	/**
-	 * EXTRA GEONAMES
+	 * EXTRA_GEONAMES - GeoNames provider with Italian macroregions (level 0)
 	 */
 	EXTRA_GEONAMES,
 	
 	/**
-	 * EXTRA OPENSTREETMAP
+	 * EXTRA_OPENSTREETMAP - OpenStreetMap provider with Italian macroregions (level 0)
 	 */
 	EXTRA_OPENSTREETMAP
 }

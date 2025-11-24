@@ -12,18 +12,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Countrynodes {
 
+	/**
+	 * List of country nodes from GeoNames API
+	 */
 	private List<Country> geonames;
+	
+	/**
+	 * Status information from GeoNames API response
+	 */
 	private Map<String, String> status;
 	
 	/**
-	 * Default countrynodes
+	 * Default constructor for Countrynodes
+	 * Creates an empty country nodes container
 	 */
 	public Countrynodes() {
 		
 	}
 
 	/**
-	 * Geonames
+	 * Get the list of country nodes
+	 * 
 	 * @return the list of countries
 	 */
 	public List<Country> getGeonames() {
@@ -31,24 +40,27 @@ public class Countrynodes {
 	}
 
 	/**
-	 * Geonames
-	 * @param geonames the list of countries
+	 * Set the list of country nodes
+	 * 
+	 * @param geonames the list of countries to set
 	 */
 	public void setGeonames(List<Country> geonames) {
 		this.geonames = geonames;
 	}
 
 	/**
-	 * Status
-	 * @return the status
+	 * Get the status information from GeoNames API
+	 * 
+	 * @return the status map
 	 */
 	public Map<String, String> getStatus() {
 		return status;
 	}
 
 	/**
-	 * Status
-	 * @param status the status
+	 * Set the status information
+	 * 
+	 * @param status the status map to set
 	 */
 	public void setStatus(Map<String, String> status) {
 		this.status = status;

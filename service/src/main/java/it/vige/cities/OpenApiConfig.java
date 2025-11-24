@@ -14,20 +14,44 @@ import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+/**
+ * OpenAPI configuration for Swagger/OpenAPI documentation
+ * Configures OAuth2 security scheme and API documentation
+ * 
+ * @author lucastancapiano
+ */
 @Configuration
 public class OpenApiConfig {
 
+	/**
+	 * Keycloak authentication server URL
+	 */
 	@Value("${keycloak.auth-server-url}")
 	private String authServerUrl;
 
+	/**
+	 * Keycloak realm name
+	 */
 	@Value("${keycloak.realm}")
 	private String realm;
 
+	/**
+	 * OAuth2 client ID (resource)
+	 */
 	@Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
 	private String resource;
 
+	/**
+	 * OAuth scheme name for OpenAPI security
+	 */
 	private static final String OAUTH_SCHEME_NAME = "Cities Generator Auth";
 
+	/**
+	 * Create OpenAPI configuration bean
+	 * Configures OAuth2 security scheme and customizes Configuration schema
+	 * 
+	 * @return the OpenAPI configuration
+	 */
 	@Bean
 	public OpenAPI openAPI() {
 		Components components = new Components();
@@ -52,16 +76,31 @@ public class OpenApiConfig {
 				.info(new Info().title("Cities Generator").description("Web console").version("1.0"));
 	}
 
+	/**
+	 * Create OAuth2 security scheme
+	 * 
+	 * @return the SecurityScheme configured for OAuth2
+	 */
 	private SecurityScheme createOAuthScheme() {
 		OAuthFlows flows = createOAuthFlows();
 		return new SecurityScheme().type(SecurityScheme.Type.OAUTH2).flows(flows);
 	}
 
+	/**
+	 * Create OAuth2 flows configuration
+	 * 
+	 * @return the OAuthFlows configured with implicit flow
+	 */
 	private OAuthFlows createOAuthFlows() {
 		OAuthFlow flow = createAuthorizationCodeFlow();
 		return new OAuthFlows().implicit(flow);
 	}
 
+	/**
+	 * Create authorization code flow for OAuth2
+	 * 
+	 * @return the OAuthFlow with authorization URL configured
+	 */
 	private OAuthFlow createAuthorizationCodeFlow() {
 		return new OAuthFlow().authorizationUrl(authServerUrl + "/realms/" + realm + "/protocol/openid-connect/auth");
 	}

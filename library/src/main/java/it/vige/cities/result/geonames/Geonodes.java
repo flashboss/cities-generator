@@ -9,19 +9,32 @@ import java.util.Map;
  */
 public class Geonodes {
 
+	/**
+	 * Total number of results from GeoNames API query
+	 */
 	private int totalResultsCount;
+	
+	/**
+	 * List of geonodes from GeoNames API
+	 */
 	private List<Geonode> geonames;
+	
+	/**
+	 * Status information from GeoNames API response
+	 */
 	private Map<String, String> status;
 	
 	/**
-	 * default geonodes
+	 * Default constructor for Geonodes
+	 * Creates an empty geonodes container
 	 */
 	public Geonodes() {
 		
 	}
 
 	/**
-	 * Total result count
+	 * Get the total number of results
+	 * 
 	 * @return the total result count
 	 */
 	public int getTotalResultsCount() {
@@ -29,15 +42,17 @@ public class Geonodes {
 	}
 
 	/**
-	 * Total result count
-	 * @param totalResultsCount the total result count
+	 * Set the total number of results
+	 * 
+	 * @param totalResultsCount the total result count to set
 	 */
 	public void setTotalResultsCount(int totalResultsCount) {
 		this.totalResultsCount = totalResultsCount;
 	}
 
 	/**
-	 * Geonames
+	 * Get the list of geonodes
+	 * 
 	 * @return the geonames list
 	 */
 	public List<Geonode> getGeonames() {
@@ -45,24 +60,27 @@ public class Geonodes {
 	}
 
 	/**
-	 * Geonames
-	 * @param geonames the geonames list
+	 * Set the list of geonodes
+	 * 
+	 * @param geonames the geonames list to set
 	 */
 	public void setGeonames(List<Geonode> geonames) {
 		this.geonames = geonames;
 	}
 
 	/**
-	 * Status
-	 * @return the status
+	 * Get the status information from GeoNames API
+	 * 
+	 * @return the status map
 	 */
 	public Map<String, String> getStatus() {
 		return status;
 	}
 
 	/**
-	 * Status
-	 * @param status the status
+	 * Set the status information
+	 * 
+	 * @param status the status map to set
 	 */
 	public void setStatus(Map<String, String> status) {
 		this.status = status;

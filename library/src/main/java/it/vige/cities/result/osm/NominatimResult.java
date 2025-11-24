@@ -10,39 +10,52 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NominatimResult {
 
+	/**
+	 * OSM element type: "node", "way", or "relation"
+	 */
 	@JsonProperty("osm_type")
 	private String osmType;
 	
+	/**
+	 * Unique OSM identifier
+	 */
 	@JsonProperty("osm_id")
 	private Long osmId;
 	
+	/**
+	 * Human-readable display name from Nominatim
+	 */
 	@JsonProperty("display_name")
 	private String displayName;
 	
 	/**
-	 * Default constructor
+	 * Default constructor for NominatimResult
+	 * Creates an empty Nominatim result
 	 */
 	public NominatimResult() {
 	}
 
 	/**
-	 * OSM type (node, way, relation)
-	 * @return the OSM type
+	 * Get the OSM element type
+	 * 
+	 * @return the OSM type ("node", "way", or "relation")
 	 */
 	public String getOsmType() {
 		return osmType;
 	}
 
 	/**
-	 * OSM type
-	 * @param osmType the OSM type
+	 * Set the OSM element type
+	 * 
+	 * @param osmType the OSM type to set
 	 */
 	public void setOsmType(String osmType) {
 		this.osmType = osmType;
 	}
 
 	/**
-	 * OSM ID
+	 * Get the unique OSM identifier
+	 * 
 	 * @return the OSM ID
 	 */
 	public Long getOsmId() {
@@ -50,15 +63,17 @@ public class NominatimResult {
 	}
 
 	/**
-	 * OSM ID
-	 * @param osmId the OSM ID
+	 * Set the unique OSM identifier
+	 * 
+	 * @param osmId the OSM ID to set
 	 */
 	public void setOsmId(Long osmId) {
 		this.osmId = osmId;
 	}
 
 	/**
-	 * Display name
+	 * Get the human-readable display name
+	 * 
 	 * @return the display name
 	 */
 	public String getDisplayName() {
@@ -66,8 +81,9 @@ public class NominatimResult {
 	}
 
 	/**
-	 * Display name
-	 * @param displayName the display name
+	 * Set the human-readable display name
+	 * 
+	 * @param displayName the display name to set
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
