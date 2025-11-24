@@ -25,7 +25,7 @@ public class FileGenerator {
 	 * Folder home
 	 */
 	public final static String CITIES_HOME = getProperty("user.home") + "/cities-generator/";
-	
+
 	/**
 	 * Version of cities-generator
 	 * Reads from manifest Implementation-Version, or defaults to "unknown" if not available
