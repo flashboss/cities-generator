@@ -13,6 +13,7 @@ const DEFAULT_COUNTRY = 'IT';
 const DEFAULT_LANGUAGE = 'it';
 const DEFAULT_PLACEHOLDER = 'Select location...';
 const DEFAULT_SEARCH_PLACEHOLDER = 'Search location...';
+const DEFAULT_MODEL = 0;
 
 // Standalone demo app
 const App: React.FC = () => {
@@ -25,7 +26,6 @@ const App: React.FC = () => {
   const handleSelect = (node: any) => {
     if (node) {
       console.log('Selected:', node);
-      alert(`Selected: ${node.name} (ID: ${node.id})`);
     }
   };
 
@@ -67,7 +67,7 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<script src="./dist/cities-generator.umd.js"></script>
 
-<cities-dropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  data-url="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? '\n  enable-search' : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  search-placeholder="${config.searchPlaceholder}"` : ''}>
+<cities-dropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  data-url="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? '\n  enable-search' : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  search-placeholder="${config.searchPlaceholder}"` : ''}${(config.model !== undefined && config.model !== DEFAULT_MODEL) ? `\n  model="${config.model}"` : ''}>
 </cities-dropdown>`}
         </pre>
 
@@ -75,7 +75,7 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`import { CitiesDropdown } from 'cities-generator-frontend';
 
-<CitiesDropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  dataUrl="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? `\n  enableSearch={true}` : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  searchPlaceholder="${config.searchPlaceholder}"` : ''}
+<CitiesDropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  dataUrl="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? `\n  enableSearch={true}` : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  searchPlaceholder="${config.searchPlaceholder}"` : ''}${(config.model !== undefined && config.model !== DEFAULT_MODEL) ? `\n  model={${config.model}}` : ''}${config.popup === true ? `\n  popup={true}` : ''}
   onSelect={(node) => console.log(node)}
 />`}
         </pre>
@@ -84,7 +84,7 @@ const App: React.FC = () => {
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<div id="cities-dropdown"></div>
 <script>
-  CitiesGenerator.render('#cities-dropdown', {${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n    country: '${config.country}',` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n    language: '${config.language}',` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n    dataUrl: '${config.dataUrl}',` : ''}${config.username ? `\n    username: '${config.username}',` : ''}${config.password ? `\n    password: '${config.password}',` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n    placeholder: '${config.placeholder}',` : ''}${config.enableSearch === true ? `\n    enableSearch: true,` : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n    searchPlaceholder: '${config.searchPlaceholder}',` : ''}
+  CitiesGenerator.render('#cities-dropdown', {${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n    country: '${config.country}',` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n    language: '${config.language}',` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n    dataUrl: '${config.dataUrl}',` : ''}${config.username ? `\n    username: '${config.username}',` : ''}${config.password ? `\n    password: '${config.password}',` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n    placeholder: '${config.placeholder}',` : ''}${config.enableSearch === true ? `\n    enableSearch: true,` : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n    searchPlaceholder: '${config.searchPlaceholder}',` : ''}${(config.model !== undefined && config.model !== DEFAULT_MODEL) ? `\n    model: ${config.model},` : ''}${config.popup === true ? `\n    popup: true,` : ''}
     onSelect: (node) => console.log(node)
   });
 </script>`}

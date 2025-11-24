@@ -21,7 +21,10 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   password,
   enableSearch = false,
   searchPlaceholder = 'Search location...',
+  model = 0, // Template model: 0 = default template, 1+ = alternative templates (to be implemented)
+  popup = false, // Show popup (alert) on final selection
 }) => {
+  // Model 1: Cascading dropdowns - each level has its own dropdown
   const [nodes, setNodes] = useState<Nodes | null>(data || null);
   const [selectedPath, setSelectedPath] = useState<Node[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +33,9 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Array<{ node: Node; path: Node[] }>>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // For model 1: array of selected nodes per level
+  const [cascadingSelections, setCascadingSelections] = useState<Node[]>([]);
 
   useEffect(() => {
     if (data) {
@@ -87,6 +93,13 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     }
   }, [data, country, language, dataUrl, username, password]);
 
+  // Reset cascading selections when nodes change
+  useEffect(() => {
+    if (model === 1 && nodes) {
+      setCascadingSelections([]);
+    }
+  }, [nodes, model]);
+
   const handleNodeClick = (node: Node, level: number) => {
     const newPath = selectedPath.slice(0, level);
     newPath[level] = node;
@@ -94,6 +107,9 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
     if (!node.zones || node.zones.length === 0) {
       // Leaf node selected
+      if (popup) {
+        alert(`Selected: ${node.name} (ID: ${node.id})`);
+      }
       if (onSelect) {
         onSelect(node);
       }
@@ -146,6 +162,80 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     return current?.zones || [];
   };
 
+  // For model 1: Get nodes for a specific level based on cascading selections
+  const getLevelNodes = (level: number): Node[] => {
+    if (!nodes) return [];
+    
+    if (level === 0) {
+      return nodes.zones;
+    }
+    
+    // Navigate through the hierarchy based on selections
+    let current: Node | undefined = cascadingSelections[level - 1];
+    if (!current) return [];
+    
+    return current.zones || [];
+  };
+
+  // For model 1: Handle selection change at a specific level
+  const handleCascadingSelection = (level: number, node: Node | null) => {
+    if (!node) {
+      // Clear this level and all levels below
+      setCascadingSelections(prev => prev.slice(0, level));
+      return;
+    }
+
+    const newSelections = [...cascadingSelections];
+    newSelections[level] = node;
+    
+    // If changing a level, clear all levels below
+    if (level < newSelections.length) {
+      newSelections.splice(level + 1);
+    }
+    
+    // Auto-select first item in next level if available
+    if (node.zones && node.zones.length > 0) {
+      const firstChild = node.zones[0];
+      newSelections[level + 1] = firstChild;
+      
+      // Recursively auto-select first items in deeper levels
+      let current = firstChild;
+      let nextLevel = level + 2;
+      while (current.zones && current.zones.length > 0) {
+        newSelections[nextLevel] = current.zones[0];
+        current = current.zones[0];
+        nextLevel++;
+      }
+    }
+    
+    setCascadingSelections(newSelections);
+    
+    // Call onSelect with the deepest selected node
+    const deepestNode = newSelections[newSelections.length - 1];
+    if (deepestNode && (!deepestNode.zones || deepestNode.zones.length === 0)) {
+      if (popup) {
+        alert(`Selected: ${deepestNode.name} (ID: ${deepestNode.id})`);
+      }
+      if (onSelect) {
+        onSelect(deepestNode);
+      }
+    }
+  };
+
+  // For model 1: Get the maximum depth of the tree
+  const getMaxDepth = (nodeList: Node[], currentDepth: number = 0): number => {
+    if (!nodeList || nodeList.length === 0) return currentDepth;
+    
+    let maxDepth = currentDepth;
+    for (const node of nodeList) {
+      if (node.zones && node.zones.length > 0) {
+        const depth = getMaxDepth(node.zones, currentDepth + 1);
+        maxDepth = Math.max(maxDepth, depth);
+      }
+    }
+    return maxDepth;
+  };
+
   const getDisplayText = (): string => {
     if (selectedPath.length === 0) return placeholder;
     return selectedPath.map(n => n.name).join(' > ');
@@ -167,6 +257,81 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
     return <div className={`cities-dropdown error ${className}`}>Error: {error}</div>;
   }
 
+  // Model 1: Cascading dropdowns
+  if (model === 1) {
+    if (!nodes) {
+      return <div className={`cities-dropdown loading ${className}`}>Loading...</div>;
+    }
+
+    // Determine how many levels to show based on selections
+    // Always show at least level 0, and show next level if current level has a selection with children
+    const getLevelsToShow = (): number => {
+      let levels = 1; // Always show level 0
+      
+      for (let i = 0; i < cascadingSelections.length; i++) {
+        const selected = cascadingSelections[i];
+        if (selected && selected.zones && selected.zones.length > 0) {
+          levels = i + 2; // Show next level
+        } else {
+          break; // Stop if we hit a leaf node
+        }
+      }
+      
+      return levels;
+    };
+
+    const levelsToShow = getLevelsToShow();
+
+    return (
+      <div className={`cities-dropdown cities-dropdown-cascading ${className}`}>
+        {Array.from({ length: levelsToShow }, (_, level) => {
+          const levelNodes = getLevelNodes(level);
+          const selectedNode = cascadingSelections[level];
+          const isDisabled = level > 0 && !cascadingSelections[level - 1];
+
+          return (
+            <div key={level} className="cities-dropdown-cascading-level">
+              <label className="cities-dropdown-cascading-label">
+                Level {level}:
+              </label>
+              <select
+                className="cities-dropdown-cascading-select"
+                value={selectedNode?.id || ''}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  if (!selectedId) {
+                    handleCascadingSelection(level, null);
+                    return;
+                  }
+                  const node = levelNodes.find(n => n.id === selectedId);
+                  if (node) {
+                    handleCascadingSelection(level, node);
+                  }
+                }}
+                disabled={isDisabled || levelNodes.length === 0}
+              >
+                <option value="">
+                  {isDisabled ? 'Select previous level first' : levelNodes.length === 0 ? 'No options' : `Select level ${level}...`}
+                </option>
+                {levelNodes.map((node) => (
+                  <option key={node.id} value={node.id}>
+                    {node.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          );
+        })}
+        {cascadingSelections.length > 0 && (
+          <div className="cities-dropdown-cascading-selected">
+            Selected: {cascadingSelections.map(n => n.name).join(' > ')}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Model 0: Default template (current implementation)
   const currentLevelNodes = getCurrentLevelNodes();
 
   return (
@@ -238,6 +403,9 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
                       setSearchQuery('');
                       if (!node.zones || node.zones.length === 0) {
                         // Leaf node - select and close
+                        if (popup) {
+                          alert(`Selected: ${node.name} (ID: ${node.id})`);
+                        }
                         if (onSelect) {
                           onSelect(node);
                         }

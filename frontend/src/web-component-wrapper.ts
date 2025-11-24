@@ -12,7 +12,7 @@ class CitiesDropdownElement extends HTMLElement {
   private reactRoot: any = null;
 
   static get observedAttributes() {
-    return ['country', 'language', 'data-url', 'placeholder', 'username', 'password', 'enable-search', 'search-placeholder'];
+    return ['country', 'language', 'data-url', 'placeholder', 'username', 'password', 'enable-search', 'search-placeholder', 'model', 'popup'];
   }
 
   connectedCallback() {
@@ -50,6 +50,9 @@ class CitiesDropdownElement extends HTMLElement {
     const password = this.getAttribute('password');
     const enableSearch = this.getAttribute('enable-search') === 'true';
     const searchPlaceholder = this.getAttribute('search-placeholder') || 'Search location...';
+    const modelAttr = this.getAttribute('model');
+    const model = modelAttr ? parseInt(modelAttr, 10) : 0;
+    const popup = this.hasAttribute('popup');
 
     const handleSelect = (node: any) => {
       this.dispatchEvent(
@@ -69,6 +72,8 @@ class CitiesDropdownElement extends HTMLElement {
       password,
       enableSearch,
       searchPlaceholder,
+      model,
+      popup,
       onSelect: handleSelect,
     });
 

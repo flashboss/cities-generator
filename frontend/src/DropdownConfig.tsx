@@ -8,6 +8,9 @@ import './DropdownConfig.css';
 // Register English locale for country names
 i18nCountries.registerLocale(enLocale);
 
+// Maximum available model number (0 = default, 1 = cascading dropdowns, etc.)
+const MAX_MODEL = 1;
+
 interface DropdownConfigProps {
   config: DropdownConfig;
   onConfigChange: (config: DropdownConfig) => void;
@@ -422,7 +425,33 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           </div>
 
           <div className="dropdown-config-section">
+            <label>
+              Model:
+              <input
+                type="number"
+                min="0"
+                max={MAX_MODEL}
+                value={config.model !== undefined ? config.model : 0}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 0;
+                  updateConfig({ model: Math.min(Math.max(0, value), MAX_MODEL) });
+                }}
+                style={{ width: '100px' }}
+              />
+            </label>
+            <small>Template model code (0 = default template, 1 = cascading dropdowns, max: {MAX_MODEL})</small>
+          </div>
+
+          <div className="dropdown-config-section">
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={config.popup || false}
+                  onChange={(e) => updateConfig({ popup: e.target.checked })}
+                />
+                <span>Show popup on selection</span>
+              </label>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                 <input
                   type="checkbox"

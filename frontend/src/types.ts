@@ -18,6 +18,8 @@ export interface DropdownConfig {
   password?: string;
   enableSearch?: boolean;
   searchPlaceholder?: string;
+  model?: number;
+  popup?: boolean;
 }
 
 export interface CountryInfo {
