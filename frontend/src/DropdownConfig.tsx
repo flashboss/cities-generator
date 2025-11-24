@@ -413,7 +413,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 <small style={{ color: '#d32f2f' }}>{languagesError}</small>
               )}
               {!languagesError && !loadingLanguages && languages.length > 0 && (
-                <small>Select language from available JSON files (format: {config.country}/LANGUAGE.json)</small>
+                <small>Select language from available JSON files (format: {config.country}/{config.language}.json)</small>
               )}
             </div>
           </div>
@@ -424,12 +424,31 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               <input
                 type="text"
                 className="dropdown-config-remote-url"
-                value={config.placeholder || ''}
-                onChange={(e) => updateConfig({ placeholder: e.target.value })}
-                placeholder="Select location..."
+                value={Array.isArray(config.placeholder) ? config.placeholder.join(', ') : (config.placeholder || '')}
+                onChange={(e) => {
+                  // Store as string while typing to allow commas
+                  const value = e.target.value;
+                  updateConfig({ placeholder: value || undefined });
+                }}
+                onBlur={(e) => {
+                  // Parse into array only when user leaves the field
+                  const value = e.target.value.trim();
+                  if (!value) {
+                    updateConfig({ placeholder: undefined });
+                    return;
+                  }
+                  if (value.includes(',')) {
+                    // Multiple placeholders separated by commas
+                    const placeholders = value.split(',').map(p => p.trim()).filter(p => p.length > 0);
+                    updateConfig({ placeholder: placeholders.length > 1 ? placeholders : placeholders[0] || undefined });
+                  } else {
+                    updateConfig({ placeholder: value || undefined });
+                  }
+                }}
+                placeholder="Select location... or Level 0, Level 1, Level 2"
               />
             </label>
-            <small>Placeholder text displayed in the dropdown</small>
+            <small>Placeholder text displayed in the dropdown. For multiple placeholders (e.g., cascading dropdowns), separate with commas: "Level 0, Level 1, Level 2"</small>
           </div>
 
           <div className="dropdown-config-section">

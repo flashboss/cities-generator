@@ -237,7 +237,12 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
   };
 
   const getDisplayText = (): string => {
-    if (selectedPath.length === 0) return placeholder;
+    if (selectedPath.length === 0) {
+      if (Array.isArray(placeholder)) {
+        return placeholder[0] || 'Select location...';
+      }
+      return placeholder;
+    }
     return selectedPath.map(n => n.name).join(' > ');
   };
 
@@ -282,19 +287,29 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
 
     const levelsToShow = getLevelsToShow();
 
+    // Get placeholder text for a specific level
+    const getPlaceholderForLevel = (level: number): string => {
+      if (Array.isArray(placeholder) && placeholder[level]) {
+        return placeholder[level];
+      }
+      return `Select level ${level}...`;
+    };
+
     return (
       <div className={`cities-dropdown cities-dropdown-cascading ${className}`}>
         {Array.from({ length: levelsToShow }, (_, level) => {
           const levelNodes = getLevelNodes(level);
           const selectedNode = cascadingSelections[level];
           const isDisabled = level > 0 && !cascadingSelections[level - 1];
+          const levelPlaceholder = getPlaceholderForLevel(level);
 
           return (
-            <div key={level} className="cities-dropdown-cascading-level">
+            <div key={`${level}-${levelPlaceholder}`} className="cities-dropdown-cascading-level">
               <label className="cities-dropdown-cascading-label">
                 Level {level}:
               </label>
               <select
+                key={`select-${level}-${levelPlaceholder}`}
                 className="cities-dropdown-cascading-select"
                 value={selectedNode?.id || ''}
                 onChange={(e) => {
@@ -311,7 +326,7 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
                 disabled={isDisabled || levelNodes.length === 0}
               >
                 <option value="">
-                  {isDisabled ? 'Select previous level first' : levelNodes.length === 0 ? 'No options' : `Select level ${level}...`}
+                  {isDisabled ? 'Select previous level first' : levelNodes.length === 0 ? 'No options' : levelPlaceholder}
                 </option>
                 {levelNodes.map((node) => (
                   <option key={node.id} value={node.id}>
@@ -322,11 +337,6 @@ export const CitiesDropdown: React.FC<CitiesDropdownProps> = ({
             </div>
           );
         })}
-        {cascadingSelections.length > 0 && (
-          <div className="cities-dropdown-cascading-selected">
-            Selected: {cascadingSelections.map(n => n.name).join(' > ')}
-          </div>
-        )}
       </div>
     );
   }
