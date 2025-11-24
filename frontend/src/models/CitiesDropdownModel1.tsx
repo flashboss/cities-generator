@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Node, Nodes } from '../types';
 import { useCitiesData } from './useCitiesData';
+import './CitiesDropdownModel1.css';
 
 interface CitiesDropdownModel1Props {
   data?: Nodes;

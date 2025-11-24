@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Node, Nodes } from '../types';
 import { useCitiesData } from './useCitiesData';
 import { useSearch } from './useSearch';
+import './CitiesDropdownModel0.css';
 
 interface CitiesDropdownModel0Props {
   data?: Nodes;

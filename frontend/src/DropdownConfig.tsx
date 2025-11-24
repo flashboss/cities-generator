@@ -45,6 +45,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   // Load available countries by reading directories from the data URL
   // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
   useEffect(() => {
+    if (!showAdvanced) {
+      return; // Don't load if panel is closed
+    }
+
     const loadCountries = async () => {
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db';
       const dataUrl = config.dataUrl || DEFAULT_GITHUB_URL;
@@ -168,14 +172,16 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
       }
     };
 
-    if (showAdvanced) {
-      loadCountries();
-    }
+    loadCountries();
   }, [config.dataUrl, showAdvanced]);
 
   // Load available languages for the selected country
   // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
   useEffect(() => {
+    if (!showAdvanced) {
+      return; // Don't load if panel is closed
+    }
+
     const loadLanguages = async () => {
       if (!config.country) {
         setLanguages([]);
@@ -288,7 +294,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
       }
     };
 
-    if (showAdvanced && config.country) {
+    if (config.country) {
       loadLanguages();
     }
   }, [config.dataUrl, config.country, showAdvanced]);

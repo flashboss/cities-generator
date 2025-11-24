@@ -1,0 +1,60 @@
+/* Model 1: Cascading Dropdowns Styles */
+
+.cities-dropdown-cascading {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.cities-dropdown-cascading-level {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cities-dropdown-cascading-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.cities-dropdown-cascading-select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.cities-dropdown-cascading-select:hover:not(:disabled) {
+  border-color: #999;
+}
+
+.cities-dropdown-cascading-select:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  border-color: #0066cc;
+}
+
+.cities-dropdown-cascading-select:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cities-dropdown-cascading {
+    max-width: 100%;
+  }
+}
+
