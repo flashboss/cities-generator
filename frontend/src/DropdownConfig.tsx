@@ -321,93 +321,101 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
             <small>Base URL for remote data source (default: GitHub repository)</small>
 
             <div className="dropdown-config-credentials">
-              <label>
-                Username (optional):
-                <input
-                  type="text"
-                  value={config.username || ''}
-                  onChange={(e) => updateConfig({ username: e.target.value })}
-                  placeholder="username"
-                />
-              </label>
-              <label>
-                Password (optional):
-                <input
-                  type="password"
-                  value={config.password || ''}
-                  onChange={(e) => updateConfig({ password: e.target.value })}
-                  placeholder="password"
-                />
-              </label>
+              <div style={{ flex: '1' }}>
+                <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                  Username:
+                  <input
+                    type="text"
+                    value={config.username || ''}
+                    onChange={(e) => updateConfig({ username: e.target.value })}
+                    placeholder="username"
+                  />
+                </label>
+                <small>Username for HTTP basic authentication (optional)</small>
+              </div>
+              <div style={{ flex: '1' }}>
+                <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                  Password:
+                  <input
+                    type="password"
+                    value={config.password || ''}
+                    onChange={(e) => updateConfig({ password: e.target.value })}
+                    placeholder="password"
+                  />
+                </label>
+                <small>Password for HTTP basic authentication (optional)</small>
+              </div>
             </div>
           </div>
 
-          <div className="dropdown-config-section">
-            <label>
-              Country:
-              {loadingCountries ? (
-                <select disabled>
-                  <option>Loading countries...</option>
-                </select>
-              ) : countries.length === 0 ? (
-                <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
-                  No countries available. Check the remote URL.
-                </div>
-              ) : (
-                <select
-                  value={config.country || countries[0]?.code || ''}
-                  onChange={(e) => updateConfig({ country: e.target.value })}
-                >
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.name} ({country.code})
-                    </option>
-                  ))}
-                </select>
+          <div className="dropdown-config-section" style={{ display: 'flex', flexDirection: 'row', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1', minWidth: '200px' }}>
+              <label>
+                Country:
+                {loadingCountries ? (
+                  <select disabled>
+                    <option>Loading countries...</option>
+                  </select>
+                ) : countries.length === 0 ? (
+                  <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
+                    No countries available. Check the remote URL.
+                  </div>
+                ) : (
+                  <select
+                    value={config.country || countries[0]?.code || ''}
+                    onChange={(e) => updateConfig({ country: e.target.value })}
+                  >
+                    {countries.map((country) => (
+                      <option key={country.code} value={country.code}>
+                        {country.name} ({country.code})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </label>
+              {countriesError && (
+                <small style={{ color: '#d32f2f' }}>{countriesError}</small>
               )}
-            </label>
-            {countriesError && (
-              <small style={{ color: '#d32f2f' }}>{countriesError}</small>
-            )}
-            {!countriesError && !loadingCountries && countries.length > 0 && (
-              <small>Select country from available JSON files</small>
-            )}
-          </div>
+              {!countriesError && !loadingCountries && countries.length > 0 && (
+                <small>Select country from available JSON files</small>
+              )}
+            </div>
 
-          <div className="dropdown-config-section">
-            <label>
-              Language:
-              {!config.country ? (
-                <select disabled>
-                  <option>Select a country first</option>
-                </select>
-              ) : loadingLanguages ? (
-                <select disabled>
-                  <option>Loading languages...</option>
-                </select>
-              ) : languages.length === 0 ? (
-                <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
-                  No languages available for {config.country}. Check the remote URL.
-                </div>
-              ) : (
-                <select
-                  value={config.language || languages[0]?.code || 'it'}
-                  onChange={(e) => updateConfig({ language: e.target.value })}
-                >
-                  {languages.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name} ({lang.code})
-                    </option>
-                  ))}
-                </select>
+            <div style={{ flex: '1', minWidth: '200px' }}>
+              <label>
+                Language:
+                {!config.country ? (
+                  <select disabled>
+                    <option>Select a country first</option>
+                  </select>
+                ) : loadingLanguages ? (
+                  <select disabled>
+                    <option>Loading languages...</option>
+                  </select>
+                ) : languages.length === 0 ? (
+                  <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
+                    No languages available for {config.country}. Check the remote URL.
+                  </div>
+                ) : (
+                  <select
+                    value={config.language || languages[0]?.code || 'it'}
+                    onChange={(e) => updateConfig({ language: e.target.value })}
+                  >
+                    {languages.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.name} ({lang.code})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </label>
+              {languagesError && (
+                <small style={{ color: '#d32f2f' }}>{languagesError}</small>
               )}
-            </label>
-            {languagesError && (
-              <small style={{ color: '#d32f2f' }}>{languagesError}</small>
-            )}
-            {!languagesError && !loadingLanguages && languages.length > 0 && (
-              <small>Select language from available JSON files (format: {config.country}/LANGUAGE.json)</small>
-            )}
+              {!languagesError && !loadingLanguages && languages.length > 0 && (
+                <small>Select language from available JSON files (format: {config.country}/LANGUAGE.json)</small>
+              )}
+            </div>
           </div>
 
           <div className="dropdown-config-section">
@@ -442,8 +450,8 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
             <small>Template model code (0 = default template, 1 = cascading dropdowns, max: {MAX_MODEL})</small>
           </div>
 
-          <div className="dropdown-config-section">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
+          <div className="dropdown-config-section" style={{ display: 'flex', flexDirection: 'row', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1', minWidth: '200px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                 <input
                   type="checkbox"
@@ -452,6 +460,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 />
                 <span>Show popup on selection</span>
               </label>
+              <small>Show alert popup when a location is selected (default: false)</small>
+            </div>
+
+            <div style={{ flex: '1', minWidth: '200px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                 <input
                   type="checkbox"
@@ -461,7 +473,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 <span>Enable search</span>
               </label>
               {config.enableSearch && (
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1', minWidth: '200px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
                   <span style={{ whiteSpace: 'nowrap' }}>Search placeholder:</span>
                   <input
                     type="text"
@@ -472,8 +484,8 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                   />
                 </label>
               )}
+              <small>Enable text search to find locations by name</small>
             </div>
-            <small>Enable text search to find locations by name</small>
           </div>
         </div>
       )}
