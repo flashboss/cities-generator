@@ -32,8 +32,8 @@
 }
 #view {
 	background: #28a745;
-	text-align: center;
-	padding: 0.625em 1.25em;
+	text-align: center !important;
+	padding: 0.625em 1.25em !important;
 }
 #youtube {
 	background: url("../images/youtube.png") red no-repeat 97% 50%;
