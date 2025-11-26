@@ -23,6 +23,7 @@ dist
 dist-ssr
 *.local
 # Note: frontend/dist is allowed on master for GitHub Pages (exception to dist rule)
+frontend/index.html
 
 # Editor directories and files
 .vscode/*
