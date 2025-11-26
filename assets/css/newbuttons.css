@@ -1,10 +1,11 @@
 #buttons_box {
-	position: absolute !important;
+	position: fixed !important;
 	top: 0 !important;
-	right: 0 !important;
+	left: 50% !important;
+	transform: translateX(-50%) !important;
 	z-index: 10 !important;
 	display: flex !important;
-	flex-direction: row-reverse !important;
+	flex-direction: row !important;
 	flex-wrap: nowrap !important;
 	gap: 0 !important;
 	background: rgba(0, 0, 0, 0.3) !important;
