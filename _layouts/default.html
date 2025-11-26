@@ -27,7 +27,11 @@
             <a id="docker" href="https://hub.docker.com/repositories/vige">Docker Hub</a>
             <a id="contribution" href="https://www.paypal.com/paypalme/LStancapiano">Contribute</a>
             <a id="youtube" href="https://youtu.be/MP-jiQcQC4Q">Youtube</a>
-            <a id="view" href="/frontend/">View</a>
+            {% if page.url == '/frontend/' %}
+              <a id="view" href="/">Home</a>
+            {% else %}
+              <a id="view" href="/frontend/">View</a>
+            {% endif %}
           </div>
 
           <div style="display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap;">
