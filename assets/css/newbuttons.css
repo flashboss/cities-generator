@@ -1,0 +1,45 @@
+#contribution {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 405px;
+	z-index: 10;
+	padding: 10px 50px 10px 10px;
+	color: #fff;
+	background: url("../images/paypal.png") #0090ff no-repeat 95% 50%;
+	background-size: 40px;
+	font-weight: 700;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px
+}
+#docker {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 189px;
+	z-index: 10;
+	padding: 10px 50px 10px 10px;
+	color: #fff;
+	background: url("../images/docker.png") #0090ff no-repeat 97% 50%;
+	background-size: 40px;
+	font-weight: 700;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px
+}
+#youtube {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 548px;
+        z-index: 10;
+        padding: 10px 50px 10px 10px;
+        color: #fff;
+        background: url("../images/youtube.png") red no-repeat 97% 50%;
+        background-size: 40px;
+        font-weight: 700;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px
+}
