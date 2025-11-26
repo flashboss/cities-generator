@@ -1,7 +1,7 @@
 ---
-layout: default
+layout: guide
 title: Cities Generator
-permalink: /frontend/
+permalink: /guide/
 ---
 
 # Cities Generator
