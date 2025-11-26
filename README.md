@@ -1,3 +1,9 @@
+---
+layout: default
+title: Cities Generator
+permalink: /frontend/
+---
+
 # Cities Generator
 
 Generates a descriptor file for the cities choosing:
