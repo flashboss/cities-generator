@@ -1,3 +1,9 @@
+---
+layout: guide
+title: Cities Generator
+permalink: /guide/
+---
+
 # Cities Generator
 
 Generates a descriptor file for the cities choosing:
