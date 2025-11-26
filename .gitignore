@@ -37,4 +37,6 @@ _config.yml
 _layouts/
 assets/
 CNAME
+Gemfile
+Gemfile.lock
 
