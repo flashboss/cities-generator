@@ -71,12 +71,32 @@ const webComponentConfig = defineConfig({
   },
 });
 
+// Demo app build (full React app with configurator)
+const demoConfig = defineConfig({
+  plugins: [react()],
+  build: {
+    emptyOutDir: false,
+    rollupOptions: {
+      input: 'src/main.tsx',
+      output: {
+        format: 'iife',
+        name: 'CitiesGeneratorDemo',
+        entryFileNames: 'cities-generator-demo.js',
+        inlineDynamicImports: true,
+      },
+    },
+  },
+});
+
 export default ({ mode }) => {
   if (mode === 'standalone') {
     return standaloneConfig;
   }
   if (mode === 'webcomponent') {
     return webComponentConfig;
+  }
+  if (mode === 'demo') {
+    return demoConfig;
   }
   return umdConfig;
 };
