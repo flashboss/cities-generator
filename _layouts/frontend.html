@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <!-- Load Jekyll theme CSS first -->
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/newbuttons.css">
+    <link rel="icon" type="image/x-icon" href="{{ '/assets/images/favicon.ico' | relative_url }}">
+    <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+    <link rel="apple-touch-icon" href="{{ '/assets/images/favicon.png' | relative_url }}">
+
+{% seo %}
+    {% include head-custom.html %}
+    <!-- Load React app CSS -->
+    <link rel="stylesheet" href="/frontend/dist/style.css">
+    <style>
+      /* Override main_content_wrap background */
+      #main_content_wrap {
+        background: white !important;
+      }
+      /* Isolate React app from Jekyll theme CSS by resetting only specific properties */
+      #main_content {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        color: #333 !important;
+        background: transparent !important;
+        border: none !important;
+        text-align: left !important;
+        /* Reset common Jekyll theme styles */
+        max-width: none !important;
+        width: auto !important;
+      }
+      /* Ensure React app root uses its own styles */
+      #main_content #root {
+        /* Let React app CSS control everything */
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <div id="buttons_box">
+            {% if site.github.is_project_page %}
+              <a id="github" href="{{ site.github.repository_url }}">GitHub</a>
+            {% endif %}
+            <a id="docker" href="https://hub.docker.com/repositories/vige">Docker Hub</a>
+            <a id="contribution" href="https://www.paypal.com/paypalme/LStancapiano">Contribute</a>
+            <a id="youtube" href="https://youtu.be/MP-jiQcQC4Q">Youtube</a>
+            {% if page.url == '/frontend/' %}
+              <a id="view" href="/">Home</a>
+            {% else %}
+              <a id="view" href="/frontend/">View</a>
+            {% endif %}
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%; border: none !important; outline: none !important; box-shadow: none !important;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%; display: none; border: none !important; outline: none !important; box-shadow: none !important;" onerror="this.style.display='none';">
+            <div style="flex: 1; min-width: 200px;">
+              <h1 id="project_title" style="margin: 0;">{{ site.title | default: site.github.repository_name }}</h1>
+              <h2 id="project_tagline" style="margin: 0;">{{ site.description | default: site.github.project_tagline }}</h2>
+            </div>
+          </div>
+
+          {% if site.show_downloads %}
+            <section id="downloads">
+              <a class="zip_download_link" href="{{ site.github.zip_url }}">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="{{ site.github.tar_url }}">Download this project as a tar.gz file</a>
+            </section>
+          {% endif %}
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        {{ content }}
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        {% if site.github.is_project_page %}
+        <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
+        {% endif %}
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

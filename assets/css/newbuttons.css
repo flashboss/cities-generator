@@ -31,8 +31,9 @@
 	background-size: 2.5em;
 }
 #view {
-	background: url("../images/logo.svg") #28a745 no-repeat 95% 50%;
-	background-size: 2.5em;
+	background: #28a745;
+	text-align: center;
+	padding: 0.625em 1.25em;
 }
 #youtube {
 	background: url("../images/youtube.png") red no-repeat 97% 50%;
