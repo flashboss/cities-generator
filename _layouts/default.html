@@ -28,8 +28,8 @@
 	  <a id="youtube" href="https://youtu.be/MP-jiQcQC4Q">Youtube</a>
 
           <div style="display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%; display: none;" onerror="this.style.display='none';">
+            <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%; border: none;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="Cities Generator Logo" style="height: 60px; width: auto; max-width: 100%; display: none; border: none;" onerror="this.style.display='none';">
             <div style="flex: 1; min-width: 200px;">
               <h1 id="project_title" style="margin: 0;">{{ site.title | default: site.github.repository_name }}</h1>
               <h2 id="project_tagline" style="margin: 0;">{{ site.description | default: site.github.project_tagline }}</h2>
