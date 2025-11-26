@@ -113,6 +113,8 @@ Result result = generator.generateFile();
 
 You will find the file EU/IT/it.json in the ${user.home}/cities-generator directory (structure: {continent}/{country}/{language}.json)
 
+For detailed API documentation, see the [Javadoc](https://javadoc.io/doc/it.vige.cities/cities-generator).
+
 ## Publishing to Git
 
 After generating the JSON files, you can automatically publish them to a Git repository using the `--git-config` parameter. This feature clones the repository, copies the generated JSON file, commits, and pushes the changes.
