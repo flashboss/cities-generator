@@ -32,3 +32,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Jekyll
+_site/
+.bundle/
+vendor/
+
+# Ruby
+Gemfile.lock
