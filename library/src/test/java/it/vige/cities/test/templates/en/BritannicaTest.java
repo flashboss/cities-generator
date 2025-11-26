@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.vige.cities.Configuration;
@@ -28,6 +29,14 @@ import it.vige.cities.templates.en.Britannica;
 public class BritannicaTest extends FileGenerator {
 
 	/**
+	 * Init
+	 */
+	@BeforeEach
+	public void init() {
+		language = EN;
+	}
+
+	/**
 	 * Cities
 	 * 
 	 * @throws Exception
@@ -37,6 +46,7 @@ public class BritannicaTest extends FileGenerator {
 		Configuration configuration = new Configuration();
 		configuration.setCountry(GB.name());
 		configuration.setProvider(BRITANNICA.name());
+		configuration.setLanguage(EN.getCode());
 		configuration.setCaseSensitive(false);
 		configuration.setDuplicatedNames(false);
 		Generator generator = new Generator(configuration, true);

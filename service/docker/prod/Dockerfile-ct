@@ -26,15 +26,17 @@ ENV CASESENSITIVE=false
 VOLUME /root/cities-generator
 
 WORKDIR /workspace
-COPY / /workspace/cgservice
-COPY --chmod=755 docker/prod/docker-entrypoint-ct.sh /usr/local/bin/docker-entrypoint-ct.sh
+# Copy entire project (must be built from project root)
+COPY service /workspace/cgservice
+COPY library /workspace/library
+COPY --chmod=755 service/docker/prod/docker-entrypoint-ct.sh /usr/local/bin/docker-entrypoint-ct.sh
 RUN cd cgservice && ./gradlew build -x test && \
-	mkdir /root/cities-generator && \
-	mkdir /root/cities-generator/cert && \
+	mkdir -p /root/cities-generator && \
+	mkdir -p /root/cities-generator/cert && \
     rm -Rf /root/.gradle && \
-	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
+	rm -f /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
 	mv /workspace/cgservice/docker/prod/volume/cert/application-ct.keystore /root/cities-generator/cert/application.keystore && \
-	rm -Rf /workspace/cgservice
+	rm -Rf /workspace/cgservice /workspace/library
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-ct.sh"]

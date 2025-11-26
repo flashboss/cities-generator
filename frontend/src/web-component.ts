@@ -7,7 +7,7 @@ class CitiesDropdownElement extends HTMLElement {
   private reactRoot: any = null;
 
   static get observedAttributes() {
-    return ['country', 'language', 'data-url', 'placeholder'];
+    return ['country', 'language', 'data-url', 'placeholder', 'username', 'password', 'enable-search', 'search-placeholder', 'model', 'popup'];
   }
 
   constructor() {
@@ -30,6 +30,13 @@ class CitiesDropdownElement extends HTMLElement {
     const language = this.getAttribute('language') || 'it';
     const dataUrl = this.getAttribute('data-url');
     const placeholder = this.getAttribute('placeholder') || 'Select location...';
+    const username = this.getAttribute('username');
+    const password = this.getAttribute('password');
+    const enableSearch = this.hasAttribute('enable-search');
+    const searchPlaceholder = this.getAttribute('search-placeholder') || 'Search location...';
+    const modelAttr = this.getAttribute('model');
+    const model = modelAttr ? parseInt(modelAttr, 10) : 0;
+    const popup = this.hasAttribute('popup');
 
     // Import React dynamically for Web Component
     import('react').then((React) => {
@@ -48,6 +55,12 @@ class CitiesDropdownElement extends HTMLElement {
           language,
           dataUrl,
           placeholder,
+          username,
+          password,
+          enableSearch,
+          searchPlaceholder,
+          model,
+          popup,
           onSelect: handleSelect,
         });
 

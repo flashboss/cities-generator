@@ -9,26 +9,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
 
+	/**
+	 * GeoNames unique identifier for the country
+	 */
 	private int geonameId;
 	
 	/**
-	 * Default country
+	 * Default constructor for Country
+	 * Creates an empty country object
 	 */
 	public Country() {
 		
 	}
 
 	/**
-	 * Geoname id
-	 * @return the geoname id
+	 * Get the GeoNames unique identifier
+	 * 
+	 * @return the geoname ID
 	 */
 	public int getGeonameId() {
 		return geonameId;
 	}
 
 	/**
-	 * Geoname id
-	 * @param geonameId the geoname id
+	 * Set the GeoNames unique identifier
+	 * 
+	 * @param geonameId the geoname ID to set
 	 */
 	public void setGeonameId(int geonameId) {
 		this.geonameId = geonameId;

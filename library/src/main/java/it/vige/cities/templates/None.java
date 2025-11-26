@@ -14,14 +14,19 @@ import it.vige.cities.result.Nodes;
 public class None extends Template {
 
 	/**
-	 * default None
+	 * Default constructor for None template
+	 * Creates an empty generator used for tests
 	 */
 	public None() {
 		super();
 	}
 
 	/**
-	 * Generate
+	 * Generate empty nodes
+	 * Returns an empty Nodes object with OK result, used for testing purposes
+	 * 
+	 * @return ResultNodes with OK result and empty Nodes
+	 * @throws Exception if there is a problem (should not occur for this template)
 	 */
 	@Override
 	protected ResultNodes generate() throws Exception {

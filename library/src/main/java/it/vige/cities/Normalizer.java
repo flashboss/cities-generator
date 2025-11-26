@@ -20,20 +20,22 @@ public class Normalizer {
 	private static final Logger logger = getLogger(Normalizer.class);
 
 	/**
-	 * default Normalizer
+	 * Default constructor for Normalizer
+	 * Creates a new normalizer instance
 	 */
 	public Normalizer() {
 		
 	}
 	
 	/**
-	 * Set name
+	 * Set name for a node according to configuration
+	 * Normalizes the name based on case sensitivity and duplicate name settings
 	 * 
-	 * @param caseSensitive   case sensitive parameter
-	 * @param duplicatedNames duplicated names parameter
-	 * @param text            text
-	 * @param zones           zones
-	 * @param node            node
+	 * @param caseSensitive   true if names should be case-sensitive, false to convert to uppercase
+	 * @param duplicatedNames true if duplicate names are allowed, false to append count suffix
+	 * @param text            the original text to normalize
+	 * @param zones           the list of zones to check for duplicates
+	 * @param node            the node to set the name on
 	 */
 	public static void setName(boolean caseSensitive, boolean duplicatedNames, final String text, List<Node> zones,
 			Node node) {

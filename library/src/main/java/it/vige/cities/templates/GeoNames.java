@@ -30,49 +30,77 @@ import jakarta.ws.rs.core.Response;
  */
 public class GeoNames extends Template {
 
+	/**
+	 * Logger for GeoNames operations
+	 */
 	private static final Logger logger = getLogger(GeoNames.class);
 
+	/**
+	 * GeoNames API URL for children query
+	 */
 	private final static String URL_CHILDREN = "http://api.geonames.org/childrenJSON";
+	
+	/**
+	 * GeoNames API URL for country info query
+	 */
 	private final static String URL_COUNTRY = "http://api.geonames.org/countryInfoJSON";
+	
+	/**
+	 * Default username for GeoNames API
+	 */
 	private final static String DEFAULT_USERNAME = "vota";
 
 	/**
-	 * Case sensitive
+	 * Case sensitive flag for city name matching
 	 */
 	protected boolean caseSensitive;
-	private boolean duplicatedNames;
-	private String username;
+	
 	/**
-	 * Language for translations
+	 * Duplicated names flag - allows duplicate city names
+	 */
+	private boolean duplicatedNames;
+	
+	/**
+	 * Username for GeoNames API authentication
+	 */
+	private String username;
+	
+	/**
+	 * Language for location name translations
 	 */
 	protected Languages language;
 
 	/**
-	 * First level
+	 * First level in the hierarchy (0 = regions)
 	 */
 	protected int firstLevel = 0;
+	
+	/**
+	 * HTTP client for API requests
+	 */
 	private Client client;
 
 	/**
-	 * GeoNames
+	 * Constructor for GeoNames template
+	 * Uses default language (IT - Italian)
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames the duplicated names parameter
-	 * @param username        the user name
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param username        the GeoNames API username (null to use default)
 	 */
 	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username) {
 		this(country, caseSensitive, duplicatedNames, username, Languages.getDefault());
 	}
 
 	/**
-	 * GeoNames
+	 * Constructor for GeoNames template with language
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames the duplicated names parameter
-	 * @param username        the user name
-	 * @param language        the language enum
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param username        the GeoNames API username (null to use default)
+	 * @param language        the language enum for location name translations
 	 */
 	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, Languages language) {
 		logger.debug("Creating GeoNames template - country: {}, caseSensitive: {}, duplicatedNames: {}, language: {}", 
@@ -90,24 +118,26 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * GeoNames (convenience method accepting String)
+	 * Constructor for GeoNames template (convenience method accepting String)
+	 * Accepts language as a string code and converts it to Languages enum
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames the duplicated names parameter
-	 * @param username        the user name
-	 * @param language        the language code (e.g., "it", "en")
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param username        the GeoNames API username (null to use default)
+	 * @param language        the language code (e.g., "it", "en", "fr")
 	 */
 	public GeoNames(String country, boolean caseSensitive, boolean duplicatedNames, String username, String language) {
 		this(country, caseSensitive, duplicatedNames, username, Languages.fromCode(language));
 	}
 
 	/**
-	 * Page country
+	 * Get country information from GeoNames API
+	 * Fetches country data including the GeoNames ID needed for subsequent queries
 	 * 
-	 * @param country the country
-	 * @return the response
-	 * @throws Exception if there is a problem
+	 * @param country the country code (ISO 3166-1 alpha-2)
+	 * @return the HTTP response containing country information
+	 * @throws Exception if there is a problem connecting to or parsing the GeoNames API
 	 */
 	protected Response getPageCountry(String country) throws Exception {
 		logger.debug("Getting country page for: {} with language: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode());
@@ -124,11 +154,12 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * Page children
+	 * Get children nodes from GeoNames API
+	 * Fetches administrative subdivisions (regions, provinces, municipalities) for a given GeoNames ID
 	 * 
-	 * @param id the id
-	 * @return the response
-	 * @throws Exception if there is a problem
+	 * @param id the GeoNames ID to get children for
+	 * @return the HTTP response containing children nodes
+	 * @throws Exception if there is a problem connecting to or parsing the GeoNames API
 	 */
 	protected Response getPageChildren(int id) throws Exception {
 		logger.debug("Getting children for geonameId: {} with language: {}", id, language != null ? language.getCode() : Languages.getDefault().getCode());
@@ -145,12 +176,13 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * Nodes
+	 * Recursively add nodes from GeoNames API
+	 * Fetches children for a given GeoNames ID and recursively processes them up to MAX_LEVEL
 	 * 
-	 * @param zones       the zones
-	 * @param numberLevel the number level
-	 * @param id          the id
-	 * @throws Exception if there is a problem
+	 * @param zones       the list of zones to add nodes to
+	 * @param numberLevel the current hierarchical level (0=regions, 1=provinces, 2=municipalities)
+	 * @param idStr       the GeoNames ID string (may contain multiple IDs separated by ID_SEPARATOR)
+	 * @throws Exception if there is a problem fetching or processing nodes
 	 */
 	private void addNodes(List<Node> zones, int numberLevel, String idStr) throws Exception {
 		logger.debug("Adding nodes - level: {}, id: {}", numberLevel, idStr);
@@ -185,7 +217,11 @@ public class GeoNames extends Template {
 	}
 
 	/**
-	 * Generate
+	 * Generate cities data from GeoNames API
+	 * Fetches country information, then recursively retrieves administrative subdivisions
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem fetching or processing data from GeoNames API
 	 */
 	@Override
 	protected ResultNodes generate() throws Exception {

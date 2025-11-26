@@ -5,6 +5,7 @@ import static java.util.Locale.getDefault;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.time.Instant;
 
 import org.slf4j.Logger;
 
@@ -77,21 +78,30 @@ public class FileGenerator {
 	}
 
 	/**
-	 * Country
+	 * Country code (ISO 3166-1 alpha-2) for the generated cities
+	 * Defaults to the country from the system default locale
 	 */
 	protected String country = getDefault().getCountry().toUpperCase();
 	
 	/**
-	 * Language (default: IT - Italian)
+	 * Language for location names
+	 * Defaults to IT (Italian)
 	 */
 	protected Languages language = Languages.getDefault();
 
+	/**
+	 * Logger for file generator operations
+	 */
 	private Logger logger = getLogger(FileGenerator.class);
 
+	/**
+	 * Jackson ObjectMapper for JSON serialization/deserialization
+	 */
 	private ObjectMapper mapper = new ObjectMapper();
 	
 	/**
-	 * default fileGenerator
+	 * Default constructor for FileGenerator
+	 * Initializes the file generator with default settings
 	 */
 	public FileGenerator() {
 		logger.debug("Creating FileGenerator instance");
@@ -99,23 +109,36 @@ public class FileGenerator {
 	}
 
 	/**
-	 * Write file
-	 * @param nodes the nodes to write
-	 * @throws Exception if there is a problem
+	 * Ensure CITIES_HOME directory exists
+	 * Creates the directory structure if needed
+	 */
+	private void ensureCitiesHome() {
+		new File(CITIES_HOME).mkdirs();
+	}
+
+	/**
+	 * Write nodes to JSON file
+	 * Convenience method that calls writeFile(nodes, null)
+	 * 
+	 * @param nodes the nodes to write to file
+	 * @throws Exception if there is a problem writing the file
 	 */
 	protected void writeFile(Nodes nodes) throws Exception {
 		writeFile(nodes, null);
 	}
 
 	/**
-	 * Write file
-	 * @param nodes the nodes to write
-	 * @param templateName the name of the template used to generate the data
-	 * @throws Exception if there is a problem
+	 * Write nodes to JSON file with metadata
+	 * Creates the directory structure {continent}/{country}/{language}.json and writes the nodes
+	 * Adds copyright, generation date, and template name to the JSON output
+	 * 
+	 * @param nodes the nodes to write to file
+	 * @param templateName the name of the template used to generate the data (optional, can be null)
+	 * @throws Exception if there is a problem writing the file
 	 */
 	protected void writeFile(Nodes nodes, String templateName) throws Exception {
 		logger.debug("Starting writeFile - country: {}, language: {}, template: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode(), templateName);
-		new File(CITIES_HOME).mkdir();
+		ensureCitiesHome();
 		// Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
 		Continents continent = Continents.fromCountryCode(country);
 		String continentDir = continent.getCode();
@@ -143,6 +166,7 @@ public class FileGenerator {
 		copyright += ". Copyright (c) Vige, Home of Professional Open Source. Licensed under the Apache License, Version 2.0.";
 		ObjectNode newObjectNode = mapper.createObjectNode();
 		newObjectNode.put("copyright", copyright);
+		newObjectNode.put("generationDate", Instant.now().toString());
 		newObjectNode.setAll(objectNode);
 		
 		// Write the modified JSON to file
@@ -153,34 +177,40 @@ public class FileGenerator {
 	}
 
 	/**
-	 * Read file
-	 * @return the read nodes
-	 * @throws Exception if there is a problem
+	 * Read nodes from JSON file
+	 * Convenience method that reads using the current country and language
+	 * 
+	 * @return the nodes read from file
+	 * @throws Exception if there is a problem reading the file
 	 */
 	protected Nodes readFile() throws Exception {
 		return readFile(country);
 	}
 
 	/**
-	 * Read file
-	 * @param country the country
-	 * @return the nodes of the country
-	 * @throws Exception if there is a problem
+	 * Read nodes from JSON file for a specific country
+	 * Uses the current language setting
+	 * 
+	 * @param country the country code (ISO 3166-1 alpha-2) to read
+	 * @return the nodes read from file for the specified country
+	 * @throws Exception if there is a problem reading the file
 	 */
 	protected Nodes readFile(String country) throws Exception {
 		return readFile(country, language);
 	}
 	
 	/**
-	 * Read file
-	 * @param country the country
-	 * @param language the language enum
-	 * @return the nodes of the country
-	 * @throws Exception if there is a problem
+	 * Read nodes from JSON file for a specific country and language
+	 * Reads from the file path: {continent}/{country}/{language}.json
+	 * 
+	 * @param country the country code (ISO 3166-1 alpha-2) to read
+	 * @param language the language enum to read
+	 * @return the nodes read from file for the specified country and language
+	 * @throws Exception if there is a problem reading the file
 	 */
 	protected Nodes readFile(String country, Languages language) throws Exception {
 		logger.debug("Reading file - country: {}, language: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode());
-		new File(CITIES_HOME).mkdir();
+		ensureCitiesHome();
 		// Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
 		Continents continent = Continents.fromCountryCode(country);
 		String continentDir = continent.getCode();
@@ -196,23 +226,27 @@ public class FileGenerator {
 	}
 
 	/**
-	 * Read file (convenience method accepting String)
-	 * @param country the country
-	 * @param language the language code (e.g., "it", "en")
-	 * @return the nodes of the country
-	 * @throws Exception if there is a problem
+	 * Read nodes from JSON file for a specific country and language (convenience method)
+	 * Accepts language as a string code and converts it to Languages enum
+	 * 
+	 * @param country the country code (ISO 3166-1 alpha-2) to read
+	 * @param language the language code (e.g., "it", "en", "fr")
+	 * @return the nodes read from file for the specified country and language
+	 * @throws Exception if there is a problem reading the file
 	 */
 	protected Nodes readFile(String country, String language) throws Exception {
 		return readFile(country, Languages.fromCode(language));
 	}
 
 	/**
-	 * Exists
-	 * @return true if the file exists
+	 * Check if the JSON file exists for the current country and language
+	 * Checks the file path: {continent}/{country}/{language}.json
+	 * 
+	 * @return true if the file exists, false otherwise
 	 */
 	protected boolean exists() {
 		logger.debug("Checking if file exists - country: {}, language: {}", country, language != null ? language.getCode() : Languages.getDefault().getCode());
-		new File(CITIES_HOME).mkdir();
+		ensureCitiesHome();
 		// Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
 		Continents continent = Continents.fromCountryCode(country);
 		String continentDir = continent.getCode();
@@ -224,5 +258,6 @@ public class FileGenerator {
 		logger.debug("File existence check - path: {}, exists: {}", filePath, exists);
 		return exists;
 	}
+
 
 }

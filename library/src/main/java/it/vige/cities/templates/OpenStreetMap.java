@@ -37,42 +37,55 @@ import it.vige.cities.result.osm.OsmResponse;
  */
 public class OpenStreetMap extends Template {
 
+	/**
+	 * Logger for OpenStreetMap operations
+	 */
 	private static final Logger logger = getLogger(OpenStreetMap.class);
 
+	/**
+	 * Overpass API URL for querying OpenStreetMap data
+	 */
 	private final static String OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
 
 	/**
-	 * Case sensitive
+	 * Case sensitive flag for city name matching
 	 */
 	protected boolean caseSensitive;
-	private boolean duplicatedNames;
+	
 	/**
-	 * Language for translations
+	 * Duplicated names flag - allows duplicate city names
+	 */
+	private boolean duplicatedNames;
+	
+	/**
+	 * Language for location name translations
 	 */
 	protected Languages language;
 
 	/**
 	 * Map of admin_level to OSM ID for the country (not used for regions-only mode)
+	 * Used to cache country-level administrative boundaries
 	 */
 	private Map<Integer, Long> countryOsmIds = new HashMap<>();
 	
 	/**
 	 * Bounding box for the country (not used for regions-only mode with area query)
+	 * Format: [minLat, minLon, maxLat, maxLon]
 	 */
 	private double[] countryBbox = null;
 
 	/**
-	 * First level
+	 * First level in the hierarchy (0 = regions)
 	 */
 	protected int firstLevel = 0;
 
 	/**
-	 * OpenStreetMap
+	 * Constructor for OpenStreetMap template
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames the duplicated names parameter
-	 * @param language        the language enum
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param language        the language enum for location name translations
 	 */
 	public OpenStreetMap(String country, boolean caseSensitive, boolean duplicatedNames, Languages language) {
 		logger.debug(
@@ -88,12 +101,13 @@ public class OpenStreetMap extends Template {
 	}
 
 	/**
-	 * OpenStreetMap (convenience method accepting String)
+	 * Constructor for OpenStreetMap template (convenience method accepting String)
+	 * Accepts language as a string code and converts it to Languages enum
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames the duplicated names parameter
-	 * @param language        the language code (e.g., "it", "en")
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param language        the language code (e.g., "it", "en", "fr")
 	 */
 	public OpenStreetMap(String country, boolean caseSensitive, boolean duplicatedNames, String language) {
 		this(country, caseSensitive, duplicatedNames, Languages.fromCode(language));
@@ -110,6 +124,10 @@ public class OpenStreetMap extends Template {
 	 */
 	/**
 	 * Extract bounding box from country relation or use hardcoded values
+	 * Attempts to get bounding box from OSM relation tags, falls back to hardcoded values for known countries
+	 * Format: [minLat, minLon, maxLat, maxLon] = [south, west, north, east]
+	 * 
+	 * @throws Exception if there is a problem querying OSM or parsing the response
 	 */
 	private void extractCountryBbox() throws Exception {
 		if (countryBbox != null) {
@@ -207,13 +225,24 @@ public class OpenStreetMap extends Template {
 
 	/**
 	 * Execute Overpass query with retry logic
+	 * Convenience method that calls executeOverpassQuery with default 3 retries
+	 * 
+	 * @param query the Overpass QL query string
+	 * @return the JSON response as a string
+	 * @throws Exception if all retry attempts fail
 	 */
 	private String executeOverpassQuery(String query) throws Exception {
 		return executeOverpassQuery(query, 3); // 3 retries
 	}
 
 	/**
-	 * Execute Overpass query with retry logic
+	 * Execute Overpass query with retry logic and exponential backoff
+	 * Handles rate limiting and network errors with automatic retries
+	 * 
+	 * @param query the Overpass QL query string
+	 * @param maxRetries the maximum number of retry attempts
+	 * @return the JSON response as a string
+	 * @throws Exception if all retry attempts fail
 	 */
 	private String executeOverpassQuery(String query, int maxRetries) throws Exception {
 		int attempt = 0;
@@ -328,6 +357,16 @@ public class OpenStreetMap extends Template {
 		throw new Exception("Overpass query failed after " + maxRetries + " attempts");
 	}
 
+	/**
+	 * Get administrative boundaries from Overpass API
+	 * Queries OSM for administrative boundaries at a specific admin_level
+	 * 
+	 * @param adminLevel the administrative level (2=country, 4=region, 6=province, 8=municipality)
+	 * @param parentRelationId the parent relation ID (null for top-level queries)
+	 * @param useBbox true to use bounding box query, false to use area-based query
+	 * @return the JSON response as a string
+	 * @throws Exception if there is a problem executing the Overpass query
+	 */
 	private String getAdministrativeBoundaries(int adminLevel, Long parentRelationId, boolean useBbox)
 			throws Exception {
 		logger.debug(
@@ -478,13 +517,14 @@ public class OpenStreetMap extends Template {
 	}
 
 	/**
-	 * Add nodes recursively - regions, provinces, and municipalities
+	 * Recursively add nodes from OpenStreetMap
+	 * Queries OSM for administrative boundaries and recursively processes them up to MAX_LEVEL
 	 * 
-	 * @param zones       the zones
-	 * @param numberLevel the number level
-	 * @param parentId    the parent ID
-	 * @param adminLevel  the administrative level (4=regions, 6=provinces, 8=municipalities)
-	 * @throws Exception if there is a problem
+	 * @param zones       the list of zones to add nodes to
+	 * @param numberLevel the current hierarchical level (0=regions, 1=provinces, 2=municipalities)
+	 * @param parentId    the parent node ID (used to build hierarchical IDs)
+	 * @param adminLevel  the OSM administrative level (4=regions, 6=provinces, 8=municipalities)
+	 * @throws Exception if there is a problem fetching or processing nodes from OSM
 	 */
 	private void addNodes(List<Node> zones, int numberLevel, String parentId, int adminLevel) throws Exception {
 		logger.debug("Adding nodes - level: {}, parentId: {}, adminLevel: {}", numberLevel, parentId, adminLevel);
@@ -646,6 +686,14 @@ public class OpenStreetMap extends Template {
 
 	/**
 	 * Generate
+	 */
+	/**
+	 * Generate cities data from OpenStreetMap
+	 * Queries the Overpass API to retrieve administrative boundaries (regions, provinces, municipalities)
+	 * Uses area-based queries for efficient retrieval
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem querying or processing data from OpenStreetMap
 	 */
 	@Override
 	protected ResultNodes generate() throws Exception {

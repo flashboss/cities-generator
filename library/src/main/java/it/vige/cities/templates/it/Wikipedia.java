@@ -31,20 +31,37 @@ import it.vige.cities.result.Nodes;
  */
 public class Wikipedia extends HTMLTemplate {
 
+	/**
+	 * Logger for Wikipedia operations
+	 */
 	private static final Logger logger = getLogger(Wikipedia.class);
 
+	/**
+	 * Wikipedia URL for Italian municipalities list
+	 */
 	private final static String URL = "https://it.wikipedia.org/wiki/Comuni_d%27Italia";
 
+	/**
+	 * Case sensitive flag for city name matching
+	 */
 	private boolean caseSensitive;
+	
+	/**
+	 * Duplicated names flag - allows duplicate city names
+	 */
 	private boolean duplicatedNames;
 
+	/**
+	 * Map associating macroregion nodes with their region names
+	 * Used to map regions to macroregions during generation
+	 */
 	private Map<Node, List<String>> associations = new HashMap<Node, List<String>>();
 
 	/**
-	 * Wikipedia
+	 * Constructor for Wikipedia template
 	 * 
-	 * @param caseSensitive   the case sensitive parameter
-	 * @param duplicatedNames the duplicated names parameter
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
 	 */
 	public Wikipedia(boolean caseSensitive, boolean duplicatedNames) {
 		logger.debug("Creating Wikipedia template - caseSensitive: {}, duplicatedNames: {}", caseSensitive, duplicatedNames);
@@ -73,7 +90,11 @@ public class Wikipedia extends HTMLTemplate {
 	}
 
 	/**
-	 * Generate
+	 * Generate cities data from Wikipedia
+	 * Scrapes the Italian Wikipedia page to extract Italian municipalities organized by macroregions and regions
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem fetching or parsing the Wikipedia page
 	 */
 	@Override
 	public ResultNodes generate() throws Exception {
@@ -233,10 +254,24 @@ public class Wikipedia extends HTMLTemplate {
 		return ItalianMacroregions.addLevel0(nodes, caseSensitive, associations);
 	}
 
+	/**
+	 * Filter duplicate elements from a list based on their text content
+	 * 
+	 * @param list the list of elements to filter
+	 * @return a new list with duplicates removed
+	 */
 	private List<Element> filterDuplicated(List<Element> list) {
 		return list.stream().filter(distinctByKey(Element::text)).collect(toList());
 	}
 
+	/**
+	 * Create a predicate that filters duplicates based on a key extractor
+	 * Uses a concurrent set to track seen keys for thread-safe filtering
+	 * 
+	 * @param <T> the type of elements
+	 * @param keyExtractor the function to extract the key for comparison
+	 * @return a predicate that returns true for the first occurrence of each key
+	 */
 	private <T> java.util.function.Predicate<T> distinctByKey(java.util.function.Function<? super T, ?> keyExtractor) {
 		Set<Object> seen = java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
 		return t -> seen.add(keyExtractor.apply(t));

@@ -22,16 +22,26 @@ import it.vige.cities.result.Nodes;
  */
 public class ComuniItaliani extends HTMLTemplate {
 
+	/**
+	 * Comuni Italiani URL for Italian administrative divisions
+	 */
 	private final static String URL = "http://www.comuni-italiani.it/zona";
 
+	/**
+	 * Case sensitive flag for city name matching
+	 */
 	private boolean caseSensitive;
+	
+	/**
+	 * Duplicated names flag - allows duplicate city names
+	 */
 	private boolean duplicatedNames;
 
 	/**
-	 * ComuniItaliani
+	 * Constructor for ComuniItaliani template
 	 * 
-	 * @param caseSensitive   the case sensitive parameter
-	 * @param duplicatedNames the duplicated names parameter
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
 	 */
 	public ComuniItaliani(boolean caseSensitive, boolean duplicatedNames) {
 		this.caseSensitive = caseSensitive;
@@ -58,7 +68,11 @@ public class ComuniItaliani extends HTMLTemplate {
 	}
 
 	/**
-	 * Generate
+	 * Generate cities data from Comuni Italiani
+	 * Scrapes the comuni-italiani.it website to extract Italian administrative divisions (regions, provinces, municipalities)
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem fetching or parsing the Comuni Italiani pages
 	 */
 	@Override
 	public ResultNodes generate() throws Exception {

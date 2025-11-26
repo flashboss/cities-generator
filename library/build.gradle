@@ -16,6 +16,7 @@ buildscript {
         commonsCliVersion = '1.10.0'
         commonsLangVersion = '3.19.0'
         resteasyVersion = '7.0.0.Final'
+        jgitVersion = '6.9.0.202403050737-r'
         junitVersion = '6.0.0'
         javaVersion = JavaVersion.VERSION_25
     }
@@ -54,6 +55,7 @@ dependencies {
     api "org.apache.commons:commons-lang3:${commonsLangVersion}"
     api "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}"
     api "org.jboss.resteasy:resteasy-client:${resteasyVersion}"
+    api "org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"

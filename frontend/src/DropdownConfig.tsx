@@ -3,10 +3,27 @@ import { DropdownConfig } from './types';
 import i18nCountries from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
 import { getContinentFromCountry } from './continentUtils';
+import { ModelSelector } from './ModelSelector';
 import './DropdownConfig.css';
 
 // Register English locale for country names
 i18nCountries.registerLocale(enLocale);
+
+// Available dropdown models with their information
+const AVAILABLE_MODELS = [
+  {
+    id: 0,
+    name: 'Default Hierarchical',
+    description: 'Single dropdown with hierarchical navigation through breadcrumbs. Supports search functionality.',
+    gifUrl: 'https://raw.githubusercontent.com/flashboss/cities-generator/master/assets/gifs/model-0.gif',
+  },
+  {
+    id: 1,
+    name: 'Cascading Dropdowns',
+    description: 'Multiple sequential dropdowns where each level appears after selection. Higher level selections automatically update lower levels.',
+    gifUrl: 'https://raw.githubusercontent.com/flashboss/cities-generator/master/assets/gifs/model-1.gif',
+  },
+];
 
 interface DropdownConfigProps {
   config: DropdownConfig;
@@ -42,6 +59,10 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
   // Load available countries by reading directories from the data URL
   // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
   useEffect(() => {
+    if (!showAdvanced) {
+      return; // Don't load if panel is closed
+    }
+
     const loadCountries = async () => {
       const DEFAULT_GITHUB_URL = 'https://raw.githubusercontent.com/flashboss/cities-generator/master/_db';
       const dataUrl = config.dataUrl || DEFAULT_GITHUB_URL;
@@ -165,14 +186,16 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
       }
     };
 
-    if (showAdvanced) {
-      loadCountries();
-    }
+    loadCountries();
   }, [config.dataUrl, showAdvanced]);
 
   // Load available languages for the selected country
   // Structure: {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json)
   useEffect(() => {
+    if (!showAdvanced) {
+      return; // Don't load if panel is closed
+    }
+
     const loadLanguages = async () => {
       if (!config.country) {
         setLanguages([]);
@@ -285,7 +308,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
       }
     };
 
-    if (showAdvanced && config.country) {
+    if (config.country) {
       loadLanguages();
     }
   }, [config.dataUrl, config.country, showAdvanced]);
@@ -318,93 +341,101 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
             <small>Base URL for remote data source (default: GitHub repository)</small>
 
             <div className="dropdown-config-credentials">
-              <label>
-                Username (optional):
-                <input
-                  type="text"
-                  value={config.username || ''}
-                  onChange={(e) => updateConfig({ username: e.target.value })}
-                  placeholder="username"
-                />
-              </label>
-              <label>
-                Password (optional):
-                <input
-                  type="password"
-                  value={config.password || ''}
-                  onChange={(e) => updateConfig({ password: e.target.value })}
-                  placeholder="password"
-                />
-              </label>
+              <div style={{ flex: '1' }}>
+                <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                  Username:
+                  <input
+                    type="text"
+                    value={config.username || ''}
+                    onChange={(e) => updateConfig({ username: e.target.value })}
+                    placeholder="username"
+                  />
+                </label>
+                <small>Username for HTTP basic authentication (optional)</small>
+              </div>
+              <div style={{ flex: '1' }}>
+                <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                  Password:
+                  <input
+                    type="password"
+                    value={config.password || ''}
+                    onChange={(e) => updateConfig({ password: e.target.value })}
+                    placeholder="password"
+                  />
+                </label>
+                <small>Password for HTTP basic authentication (optional)</small>
+              </div>
             </div>
           </div>
 
-          <div className="dropdown-config-section">
-            <label>
-              Country:
-              {loadingCountries ? (
-                <select disabled>
-                  <option>Loading countries...</option>
-                </select>
-              ) : countries.length === 0 ? (
-                <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
-                  No countries available. Check the remote URL.
-                </div>
-              ) : (
-                <select
-                  value={config.country || countries[0]?.code || ''}
-                  onChange={(e) => updateConfig({ country: e.target.value })}
-                >
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.name} ({country.code})
-                    </option>
-                  ))}
-                </select>
+          <div className="dropdown-config-section" style={{ display: 'flex', flexDirection: 'row', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1', minWidth: '200px' }}>
+              <label>
+                Country:
+                {loadingCountries ? (
+                  <select disabled>
+                    <option>Loading countries...</option>
+                  </select>
+                ) : countries.length === 0 ? (
+                  <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
+                    No countries available. Check the remote URL.
+                  </div>
+                ) : (
+                  <select
+                    value={config.country || countries[0]?.code || ''}
+                    onChange={(e) => updateConfig({ country: e.target.value })}
+                  >
+                    {countries.map((country) => (
+                      <option key={country.code} value={country.code}>
+                        {country.name} ({country.code})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </label>
+              {countriesError && (
+                <small style={{ color: '#d32f2f' }}>{countriesError}</small>
               )}
-            </label>
-            {countriesError && (
-              <small style={{ color: '#d32f2f' }}>{countriesError}</small>
-            )}
-            {!countriesError && !loadingCountries && countries.length > 0 && (
-              <small>Select country from available JSON files</small>
-            )}
-          </div>
+              {!countriesError && !loadingCountries && countries.length > 0 && (
+                <small>Select country from available JSON files</small>
+              )}
+            </div>
 
-          <div className="dropdown-config-section">
-            <label>
-              Language:
-              {!config.country ? (
-                <select disabled>
-                  <option>Select a country first</option>
-                </select>
-              ) : loadingLanguages ? (
-                <select disabled>
-                  <option>Loading languages...</option>
-                </select>
-              ) : languages.length === 0 ? (
-                <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
-                  No languages available for {config.country}. Check the remote URL.
-                </div>
-              ) : (
-                <select
-                  value={config.language || languages[0]?.code || 'it'}
-                  onChange={(e) => updateConfig({ language: e.target.value })}
-                >
-                  {languages.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name} ({lang.code})
-                    </option>
-                  ))}
-                </select>
+            <div style={{ flex: '1', minWidth: '200px' }}>
+              <label>
+                Language:
+                {!config.country ? (
+                  <select disabled>
+                    <option>Select a country first</option>
+                  </select>
+                ) : loadingLanguages ? (
+                  <select disabled>
+                    <option>Loading languages...</option>
+                  </select>
+                ) : languages.length === 0 ? (
+                  <div style={{ color: '#d32f2f', padding: '8px', border: '1px solid #d32f2f', borderRadius: '4px' }}>
+                    No languages available for {config.country}. Check the remote URL.
+                  </div>
+                ) : (
+                  <select
+                    value={config.language || languages[0]?.code || 'it'}
+                    onChange={(e) => updateConfig({ language: e.target.value })}
+                  >
+                    {languages.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.name} ({lang.code})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </label>
+              {languagesError && (
+                <small style={{ color: '#d32f2f' }}>{languagesError}</small>
               )}
-            </label>
-            {languagesError && (
-              <small style={{ color: '#d32f2f' }}>{languagesError}</small>
-            )}
-            {!languagesError && !loadingLanguages && languages.length > 0 && (
-              <small>Select language from available JSON files (format: {config.country}/LANGUAGE.json)</small>
-            )}
+              {!languagesError && !loadingLanguages && languages.length > 0 && (
+                <small>Select language from available JSON files (format: {config.country}/{config.language}.json)</small>
+              )}
+            </div>
           </div>
 
           <div className="dropdown-config-section">
@@ -413,26 +444,74 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               <input
                 type="text"
                 className="dropdown-config-remote-url"
-                value={config.placeholder || ''}
-                onChange={(e) => updateConfig({ placeholder: e.target.value })}
-                placeholder="Select location..."
+                value={Array.isArray(config.placeholder) ? config.placeholder.join(', ') : (config.placeholder || '')}
+                onChange={(e) => {
+                  // Store as string while typing to allow commas
+                  const value = e.target.value;
+                  updateConfig({ placeholder: value || undefined });
+                }}
+                onBlur={(e) => {
+                  // Parse into array only when user leaves the field
+                  const value = e.target.value.trim();
+                  if (!value) {
+                    updateConfig({ placeholder: undefined });
+                    return;
+                  }
+                  if (value.includes(',')) {
+                    // Multiple placeholders separated by commas
+                    const placeholders = value.split(',').map(p => p.trim()).filter(p => p.length > 0);
+                    updateConfig({ placeholder: placeholders.length > 1 ? placeholders : placeholders[0] || undefined });
+                  } else {
+                    updateConfig({ placeholder: value || undefined });
+                  }
+                }}
+                placeholder="Select location... or Level 0, Level 1, Level 2"
               />
             </label>
-            <small>Placeholder text displayed in the dropdown (default: "Select location...")</small>
+            <small>Placeholder text displayed in the dropdown. For multiple placeholders (e.g., cascading dropdowns), separate with commas: "Level 0, Level 1, Level 2"</small>
           </div>
 
           <div className="dropdown-config-section">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
+            <ModelSelector
+              selectedModel={config.model !== undefined ? config.model : 0}
+              onModelSelect={(modelId) => {
+                const updates: Partial<DropdownConfig> = { model: modelId };
+                // If model is 1, disable search
+                if (modelId === 1) {
+                  updates.enableSearch = false;
+                  updates.searchPlaceholder = undefined;
+                }
+                updateConfig(updates);
+              }}
+              availableModels={AVAILABLE_MODELS}
+            />
+          </div>
+
+          <div className="dropdown-config-section" style={{ display: 'flex', flexDirection: 'row', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1', minWidth: '200px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={config.popup || false}
+                  onChange={(e) => updateConfig({ popup: e.target.checked })}
+                />
+                <span>Show popup on selection</span>
+              </label>
+              <small>Show alert popup when a location is selected</small>
+            </div>
+
+            <div style={{ flex: '1', minWidth: '200px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: config.model === 1 ? 'not-allowed' : 'pointer' }}>
                 <input
                   type="checkbox"
                   checked={config.enableSearch || false}
                   onChange={(e) => updateConfig({ enableSearch: e.target.checked })}
+                  disabled={config.model === 1}
                 />
                 <span>Enable search</span>
               </label>
-              {config.enableSearch && (
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1', minWidth: '200px' }}>
+              {config.enableSearch && config.model !== 1 && (
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
                   <span style={{ whiteSpace: 'nowrap' }}>Search placeholder:</span>
                   <input
                     type="text"
@@ -443,8 +522,8 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                   />
                 </label>
               )}
+              <small>Enable text search to find locations by name {config.model === 1 && '(not for model 1)'}</small>
             </div>
-            <small>Enable text search to find locations by name</small>
           </div>
         </div>
       )}

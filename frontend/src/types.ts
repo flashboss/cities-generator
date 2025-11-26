@@ -13,11 +13,13 @@ export interface DropdownConfig {
   dataUrl?: string;
   country?: string;
   language?: string;
-  placeholder?: string;
+  placeholder?: string | string[];
   username?: string;
   password?: string;
   enableSearch?: boolean;
   searchPlaceholder?: string;
+  model?: number;
+  popup?: boolean;
 }
 
 export interface CountryInfo {

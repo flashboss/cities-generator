@@ -1,12 +1,14 @@
 package it.vige.cities.templates.en;
 
 /**
- * The english providers actually supported
+ * The English-specific providers actually supported
+ * Providers that are specific to English-speaking countries (e.g., GB)
+ * 
  * @author lucastancapiano
  */
 public enum Providers {
 	/**
-	 * BRITANNICA
+	 * BRITANNICA - Britannica Encyclopedia provider for Great Britain
 	 */
 	BRITANNICA
 }

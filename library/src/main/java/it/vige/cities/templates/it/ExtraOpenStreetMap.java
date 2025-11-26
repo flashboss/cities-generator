@@ -19,34 +19,50 @@ import it.vige.cities.templates.OpenStreetMap;
  */
 public class ExtraOpenStreetMap extends OpenStreetMap {
 
-	// Italian region names (language-independent, normalized)
+	/**
+	 * Italian region names in North-West macroregion (language-independent, normalized)
+	 */
 	private static final Set<String> NORD_OCCIDENTALE = Set.of(
 		"Piemonte", "Liguria", "Valle d'Aosta", "Valle d’Aosta", "Lombardia"
 	);
 	
+	/**
+	 * Italian region names in North-East macroregion (language-independent, normalized)
+	 */
 	private static final Set<String> NORD_ORIENTALE = Set.of(
 		"Emilia-Romagna", "Veneto", "Trentino-Alto Adige", "Friuli Venezia Giulia"
 	);
 	
+	/**
+	 * Italian region names in Central macroregion (language-independent, normalized)
+	 */
 	private static final Set<String> CENTRALE = Set.of(
 		"Lazio", "Marche", "Umbria", "Toscana"
 	);
 	
+	/**
+	 * Italian region names in Southern macroregion (language-independent, normalized)
+	 */
 	private static final Set<String> MERIDIONALE = Set.of(
 		"Abruzzo", "Campania", "Basilicata", "Molise", "Calabria", "Puglia"
 	);
 	
+	/**
+	 * Italian region names in Insular macroregion (language-independent, normalized)
+	 */
 	private static final Set<String> INSULARE = Set.of(
 		"Sardegna", "Sicilia"
 	);
 
 	/**
-	 * ExtraOpenStreetMap
+	 * Constructor for ExtraOpenStreetMap template
+	 * Adds Italian macroregions (level 0) grouping regions by geographical area
+	 * Sets firstLevel to 1 (regions) since macroregions are added separately
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames true if it accepts duplicated names
-	 * @param language        the language enum
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param language        the language enum for location name translations
 	 */
 	public ExtraOpenStreetMap(String country, boolean caseSensitive, boolean duplicatedNames, Languages language) {
 		super(country, caseSensitive, duplicatedNames, language);
@@ -54,15 +70,30 @@ public class ExtraOpenStreetMap extends OpenStreetMap {
 	}
 
 	/**
-	 * ExtraOpenStreetMap (convenience method accepting String)
+	 * Constructor for ExtraOpenStreetMap template (convenience method accepting String)
+	 * Accepts language as a string code and converts it to Languages enum
 	 * 
-	 * @param country         the country
-	 * @param caseSensitive   true if it is case sensitive
-	 * @param duplicatedNames true if it accepts duplicated names
-	 * @param language        the language code (e.g., "it", "en")
+	 * @param country         the country code (ISO 3166-1 alpha-2)
+	 * @param caseSensitive   true if names should be case-sensitive
+	 * @param duplicatedNames true if duplicate names are allowed
+	 * @param language        the language code (e.g., "it", "en", "fr")
 	 */
 	public ExtraOpenStreetMap(String country, boolean caseSensitive, boolean duplicatedNames, String language) {
 		this(country, caseSensitive, duplicatedNames, Languages.fromCode(language));
+	}
+
+	/**
+	 * Check if the template supports the given language
+	 * ExtraOpenStreetMap template supports IT, EN, DE, FR, ES, PT
+	 */
+	@Override
+	public boolean isLanguageSupported(Languages language) {
+		return language == Languages.IT || 
+			   language == Languages.EN || 
+			   language == Languages.DE || 
+			   language == Languages.FR || 
+			   language == Languages.ES || 
+			   language == Languages.PT;
 	}
 
 	/**
@@ -111,7 +142,11 @@ public class ExtraOpenStreetMap extends OpenStreetMap {
 	}
 
 	/**
-	 * Generate
+	 * Generate cities data with Italian macroregions
+	 * Adds macroregions (level 0) and groups regions from OpenStreetMap under them
+	 * 
+	 * @return ResultNodes with OK result and generated nodes
+	 * @throws Exception if there is a problem generating data from OpenStreetMap
 	 */
 	@Override
 	protected ResultNodes generate() throws Exception {
@@ -151,6 +186,12 @@ public class ExtraOpenStreetMap extends OpenStreetMap {
 		}
 	}
 
+	/**
+	 * Recursively change node IDs to include parent prefix
+	 * Modifies child node IDs to include the parent ID prefix separated by ID_SEPARATOR
+	 * 
+	 * @param node the parent node whose children's IDs should be modified
+	 */
 	private void changeIds(Node node) {
 		node.getZones().parallelStream().forEach(x -> {
 			String prefix = node.getId();

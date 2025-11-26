@@ -25,13 +25,15 @@ ENV DUPLICATEDNAMES=false
 ENV CASESENSITIVE=false
 
 WORKDIR /workspace
-COPY / /workspace/cgservice
-COPY /docker/dev/volume/cities-generator /root/cities-generator
-COPY --chmod=755 docker/dev/docker-entrypoint-ct.sh /usr/local/bin/docker-entrypoint-ct.sh
+# Copy entire project (must be built from project root)
+COPY service /workspace/cgservice
+COPY library /workspace/library
+COPY service/docker/dev/volume/cities-generator /root/cities-generator
+COPY --chmod=755 service/docker/dev/docker-entrypoint-ct.sh /usr/local/bin/docker-entrypoint-ct.sh
 RUN cd cgservice && ./gradlew build -x test && \
     rm -Rf /root/.gradle && \
-	rm /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
+	rm -f /workspace/cgservice/build/libs/cities-generator-service*-plain.jar && \
 	mv /workspace/cgservice/build/libs/cities-generator-service*.jar /workspace/cgservice.jar && \
-	rm -Rf /workspace/cgservice
+	rm -Rf /workspace/cgservice /workspace/library
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-ct.sh"]
