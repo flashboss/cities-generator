@@ -37,10 +37,7 @@ frontend/index.html
 *.sw?
 
 # Jekyll
-_config.yml
-_layouts/
-assets/
-CNAME
+
 _site/
 .bundle/
 vendor/
