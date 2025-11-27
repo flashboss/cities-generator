@@ -2,17 +2,17 @@
 <div id="header_wrap" class="outer">
     <header class="inner">
       <div id="buttons_box">
+        {% if page.url == '/guide/' %}
+          <a id="view" href="/">Home</a>
+        {% else %}
+          <a id="view" href="/guide/">Guide</a>
+        {% endif %}
         {% if site.github.is_project_page %}
           <a id="github" href="{{ site.github.repository_url }}">GitHub</a>
         {% endif %}
         <a id="docker" href="https://hub.docker.com/repositories/vige">Docker Hub</a>
         <a id="contribution" href="https://www.paypal.com/paypalme/LStancapiano">Contribute</a>
         <a id="youtube" href="https://youtu.be/MP-jiQcQC4Q">Youtube</a>
-        {% if page.url == '/guide/' %}
-          <a id="view" href="/">Home</a>
-        {% else %}
-          <a id="view" href="/guide/">Guide</a>
-        {% endif %}
       </div>
 
       <div style="display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap;">
