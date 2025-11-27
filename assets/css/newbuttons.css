@@ -48,8 +48,3 @@
 	background: url("../images/blacktocat.png") #0090ff no-repeat 95% 50%;
 	background-size: 2.5em;
 }
-header img[src*="logo"] {
-	border: none !important;
-	outline: none !important;
-	box-shadow: none !important;
-}
