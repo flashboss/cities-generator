@@ -52,6 +52,7 @@
     "build:umd": "vite build",
     "build:standalone": "vite build --mode standalone",
     "build:webcomponent": "vite build --mode webcomponent",
+    "build:demo": "vite build --mode demo",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
     "publish:npm": "npm publish --access public",
