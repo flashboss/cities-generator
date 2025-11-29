@@ -18,7 +18,9 @@ Generates a descriptor file for the cities choosing:
   
   Keys: `repo` (repository URL, required), `branch` (default: master), `dir` (default: _db), `username`, `token`, `message` (commit message).
   
-  Example: `--git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=user,token=xxx,message=Update"`.
+  ```bash
+  Example: --git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=user,token=xxx,message=Update"
+  ```
   
   All fields except `repo` are optional. Default repository: https://github.com/flashboss/cities-generator.git. Username and token can also be set via `GIT_USERNAME` and `GIT_TOKEN` environment variables.
 
