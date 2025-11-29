@@ -133,8 +133,8 @@
 .dropdown-config-credentials input[type="text"],
 .dropdown-config-credentials input[type="password"] {
   flex: 1;
-  min-width: 120px;
-  max-width: 200px;
+  min-width: 100px;
+  max-width: 150px;
   box-sizing: border-box;
 }
 
