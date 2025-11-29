@@ -1,0 +1,57 @@
+/* Override main_content_wrap background */
+#main_content_wrap {
+  background: white !important;
+}
+
+/* Isolate React app from Jekyll theme CSS by resetting only specific properties */
+#main_content {
+  /* Reset common Jekyll theme styles */
+  max-width: none !important;
+  width: auto !important;
+  padding: 1rem !important;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  #main_content {
+    padding: 0.5rem !important;
+    padding-bottom: 5rem !important; /* Space for fixed bottom buttons */
+  }
+  #header_wrap {
+    padding: 0.5rem !important;
+  }
+  #header_wrap .inner {
+    padding: 0.5rem !important;
+  }
+  #header_wrap .inner > div {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  #header_wrap .inner > div img {
+    height: 40px !important;
+  }
+  #project_title {
+    font-size: 1.5rem !important;
+    text-align: center !important;
+  }
+  #project_tagline {
+    font-size: 1rem !important;
+    text-align: center !important;
+  }
+  #header_wrap .inner > div > div {
+    min-width: 100% !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #project_title {
+    font-size: 1.25rem !important;
+  }
+  #project_tagline {
+    font-size: 0.9rem !important;
+  }
+  #header_wrap .inner > div img {
+    height: 35px !important;
+  }
+}
