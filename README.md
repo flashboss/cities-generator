@@ -652,7 +652,7 @@ cities_dropdown:
 **2. Attach to template:**
 
 ```twig
-{{ attach_library('your_theme/cities_dropdown') }}
+&#123;&#123; attach_library('your_theme/cities_dropdown') &#125;&#125;
 
 {# Using default parameters #}
 <cities-dropdown />
