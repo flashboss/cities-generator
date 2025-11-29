@@ -14,7 +14,13 @@ Generates a descriptor file for the cities choosing:
 - **-d:** true if you allow duplicated names of cities. Else none or false.
 - **-p:** choose the first provider to create the file descriptor. You can choose for **GB**: BRITANNICA, GEONAMES or OPENSTREETMAP. For **IT**: COMUNIITALIANI, WIKIPEDIA, EXTRAGEONAMES, EXTRA_OPENSTREETMAP or OPENSTREETMAP. For all other countries the provider is GEONAMES or OPENSTREETMAP. Else start a default.
 - **-u:** a optional username to use for the providers: GEONAMES and EXTRAGEONAMES. If not specified **vota** is the default.
-- **-g** or **--git-config:** publish generated JSON files to Git repository. Format: CSV with key=value pairs separated by commas. Keys: `repo` (repository URL, required), `branch` (default: master), `dir` (default: _db), `username`, `token`, `message` (commit message). Example: `--git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=user,token=xxx,message=Update"`. All fields except `repo` are optional. Default repository: https://github.com/flashboss/cities-generator.git. Username and token can also be set via `GIT_USERNAME` and `GIT_TOKEN` environment variables.
+- **-g** or **--git-config:** publish generated JSON files to Git repository. Format: CSV with key=value pairs separated by commas.
+  
+  Keys: `repo` (repository URL, required), `branch` (default: master), `dir` (default: _db), `username`, `token`, `message` (commit message).
+  
+  Example: `--git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=user,token=xxx,message=Update"`.
+  
+  All fields except `repo` are optional. Default repository: https://github.com/flashboss/cities-generator.git. Username and token can also be set via `GIT_USERNAME` and `GIT_TOKEN` environment variables.
 
 ## Enabling DEBUG logs
 
