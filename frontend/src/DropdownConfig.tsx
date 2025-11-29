@@ -341,8 +341,8 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
             <small>Base URL for remote data source (default: GitHub repository)</small>
 
             <div className="dropdown-config-credentials">
-              <div style={{ flex: '1' }}>
-                <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+              <div>
+                <label>
                   Username:
                   <input
                     type="text"
@@ -353,8 +353,8 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                 </label>
                 <small>Username for HTTP basic authentication (optional)</small>
               </div>
-              <div style={{ flex: '1' }}>
-                <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+              <div>
+                <label>
                   Password:
                   <input
                     type="password"
@@ -369,7 +369,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
           </div>
 
           <div className="dropdown-config-section" style={{ display: 'flex', flexDirection: 'row', gap: '20px', flexWrap: 'wrap' }}>
-            <div style={{ flex: '1', minWidth: '200px' }}>
+            <div style={{ flex: '1', minWidth: '150px' }}>
               <label>
                 Country:
                 {loadingCountries ? (
@@ -401,7 +401,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
               )}
             </div>
 
-            <div style={{ flex: '1', minWidth: '200px' }}>
+            <div style={{ flex: '1', minWidth: '150px' }}>
               <label>
                 Language:
                 {!config.country ? (
@@ -518,7 +518,7 @@ export const DropdownConfigComponent: React.FC<DropdownConfigProps> = ({
                     value={config.searchPlaceholder || ''}
                     onChange={(e) => updateConfig({ searchPlaceholder: e.target.value })}
                     placeholder="Search location..."
-                    style={{ flex: '1', minWidth: '150px' }}
+                    style={{ flex: '1', minWidth: '150px', maxWidth: '100%', width: '100%', boxSizing: 'border-box' }}
                   />
                 </label>
               )}

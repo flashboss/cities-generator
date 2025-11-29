@@ -49,6 +49,8 @@
   align-items: center;
   gap: 8px;
   font-weight: 500;
+  min-width: 0; /* Allow flex items to shrink */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .dropdown-config-section input[type="text"],
@@ -58,13 +60,15 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9em;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .dropdown-config-section input.dropdown-config-remote-url {
   flex: 1;
-  min-width: 300px;
-  max-width: 550px;
-  width: auto;
+  min-width: 200px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .dropdown-config-subsection {
@@ -90,6 +94,9 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9em;
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 100%;
 }
 
 .dropdown-config-subsection small {
@@ -103,15 +110,32 @@
   gap: 15px;
   margin-top: 10px;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
-.dropdown-config-credentials label {
+.dropdown-config-credentials > div {
   display: flex;
   flex-direction: column;
   gap: 5px;
   flex: 1;
-  align-items: flex-start;
-  text-align: left;
+  min-width: 150px;
+}
+
+.dropdown-config-credentials label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  min-width: 0; /* Allow flex items to shrink below their content size */
+}
+
+.dropdown-config-credentials input[type="text"],
+.dropdown-config-credentials input[type="password"] {
+  flex: 1;
+  min-width: 120px;
+  max-width: 200px;
+  box-sizing: border-box;
 }
 
 .dropdown-config-countries {
@@ -136,5 +160,21 @@
   padding: 10px;
   color: #666;
   font-style: italic;
+}
+
+/* Responsive adjustments for very small screens */
+@media (max-width: 480px) {
+  .dropdown-config-section input.dropdown-config-remote-url {
+    min-width: 150px;
+  }
+  
+  .dropdown-config-section label {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .dropdown-config-section label > *:first-child {
+    margin-bottom: 4px;
+  }
 }
 
