@@ -48,3 +48,49 @@
 	background: url("../images/blacktocat.png") #0090ff no-repeat 95% 50%;
 	background-size: 2.5em;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+	#buttons_box {
+		position: fixed !important;
+		top: auto !important;
+		bottom: 0 !important;
+		left: 0 !important;
+		right: 0 !important;
+		transform: none !important;
+		width: 100% !important;
+		flex-wrap: wrap !important;
+		border-radius: 0 !important;
+		padding: 0.25em !important;
+		gap: 0.25em !important;
+	}
+	
+	#buttons_box a {
+		flex: 1 1 calc(50% - 0.125em) !important;
+		min-width: calc(50% - 0.125em) !important;
+		padding: 0.5em 0.75em !important;
+		font-size: 0.85em !important;
+		text-align: center !important;
+	}
+	
+	#view {
+		flex: 1 1 100% !important;
+		min-width: 100% !important;
+		order: -1 !important;
+	}
+}
+
+@media (max-width: 480px) {
+	#buttons_box a {
+		font-size: 0.75em !important;
+		padding: 0.4em 0.5em !important;
+	}
+	
+	#contribution,
+	#docker,
+	#youtube,
+	#github {
+		background-size: 1.5em !important;
+		background-position: 90% 50% !important;
+	}
+}

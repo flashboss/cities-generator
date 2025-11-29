@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <!-- Load Jekyll theme CSS first -->
     <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/newbuttons.css">
@@ -26,6 +26,52 @@
         /* Reset common Jekyll theme styles */
         max-width: none !important;
         width: auto !important;
+        padding: 1rem !important;
+      }
+      
+      /* Mobile responsive styles */
+      @media (max-width: 768px) {
+        #main_content {
+          padding: 0.5rem !important;
+          padding-bottom: 5rem !important; /* Space for fixed bottom buttons */
+        }
+        #header_wrap {
+          padding: 0.5rem !important;
+        }
+        #header_wrap .inner {
+          padding: 0.5rem !important;
+        }
+        #header_wrap .inner > div {
+          flex-direction: column !important;
+          gap: 0.75rem !important;
+        }
+        #header_wrap .inner > div img {
+          height: 40px !important;
+        }
+        #project_title {
+          font-size: 1.5rem !important;
+          text-align: center !important;
+        }
+        #project_tagline {
+          font-size: 1rem !important;
+          text-align: center !important;
+        }
+        #header_wrap .inner > div > div {
+          min-width: 100% !important;
+          text-align: center !important;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        #project_title {
+          font-size: 1.25rem !important;
+        }
+        #project_tagline {
+          font-size: 0.9rem !important;
+        }
+        #header_wrap .inner > div img {
+          height: 35px !important;
+        }
       }
     </style>
   </head>
