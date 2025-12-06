@@ -58,7 +58,7 @@ const App: React.FC = () => {
 />`}
         </pre>
 
-        <h3>2. Web Component (Most Portable - IIFE Standalone)</h3>
+        <h3>2. Web Component (Most Portable)</h3>
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<!-- Load IIFE standalone bundle (includes React, CSS, web component support, and process polyfill) -->
 <script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
@@ -67,7 +67,7 @@ const App: React.FC = () => {
 </cities-dropdown>`}
         </pre>
 
-        <h3>3. Vanilla JavaScript (UMD Bundle - Requires React)</h3>
+        <h3>3. UMD Bundle (Requires React)</h3>
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<!-- Polyfill for process (required for React) -->
 <script>
