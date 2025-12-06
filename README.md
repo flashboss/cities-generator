@@ -16,13 +16,13 @@ A comprehensive solution for generating and using cities data. This project cons
 
 Java library for generating descriptor files with cities data. Supports multiple countries, languages, and data providers.
 
-For detailed documentation, installation instructions, and usage examples, see the [Library README](library/README.md).
+For detailed documentation, installation instructions, and usage examples, see the [Library README](/library/).
 
 ## Service
 
 REST service for accessing cities data. Provides a REST API that returns JSON format with the cities of the used country according to the configured parameters.
 
-For detailed documentation, installation instructions, Docker setup, and configuration examples, see the [Service README](service/README.md).
+For detailed documentation, installation instructions, Docker setup, and configuration examples, see the [Service README](/service/).
 
 ## Generated Data
 
@@ -36,4 +36,4 @@ The structure is {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/
 
 A portable, hierarchical dropdown menu component for displaying cities data from cities-generator JSON files. The component is designed to work in any platform (WordPress, Drupal, Liferay, Joomla, etc.) with minimal integration effort.
 
-For detailed documentation, installation instructions, and usage examples, see the [Frontend README](frontend/README.md).
+For detailed documentation, installation instructions, and usage examples, see the [Frontend README](/frontend/).
