@@ -1,11 +1,50 @@
 ﻿
 (function() {
-  if (typeof window !== 'undefined' && typeof window.process === 'undefined') {
-    window.process = {
-      env: {
-        NODE_ENV: 'production'
-      }
-    };
+  'use strict';
+  var processObj = {
+    env: {
+      NODE_ENV: 'production'
+    }
+  };
+  
+  // Get the global object (works in all environments)
+  var globalObj = (function() {
+    if (typeof globalThis !== 'undefined') return globalThis;
+    if (typeof window !== 'undefined') return window;
+    if (typeof global !== 'undefined') return global;
+    if (typeof self !== 'undefined') return self;
+    return this;
+  })();
+  
+  // Define process on all possible global objects
+  try {
+    globalObj.process = processObj;
+    if (typeof window !== 'undefined' && window !== globalObj) {
+      window.process = processObj;
+    }
+    if (typeof globalThis !== 'undefined' && globalThis !== globalObj) {
+      globalThis.process = processObj;
+    }
+    
+    // Use Function constructor to define 'process' as a true global variable
+    // This works even in strict mode because Function creates a new execution context
+    // This is necessary because React accesses 'process' directly, not 'window.process'
+    (new Function('process', 'this.process = process;')).call(globalObj, processObj);
+  } catch(e) {
+    // Fallback: try Object.defineProperty
+    try {
+      Object.defineProperty(globalObj, 'process', {
+        value: processObj,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    } catch(e2) {
+      // Last resort: direct assignment (might not work in strict mode)
+      try {
+        globalObj.process = processObj;
+      } catch(e3) {}
+    }
   }
 })();
 
