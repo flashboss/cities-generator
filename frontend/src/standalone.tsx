@@ -1,6 +1,17 @@
 // Standalone bundle entry point for UMD/IIFE builds
 // For UMD: React is external and will be available as global variable
 // For IIFE: React is bundled and imported directly
+
+// Polyfill for process (required for React in browser environments)
+// MUST be executed BEFORE React imports, otherwise React will fail when accessing process.env.NODE_ENV
+if (typeof window !== 'undefined' && typeof (window as any).process === 'undefined') {
+  (window as any).process = {
+    env: {
+      NODE_ENV: 'production'
+    }
+  };
+}
+
 // @ts-ignore - React may be external (UMD) or bundled (IIFE)
 import React from 'react';
 // @ts-ignore - ReactDOM may be external (UMD) or bundled (IIFE)
@@ -13,15 +24,6 @@ import './index.css';
 import './CitiesDropdown.css';
 import './models/CitiesDropdownModel0.css';
 import './models/CitiesDropdownModel1.css';
-
-// Polyfill for process (required for React in browser environments)
-if (typeof window !== 'undefined' && typeof (window as any).process === 'undefined') {
-  (window as any).process = {
-    env: {
-      NODE_ENV: 'production'
-    }
-  };
-}
 
 // Get React - works for both UMD (external) and IIFE (bundled)
 // When React is external (UMD), Vite replaces the import with the global variable

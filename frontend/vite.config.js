@@ -32,6 +32,9 @@ const umdConfig = defineConfig({
 // Standalone build (includes React - larger but zero dependencies)
 const standaloneConfig = defineConfig({
   plugins: [react()],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   build: {
     emptyOutDir: false, // Don't clean dist between builds
     cssCodeSplit: false, // Don't split CSS into separate files
@@ -51,18 +54,33 @@ const standaloneConfig = defineConfig({
         manualChunks: undefined,
       },
       plugins: [
-        // Plugin to inject CSS into JS
+        // Plugin to inject CSS and process polyfill into JS
         {
-          name: 'inject-css',
+          name: 'inject-css-and-polyfill',
           generateBundle(options, bundle) {
             // Find CSS file and inject it into JS bundle
             const cssFile = Object.keys(bundle).find(file => file.endsWith('.css'));
-            if (cssFile && bundle[cssFile]) {
-              const cssContent = bundle[cssFile].source;
-              const jsFile = Object.keys(bundle).find(file => file.endsWith('.iife.js'));
-              if (jsFile && bundle[jsFile]) {
-                // Inject CSS as style tag
-                const cssInjection = `
+            const jsFile = Object.keys(bundle).find(file => file.endsWith('.iife.js'));
+            
+            if (jsFile && bundle[jsFile]) {
+              // Inject process polyfill FIRST (before CSS, before everything)
+              const processPolyfill = `
+(function() {
+  if (typeof window !== 'undefined' && typeof window.process === 'undefined') {
+    window.process = {
+      env: {
+        NODE_ENV: 'production'
+      }
+    };
+  }
+})();
+`;
+              
+              // Inject CSS as style tag
+              let cssInjection = '';
+              if (cssFile && bundle[cssFile]) {
+                const cssContent = bundle[cssFile].source;
+                cssInjection = `
 (function() {
   if (typeof document !== 'undefined') {
     const style = document.createElement('style');
@@ -71,10 +89,12 @@ const standaloneConfig = defineConfig({
   }
 })();
 `;
-                bundle[jsFile].code = cssInjection + bundle[jsFile].code;
                 // Delete CSS file
                 delete bundle[cssFile];
               }
+              
+              // Prepend polyfill and CSS to the bundle
+              bundle[jsFile].code = processPolyfill + cssInjection + bundle[jsFile].code;
             }
           },
         },
