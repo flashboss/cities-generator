@@ -51,15 +51,89 @@ npm run build:webcomponent # Web Component ES module
 
 The build outputs are in the `dist/` directory:
 
-- `cities-generator.umd.js` - UMD bundle (~18KB, requires React)
-- `cities-generator-standalone.iife.js` - Standalone bundle (~52KB, includes React)
-- `style.css` - Component styles
+- `cities-generator.umd.js` - UMD bundle (~18KB, requires React external, includes CSS)
+- `cities-generator-standalone.iife.js` - IIFE standalone bundle (~52KB, includes React, CSS, web component support, and process polyfill)
 
 ## Usage
 
 ### Method 1: Web Component (Most Portable - Recommended)
 
 Works in **any** platform without framework dependencies. Simply include the scripts and use the custom HTML element:
+
+```html
+<!-- Load IIFE standalone bundle (includes React, CSS, web component support, and process polyfill) -->
+<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
+
+<!-- Option 1: Use as Web Component -->
+<!-- Using default parameters -->
+<cities-dropdown />
+
+<!-- Using default URL -->
+<cities-dropdown
+  country="IT"
+  language="it"
+  placeholder="Select location...">
+</cities-dropdown>
+
+<!-- Using custom base URL (automatically appends /IT/it.json) -->
+<cities-dropdown
+  country="IT"
+  language="it"
+  data-url="https://example.com/cities"
+  placeholder="Select location...">
+</cities-dropdown>
+
+<script>
+  document.querySelector('cities-dropdown').addEventListener('select', (e) => {
+    console.log('Selected:', e.detail);
+    // e.detail contains: { id, name, level, zones }
+  });
+</script>
+
+<!-- Option 2: Use via JavaScript API -->
+<div id="my-dropdown"></div>
+<script>
+  // Using default parameters
+  CitiesGenerator.render('#my-dropdown');
+
+  // Using default URL
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'IT',
+    language: 'it',
+    placeholder: 'Select location...',
+    onSelect: (node) => {
+      console.log('Selected:', node);
+    }
+  });
+  
+  // Using custom base URL (automatically appends /IT/it.json)
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'IT',
+    language: 'it',
+    dataUrl: 'https://example.com/cities',
+    placeholder: 'Select location...',
+    onSelect: (node) => {
+      console.log('Selected:', node);
+    }
+  });
+  
+  // Using search functionality
+  CitiesGenerator.render('#my-dropdown', {
+    country: 'IT',
+    language: 'it',
+    placeholder: 'Select location...',
+    enableSearch: true,
+    searchPlaceholder: 'Search location...',
+    onSelect: (node) => {
+      console.log('Selected:', node);
+    }
+  });
+</script>
+```
+
+### Method 2: UMD Bundle (Requires React)
+
+Use when you already have React loaded in your application. The UMD bundle is smaller and includes CSS, but requires React to be loaded separately:
 
 ```html
 <!-- Polyfill for process (required for React) -->
@@ -77,58 +151,23 @@ Works in **any** platform without framework dependencies. Simply include the scr
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-<!-- Load Cities Generator -->
+<!-- Load UMD bundle (includes CSS, requires React external) -->
 <script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator.umd.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/style.css">
 
-<!-- Use the component -->
-<!-- Using default parameters -->
-<cities-dropdown />
-
-<!-- Using default URL -->
-<cities-dropdown 
-  country="IT" 
+<!-- Option 1: Use as Web Component -->
+<cities-dropdown
+  country="IT"
   language="it"
-  placeholder="Select location...">
-</cities-dropdown>
-
-<!-- Using custom base URL (automatically appends /IT/it.json) -->
-<cities-dropdown 
-  country="IT" 
-  language="it"
-  data-url="https://example.com/cities"
   placeholder="Select location...">
 </cities-dropdown>
 
 <script>
   document.querySelector('cities-dropdown').addEventListener('select', (e) => {
     console.log('Selected:', e.detail);
-    // e.detail contains: { id, name, level, zones }
   });
 </script>
-```
 
-### Method 2: Standalone Bundle (Zero Dependencies)
-
-Use when you can't include React separately. The standalone bundle includes React:
-
-```html
-<!-- Polyfill for process (required for React) -->
-<script>
-    if (typeof process === 'undefined') {
-        window.process = {
-            env: {
-                NODE_ENV: 'production'
-            }
-        };
-    }
-</script>
-
-<!-- Load standalone bundle (includes React) -->
-<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/style.css">
-
-<!-- Use via JavaScript API -->
+<!-- Option 2: Use via JavaScript API -->
 <div id="my-dropdown"></div>
 <script>
   // Using default parameters
@@ -420,4 +459,3 @@ npm install cities-generator-frontend
 ```
 
 See the [npm package page](https://www.npmjs.com/package/cities-generator-frontend) for more information.
-
