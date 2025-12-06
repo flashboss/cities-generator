@@ -1,6 +1,6 @@
 {
   "name": "cities-generator-frontend",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Portable hierarchical dropdown menu for cities-generator JSON data",
   "type": "module",
   "main": "./dist/cities-generator.umd.js",
@@ -39,7 +39,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flashboss/cities-generator.git",
+    "url": "git+https://github.com/flashboss/cities-generator.git",
     "directory": "frontend"
   },
   "homepage": "https://github.com/flashboss/cities-generator#readme",
