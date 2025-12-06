@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// UMD build (requires React external, includes CSS)
+// UMD build (requires React external, CSS is external)
 const umdConfig = defineConfig({
   plugins: [react()],
   build: {
@@ -22,40 +22,9 @@ const umdConfig = defineConfig({
         },
         entryFileNames: 'cities-generator.umd.js',
         chunkFileNames: '[name].js',
-        assetFileNames: '[name].[ext]',
+        assetFileNames: 'style.css', // CSS file name
         format: 'umd',
-        // Inject CSS into JS bundle
-        manualChunks: undefined,
       },
-      plugins: [
-        // Plugin to inject CSS into JS
-        {
-          name: 'inject-css',
-          generateBundle(options, bundle) {
-            // Find CSS file and inject it into JS bundle
-            const cssFile = Object.keys(bundle).find(file => file.endsWith('.css'));
-            if (cssFile && bundle[cssFile]) {
-              const cssContent = bundle[cssFile].source;
-              const jsFile = Object.keys(bundle).find(file => file.endsWith('.umd.js'));
-              if (jsFile && bundle[jsFile]) {
-                // Inject CSS as style tag
-                const cssInjection = `
-(function() {
-  if (typeof document !== 'undefined') {
-    const style = document.createElement('style');
-    style.textContent = ${JSON.stringify(cssContent)};
-    document.head.appendChild(style);
-  }
-})();
-`;
-                bundle[jsFile].code = cssInjection + bundle[jsFile].code;
-                // Delete CSS file
-                delete bundle[cssFile];
-              }
-            }
-          },
-        },
-      ],
     },
   },
 });

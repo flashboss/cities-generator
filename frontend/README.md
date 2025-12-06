@@ -51,8 +51,9 @@ npm run build:webcomponent # Web Component ES module
 
 The build outputs are in the `dist/` directory:
 
-- `cities-generator.umd.js` - UMD bundle (~18KB, requires React external, includes CSS)
+- `cities-generator.umd.js` - UMD bundle (~18KB, requires React external)
 - `cities-generator-standalone.iife.js` - IIFE standalone bundle (~52KB, includes React, CSS, web component support, and process polyfill)
+- `style.css` - Component styles (required for UMD bundle)
 
 ## Usage
 
@@ -133,7 +134,7 @@ Works in **any** platform without framework dependencies. Simply include the scr
 
 ### Method 2: UMD Bundle (Requires React)
 
-Use when you already have React loaded in your application. The UMD bundle is smaller and includes CSS, but requires React to be loaded separately:
+Use when you already have React loaded in your application. The UMD bundle is smaller and requires React and CSS to be loaded separately:
 
 ```html
 <!-- Polyfill for process (required for React) -->
@@ -151,7 +152,10 @@ Use when you already have React loaded in your application. The UMD bundle is sm
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-<!-- Load UMD bundle (includes CSS, requires React external) -->
+<!-- Load CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/style.css">
+
+<!-- Load UMD bundle -->
 <script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator.umd.js"></script>
 
 <!-- Option 1: Use as Web Component -->

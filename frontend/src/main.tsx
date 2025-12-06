@@ -84,7 +84,10 @@ const App: React.FC = () => {
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-<!-- Load UMD bundle (includes CSS, requires React external) -->
+<!-- Load CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/style.css">
+
+<!-- Load UMD bundle (requires React external) -->
 <script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator.umd.js"></script>
 
 <div id="cities-dropdown"></div>
