@@ -56,6 +56,39 @@ const standaloneConfig = defineConfig({
         manualChunks: undefined,
       },
       plugins: [
+        // Plugin to replace 'process' references with safe access during build
+        {
+          name: 'replace-process-references',
+          transform(code, id) {
+            // Only process JavaScript/TypeScript files from node_modules (React, etc.)
+            if (!id.includes('node_modules') || !code.includes('process')) {
+              return null;
+            }
+            // Replace standalone 'process' references (not process.env or process.something)
+            // with safe access that checks for process existence
+            const safeProcessAccess = '(typeof process !== "undefined" ? process : (typeof window !== "undefined" && window.process ? window.process : (typeof globalThis !== "undefined" && globalThis.process ? globalThis.process : {env: {NODE_ENV: "production"}})))';
+            
+            // Match 'process' that is not followed by '.' (to avoid replacing process.env, process.something)
+            // and not part of a larger identifier
+            const processRegex = /([^a-zA-Z0-9_$]|^)process(?![a-zA-Z0-9_$\.])/g;
+            
+            if (processRegex.test(code)) {
+              return {
+                code: code.replace(processRegex, (match, prefix) => {
+                  // Check if next character is '.' - if so, don't replace (it's process.env or process.something)
+                  const matchIndex = code.indexOf(match);
+                  const afterMatch = code.substring(matchIndex + match.length);
+                  if (afterMatch.startsWith('.')) {
+                    return match; // Keep process.env, process.something, etc.
+                  }
+                  return (prefix || '') + safeProcessAccess;
+                }),
+                map: null
+              };
+            }
+            return null;
+          }
+        },
         // Plugin to inject CSS and process polyfill into JS
         {
           name: 'inject-css-and-polyfill',
@@ -70,9 +103,9 @@ const standaloneConfig = defineConfig({
               // Define process globally for React compatibility
               // React accesses 'process' directly, so we need to make it available as a global variable
               // This polyfill works even with UTF-8 BOM present
+              // Use a non-strict IIFE to allow implicit global variable declaration
               const processPolyfill = `
 (function() {
-  'use strict';
   var processObj = {
     env: {
       NODE_ENV: 'production'
@@ -89,19 +122,22 @@ const standaloneConfig = defineConfig({
   })();
   
   // Define process on all possible global objects
+  globalObj.process = processObj;
+  if (typeof window !== 'undefined' && window !== globalObj) {
+    window.process = processObj;
+  }
+  if (typeof globalThis !== 'undefined' && globalThis !== globalObj) {
+    globalThis.process = processObj;
+  }
+  
+  // Define process as a true global variable using eval in non-strict context
+  // This is necessary because React accesses 'process' directly as a variable, not as a property
   try {
-    globalObj.process = processObj;
-    if (typeof window !== 'undefined' && window !== globalObj) {
-      window.process = processObj;
-    }
-    if (typeof globalThis !== 'undefined' && globalThis !== globalObj) {
-      globalThis.process = processObj;
-    }
+    // Use Function constructor to create a function in global scope
+    // This allows us to define 'process' as a true global variable
+    var defineGlobal = new Function('process', 'this.process = process;');
+    defineGlobal.call(globalObj, processObj);
     
-    // Use Function constructor to define 'process' as a true global variable
-    // This works even in strict mode because Function creates a new execution context
-    // This is necessary because React accesses 'process' directly, not 'window.process'
-    (new Function('process', 'this.process = process;')).call(globalObj, processObj);
   } catch(e) {
     // Fallback: try Object.defineProperty
     try {
@@ -111,12 +147,7 @@ const standaloneConfig = defineConfig({
         enumerable: true,
         configurable: true
       });
-    } catch(e2) {
-      // Last resort: direct assignment (might not work in strict mode)
-      try {
-        globalObj.process = processObj;
-      } catch(e3) {}
-    }
+    } catch(e2) {}
   }
 })();
 `;
