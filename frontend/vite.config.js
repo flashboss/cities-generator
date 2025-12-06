@@ -64,25 +64,54 @@ const standaloneConfig = defineConfig({
             if (!id.includes('node_modules') || !code.includes('process')) {
               return null;
             }
-            // Replace standalone 'process' references (not process.env or process.something)
-            // with safe access that checks for process existence
-            const safeProcessAccess = '(typeof process !== "undefined" ? process : (typeof window !== "undefined" && window.process ? window.process : (typeof globalThis !== "undefined" && globalThis.process ? globalThis.process : {env: {NODE_ENV: "production"}})))';
             
-            // Match 'process' that is not followed by '.' (to avoid replacing process.env, process.something)
-            // and not part of a larger identifier
-            const processRegex = /([^a-zA-Z0-9_$]|^)process(?![a-zA-Z0-9_$\.])/g;
+            // Safe process object with env
+            const safeProcessObj = '(typeof process !== "undefined" ? process : (typeof window !== "undefined" && window.process ? window.process : (typeof globalThis !== "undefined" && globalThis.process ? globalThis.process : {env: {NODE_ENV: "production"}})))';
             
-            if (processRegex.test(code)) {
+            let modified = false;
+            let newCode = code;
+            
+            // Replace process.env.NODE_ENV and process.env['NODE_ENV'] first
+            // This is the most common pattern in React
+            const envPatterns = [
+              /process\.env\.NODE_ENV/g,
+              /process\.env\[['"]NODE_ENV['"]\]/g,
+              /process\.env\s*\.\s*NODE_ENV/g
+            ];
+            
+            envPatterns.forEach(pattern => {
+              if (pattern.test(newCode)) {
+                newCode = newCode.replace(pattern, safeProcessObj + '.env.NODE_ENV');
+                modified = true;
+              }
+            });
+            
+            // Replace ALL process references with safe access
+            // This includes process.env, process.something, and standalone process
+            // Do this in a single pass to avoid conflicts
+            
+            // First, replace process.env (most common)
+            if (newCode.includes('process.env')) {
+              newCode = newCode.replace(/process\.env/g, safeProcessObj + '.env');
+              modified = true;
+            }
+            
+            // Then replace process.property (like process.browser, etc.)
+            newCode = newCode.replace(/process\.([a-zA-Z_$][a-zA-Z0-9_$]*)/g, (match, prop) => {
+              modified = true;
+              return safeProcessObj + '.' + prop;
+            });
+            
+            // Finally, replace standalone 'process' references
+            // Match 'process' that is not part of a larger identifier
+            newCode = newCode.replace(/([^a-zA-Z0-9_$]|^)process(?![a-zA-Z0-9_$\.])/g, (match, prefix) => {
+              modified = true;
+              return (prefix || '') + safeProcessObj;
+            });
+            
+            if (modified) {
               return {
-                code: code.replace(processRegex, (match, prefix) => {
-                  // Check if next character is '.' - if so, don't replace (it's process.env or process.something)
-                  const matchIndex = code.indexOf(match);
-                  const afterMatch = code.substring(matchIndex + match.length);
-                  if (afterMatch.startsWith('.')) {
-                    return match; // Keep process.env, process.something, etc.
-                  }
-                  return (prefix || '') + safeProcessAccess;
-                }),
+                code: newCode,
                 map: null
               };
             }
@@ -102,68 +131,31 @@ const standaloneConfig = defineConfig({
               // Must be executed immediately and synchronously before any other code
               // Define process globally for React compatibility
               // React accesses 'process' directly, so we need to make it available as a global variable
-              // Use multiple approaches to ensure process is available in all contexts
+              // Use a simpler, more direct approach that works in all contexts
               const processPolyfill = `
-(function() {
-  'use strict';
-  var processObj = {
-    env: {
-      NODE_ENV: 'production'
-    }
-  };
-  
-  // Get all possible global objects
-  var globals = [];
-  if (typeof globalThis !== 'undefined') globals.push(globalThis);
-  if (typeof window !== 'undefined') globals.push(window);
-  if (typeof global !== 'undefined') globals.push(global);
-  if (typeof self !== 'undefined') globals.push(self);
-  
-  // Define process on all global objects
-  for (var i = 0; i < globals.length; i++) {
-    try {
-      globals[i].process = processObj;
-      // Also try to define it as non-configurable to make it more "real"
-      try {
-        Object.defineProperty(globals[i], 'process', {
-          value: processObj,
-          writable: true,
-          enumerable: true,
-          configurable: true
-        });
-      } catch(e) {}
-    } catch(e) {}
-  }
-  
-  // Use Function constructor to define process in global scope (works in non-strict mode)
-  // This is critical because React may access 'process' as a bare identifier
+void function() {
+  var p = {env: {NODE_ENV: 'production'}};
   try {
-    var globalObj = (function() {
-      if (typeof globalThis !== 'undefined') return globalThis;
-      if (typeof window !== 'undefined') return window;
-      if (typeof global !== 'undefined') return global;
-      if (typeof self !== 'undefined') return self;
-      return this;
-    })();
-    
-    // Try to define process using Function constructor (creates true global variable)
-    var defineProcess = new Function('p', 'this.process = p;');
-    defineProcess.call(globalObj, processObj);
-    
-    // Also try with eval in non-strict context
-    try {
-      (new Function('process', 'this.process = process;')).call(globalObj, processObj);
-    } catch(e) {}
+    if (typeof globalThis !== 'undefined') globalThis.process = p;
+    if (typeof window !== 'undefined') window.process = p;
+    if (typeof global !== 'undefined') global.process = p;
+    if (typeof self !== 'undefined') self.process = p;
+    // Use Function constructor to create true global variable
+    (new Function('p', 'this.process = p;')).call(
+      typeof globalThis !== 'undefined' ? globalThis : 
+      typeof window !== 'undefined' ? window : 
+      typeof global !== 'undefined' ? global : 
+      typeof self !== 'undefined' ? self : this,
+      p
+    );
   } catch(e) {}
-  
-  // Final fallback: ensure process is accessible via window/globalThis
-  if (typeof window !== 'undefined') {
-    window.process = processObj;
+  // Ensure process is available as bare identifier
+  if (typeof process === 'undefined') {
+    try {
+      (function() { process = p; })();
+    } catch(e) {}
   }
-  if (typeof globalThis !== 'undefined') {
-    globalThis.process = processObj;
-  }
-})();
+}();
 `;
               
               // Inject CSS as style tag - preserve Unicode characters like UMD does

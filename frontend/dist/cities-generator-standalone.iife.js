@@ -1,64 +1,27 @@
 
-(function() {
-  'use strict';
-  var processObj = {
-    env: {
-      NODE_ENV: 'production'
-    }
-  };
-  
-  // Get all possible global objects
-  var globals = [];
-  if (typeof globalThis !== 'undefined') globals.push(globalThis);
-  if (typeof window !== 'undefined') globals.push(window);
-  if (typeof global !== 'undefined') globals.push(global);
-  if (typeof self !== 'undefined') globals.push(self);
-  
-  // Define process on all global objects
-  for (var i = 0; i < globals.length; i++) {
-    try {
-      globals[i].process = processObj;
-      // Also try to define it as non-configurable to make it more "real"
-      try {
-        Object.defineProperty(globals[i], 'process', {
-          value: processObj,
-          writable: true,
-          enumerable: true,
-          configurable: true
-        });
-      } catch(e) {}
-    } catch(e) {}
-  }
-  
-  // Use Function constructor to define process in global scope (works in non-strict mode)
-  // This is critical because React may access 'process' as a bare identifier
+void function() {
+  var p = {env: {NODE_ENV: 'production'}};
   try {
-    var globalObj = (function() {
-      if (typeof globalThis !== 'undefined') return globalThis;
-      if (typeof window !== 'undefined') return window;
-      if (typeof global !== 'undefined') return global;
-      if (typeof self !== 'undefined') return self;
-      return this;
-    })();
-    
-    // Try to define process using Function constructor (creates true global variable)
-    var defineProcess = new Function('p', 'this.process = p;');
-    defineProcess.call(globalObj, processObj);
-    
-    // Also try with eval in non-strict context
-    try {
-      (new Function('process', 'this.process = process;')).call(globalObj, processObj);
-    } catch(e) {}
+    if (typeof globalThis !== 'undefined') globalThis.process = p;
+    if (typeof window !== 'undefined') window.process = p;
+    if (typeof global !== 'undefined') global.process = p;
+    if (typeof self !== 'undefined') self.process = p;
+    // Use Function constructor to create true global variable
+    (new Function('p', 'this.process = p;')).call(
+      typeof globalThis !== 'undefined' ? globalThis : 
+      typeof window !== 'undefined' ? window : 
+      typeof global !== 'undefined' ? global : 
+      typeof self !== 'undefined' ? self : this,
+      p
+    );
   } catch(e) {}
-  
-  // Final fallback: ensure process is accessible via window/globalThis
-  if (typeof window !== 'undefined') {
-    window.process = processObj;
+  // Ensure process is available as bare identifier
+  if (typeof process === 'undefined') {
+    try {
+      (function() { process = p; })();
+    } catch(e) {}
   }
-  if (typeof globalThis !== 'undefined') {
-    globalThis.process = processObj;
-  }
-})();
+}();
 
 (function() {
   if (typeof document !== 'undefined') {
