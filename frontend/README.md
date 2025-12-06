@@ -62,13 +62,24 @@ The build outputs are in the `dist/` directory:
 Works in **any** platform without framework dependencies. Simply include the scripts and use the custom HTML element:
 
 ```html
+<!-- Polyfill for process (required for React) -->
+<script>
+    if (typeof process === 'undefined') {
+        window.process = {
+            env: {
+                NODE_ENV: 'production'
+            }
+        };
+    }
+</script>
+
 <!-- Load React (if not already loaded) -->
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
 <!-- Load Cities Generator -->
-<script src="./dist/cities-generator.umd.js"></script>
-<link rel="stylesheet" href="./dist/style.css">
+<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator.umd.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/style.css">
 
 <!-- Use the component -->
 <!-- Using default parameters -->
@@ -102,9 +113,20 @@ Works in **any** platform without framework dependencies. Simply include the scr
 Use when you can't include React separately. The standalone bundle includes React:
 
 ```html
+<!-- Polyfill for process (required for React) -->
+<script>
+    if (typeof process === 'undefined') {
+        window.process = {
+            env: {
+                NODE_ENV: 'production'
+            }
+        };
+    }
+</script>
+
 <!-- Load standalone bundle (includes React) -->
-<script src="./dist/cities-generator-standalone.iife.js"></script>
-<link rel="stylesheet" href="./dist/style.css">
+<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/style.css">
 
 <!-- Use via JavaScript API -->
 <div id="my-dropdown"></div>
