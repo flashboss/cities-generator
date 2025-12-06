@@ -48,7 +48,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf dist && vite build && vite build --mode standalone && vite build --mode webcomponent",
+    "build": "vite build && vite build --mode standalone && vite build --mode webcomponent && vite build --mode demo",
     "build:umd": "vite build",
     "build:standalone": "vite build --mode standalone",
     "build:webcomponent": "vite build --mode webcomponent",
