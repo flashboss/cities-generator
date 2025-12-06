@@ -256,6 +256,139 @@ function MyComponent() {
 }
 ```
 
+### Method 4: Angular Component
+
+Angular supports Web Components natively. You can use the `<cities-dropdown>` custom element directly in your Angular templates:
+
+**Option 1: Direct usage (Recommended)**
+
+```typescript
+// location.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-location',
+  template: `
+    <cities-dropdown
+      [attr.country]="country"
+      [attr.language]="language"
+      [attr.placeholder]="placeholder"
+      (select)="onLocationSelect($event)">
+    </cities-dropdown>
+  `
+})
+export class LocationComponent {
+  country = 'IT';
+  language = 'it';
+  placeholder = 'Select location...';
+  
+  onLocationSelect(event: CustomEvent) {
+    console.log('Selected:', event.detail);
+    // event.detail contains: { id, name, level, zones }
+  }
+}
+```
+
+**Option 2: Wrapper component (for better TypeScript integration)**
+
+```typescript
+// cities-dropdown.component.ts
+import { Component, Input, Output, EventEmitter, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+
+@Component({
+  selector: 'app-cities-dropdown',
+  template: '<cities-dropdown></cities-dropdown>'
+})
+export class CitiesDropdownComponent implements AfterViewInit, OnChanges {
+  @Input() country = 'IT';
+  @Input() language = 'it';
+  @Input() placeholder = 'Select location...';
+  @Input() dataUrl?: string;
+  @Input() enableSearch = false;
+  @Input() searchPlaceholder = 'Search location...';
+  @Input() model = 0;
+  @Output() select = new EventEmitter<any>();
+
+  private element: HTMLElement | null = null;
+
+  constructor(private el: ElementRef) {}
+
+  ngAfterViewInit() {
+    this.element = this.el.nativeElement.querySelector('cities-dropdown');
+    this.updateAttributes();
+    this.setupEventListener();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.element) {
+      this.updateAttributes();
+    }
+  }
+
+  private updateAttributes() {
+    if (!this.element) return;
+    
+    this.element.setAttribute('country', this.country);
+    this.element.setAttribute('language', this.language);
+    this.element.setAttribute('placeholder', this.placeholder);
+    
+    if (this.dataUrl) {
+      this.element.setAttribute('data-url', this.dataUrl);
+    }
+    
+    if (this.enableSearch) {
+      this.element.setAttribute('enable-search', 'true');
+      this.element.setAttribute('search-placeholder', this.searchPlaceholder);
+    }
+    
+    if (this.model !== 0) {
+      this.element.setAttribute('model', this.model.toString());
+    }
+  }
+
+  private setupEventListener() {
+    if (!this.element) return;
+    
+    this.element.addEventListener('select', (e: Event) => {
+      const customEvent = e as CustomEvent;
+      this.select.emit(customEvent.detail);
+    });
+  }
+}
+```
+
+**Usage:**
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <app-cities-dropdown
+      [country]="'IT'"
+      [language]="'it'"
+      [placeholder]="'Select location...'"
+      [enableSearch]="true"
+      (select)="onLocationSelect($event)">
+    </app-cities-dropdown>
+  `
+})
+export class AppComponent {
+  onLocationSelect(location: any) {
+    console.log('Selected:', location);
+  }
+}
+```
+
+**Note:** Make sure to load the bundle in your `index.html`:
+
+```html
+<!-- In index.html -->
+<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
+```
+
 ## Component Props
 
 - `data` (Nodes, optional): Direct data object (optional)
