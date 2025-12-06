@@ -58,31 +58,16 @@ const App: React.FC = () => {
 />`}
         </pre>
 
-        <h3>2. Web Component (Most Portable)</h3>
+        <h3>2. Web Component (Most Portable - IIFE Standalone)</h3>
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
-{`<!-- Polyfill for process (required for React) -->
-<script>
-    if (typeof process === 'undefined') {
-        window.process = {
-            env: {
-                NODE_ENV: 'production'
-            }
-        };
-    }
-</script>
-    
-<!-- React and ReactDOM -->
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-<!-- cities-generator script -->
-<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator.umd.js"></script>
+{`<!-- Load IIFE standalone bundle (includes React, CSS, web component support, and process polyfill) -->
+<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
 
 <cities-dropdown${(config.country && config.country !== DEFAULT_COUNTRY) ? `\n  country="${config.country}"` : ''}${(config.language && config.language !== DEFAULT_LANGUAGE) ? `\n  language="${config.language}"` : ''}${(config.dataUrl && config.dataUrl !== DEFAULT_GITHUB_URL) ? `\n  data-url="${config.dataUrl}"` : ''}${config.username ? `\n  username="${config.username}"` : ''}${config.password ? `\n  password="${config.password}"` : ''}${(config.placeholder && config.placeholder !== DEFAULT_PLACEHOLDER) ? `\n  placeholder="${config.placeholder}"` : ''}${config.enableSearch === true ? '\n  enable-search' : ''}${(config.searchPlaceholder && config.searchPlaceholder !== DEFAULT_SEARCH_PLACEHOLDER) ? `\n  search-placeholder="${config.searchPlaceholder}"` : ''}${(config.model !== undefined && config.model !== DEFAULT_MODEL) ? `\n  model="${config.model}"` : ''}>
 </cities-dropdown>`}
         </pre>
 
-        <h3>3. Vanilla JavaScript</h3>
+        <h3>3. Vanilla JavaScript (UMD Bundle - Requires React)</h3>
         <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
 {`<!-- Polyfill for process (required for React) -->
 <script>
@@ -95,11 +80,11 @@ const App: React.FC = () => {
     }
 </script>
 
-<!-- React and ReactDOM -->
+<!-- Load React (if not already loaded) -->
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-<!-- cities-generator script -->
+<!-- Load UMD bundle (includes CSS, requires React external) -->
 <script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator.umd.js"></script>
 
 <div id="cities-dropdown"></div>

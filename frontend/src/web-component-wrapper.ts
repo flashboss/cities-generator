@@ -1,5 +1,5 @@
 // Simplified Web Component wrapper that works with bundled React
-// This will be used when React is available globally
+// This will be used when React is available globally or bundled
 
 declare global {
   interface Window {
@@ -26,6 +26,8 @@ class CitiesDropdownElement extends HTMLElement {
   }
 
   private render() {
+    // React and ReactDOM are exposed on window by standalone.tsx
+    // This works for both UMD (external React) and IIFE standalone (bundled React)
     if (!window.React || !window.ReactDOM) {
       console.error('React and ReactDOM must be loaded before using cities-dropdown');
       this.innerHTML = '<div style="padding: 10px; color: red;">Error: React not loaded</div>';
