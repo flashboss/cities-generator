@@ -34,6 +34,10 @@ For detailed documentation, installation instructions, and usage examples, see t
 
 Samples of generated cities can be found online:
 
-- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db>
+- <https://github.com/flashboss/cities-generator/tree/master/_db>
+
+they can be used through own raw link for example:
+
+- <https://raw.githubusercontent.com/flashboss/cities-generator/master/_db/EU/IT/it.json>
 
 The structure is {continent}/{country}/{language}.json (e.g., EU/IT/it.json, EU/GB/en.json).
