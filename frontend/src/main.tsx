@@ -97,6 +97,28 @@ const App: React.FC = () => {
   });
 </script>`}
         </pre>
+
+        <h3>4. Angular Component</h3>
+        <pre style={{ background: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
+{`<!-- In index.html, load the bundle -->
+<script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"></script>
+
+<!-- Option 1: Direct usage in Angular template -->
+<cities-dropdown
+  [attr.country]="'${config.country || DEFAULT_COUNTRY}'"
+  [attr.language]="'${config.language || DEFAULT_LANGUAGE}'"
+  [attr.placeholder]="'${config.placeholder || DEFAULT_PLACEHOLDER}'"${config.enableSearch === true ? '\n  [attr.enable-search]="true"\n  [attr.search-placeholder]="\'Search location...\'"' : ''}
+  (select)="onLocationSelect($event)">
+</cities-dropdown>
+
+<!-- Option 2: Using wrapper component -->
+<app-cities-dropdown
+  [country]="'${config.country || DEFAULT_COUNTRY}'"
+  [language]="'${config.language || DEFAULT_LANGUAGE}'"
+  [placeholder]="'${config.placeholder || DEFAULT_PLACEHOLDER}'"${config.enableSearch === true ? '\n  [enableSearch]="true"' : ''}
+  (select)="onLocationSelect($event)">
+</app-cities-dropdown>`}
+        </pre>
       </div>
     </div>
   );
