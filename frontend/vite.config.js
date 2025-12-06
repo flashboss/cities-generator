@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import fs from 'fs';
+import path from 'path';
 
 // UMD build (requires React external, CSS is external)
 const umdConfig = defineConfig({
@@ -76,10 +78,40 @@ const standaloneConfig = defineConfig({
 })();
 `;
               
-              // Inject CSS as style tag
+              // Inject CSS as style tag - preserve Unicode characters like UMD does
+              // Read CSS directly from source files to preserve UTF-8 encoding
               let cssInjection = '';
               if (cssFile && bundle[cssFile]) {
-                const cssContent = bundle[cssFile].source;
+                // Try to read CSS from source files first to preserve Unicode characters
+                // This mimics how UMD loads external CSS files with proper UTF-8 encoding
+                let cssContent = '';
+                try {
+                  // Read CSS files from source directory with explicit UTF-8 encoding
+                  const cssFiles = [
+                    'src/index.css',
+                    'src/CitiesDropdown.css',
+                    'src/models/CitiesDropdownModel0.css',
+                    'src/models/CitiesDropdownModel1.css'
+                  ];
+                  const cssContents = cssFiles.map(file => {
+                    const filePath = path.resolve(process.cwd(), file);
+                    if (fs.existsSync(filePath)) {
+                      return fs.readFileSync(filePath, 'utf8');
+                    }
+                    return '';
+                  }).filter(content => content.length > 0);
+                  cssContent = cssContents.join('\n');
+                } catch (err) {
+                  // Fallback to bundle CSS if reading source fails
+                  let bundleCss = bundle[cssFile].source;
+                  if (Buffer.isBuffer(bundleCss)) {
+                    bundleCss = bundleCss.toString('utf8');
+                  } else if (typeof bundleCss !== 'string') {
+                    bundleCss = String(bundleCss);
+                  }
+                  cssContent = bundleCss;
+                }
+                // JSON.stringify correctly handles Unicode characters in strings
                 cssInjection = `
 (function() {
   if (typeof document !== 'undefined') {
@@ -93,8 +125,10 @@ const standaloneConfig = defineConfig({
                 delete bundle[cssFile];
               }
               
-              // Prepend polyfill and CSS to the bundle
-              bundle[jsFile].code = processPolyfill + cssInjection + bundle[jsFile].code;
+              // Prepend UTF-8 BOM and polyfill/CSS to the bundle
+              // Add UTF-8 BOM to ensure browser interprets file as UTF-8 (like UMD does)
+              const utf8BOM = '\uFEFF';
+              bundle[jsFile].code = utf8BOM + processPolyfill + cssInjection + bundle[jsFile].code;
             }
           },
         },
