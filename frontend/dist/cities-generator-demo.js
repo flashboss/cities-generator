@@ -52,7 +52,7 @@ Error generating stack: `+o.message+`
   model={${e.model}}`:""}${e.popup===!0?`
   popup={true}`:""}
   onSelect={(node) => console.log(node)}
-/>`}),v.jsx("h3",{children:"2. Web Component (Most Portable - IIFE Standalone)"}),v.jsx("pre",{style:{background:"white",padding:"10px",borderRadius:"4px",overflow:"auto"},children:`<!-- Load IIFE standalone bundle (includes React, CSS, web component support, and process polyfill) -->
+/>`}),v.jsx("h3",{children:"2. Web Component (Most Portable)"}),v.jsx("pre",{style:{background:"white",padding:"10px",borderRadius:"4px",overflow:"auto"},children:`<!-- Load IIFE standalone bundle (includes React, CSS, web component support, and process polyfill) -->
 <script src="https://cdn.jsdelivr.net/gh/flashboss/cities-generator@master/frontend/dist/cities-generator-standalone.iife.js"><\/script>
 
 <cities-dropdown${e.country&&e.country!==kl?`
@@ -65,7 +65,7 @@ Error generating stack: `+o.message+`
   enable-search`:""}${e.searchPlaceholder&&e.searchPlaceholder!==Ku?`
   search-placeholder="${e.searchPlaceholder}"`:""}${e.model!==void 0&&e.model!==Wu?`
   model="${e.model}"`:""}>
-</cities-dropdown>`}),v.jsx("h3",{children:"3. Vanilla JavaScript (UMD Bundle - Requires React)"}),v.jsx("pre",{style:{background:"white",padding:"10px",borderRadius:"4px",overflow:"auto"},children:`<!-- Polyfill for process (required for React) -->
+</cities-dropdown>`}),v.jsx("h3",{children:"3. UMD Bundle (Requires React)"}),v.jsx("pre",{style:{background:"white",padding:"10px",borderRadius:"4px",overflow:"auto"},children:`<!-- Polyfill for process (required for React) -->
 <script>
     if (typeof process === 'undefined') {
         window.process = {
