@@ -1,54 +1,18 @@
-﻿
+
 (function() {
-  var processObj = {
-    env: {
-      NODE_ENV: 'production'
-    }
-  };
-  
-  // Get the global object (works in all environments)
-  var globalObj = (function() {
-    if (typeof globalThis !== 'undefined') return globalThis;
-    if (typeof window !== 'undefined') return window;
-    if (typeof global !== 'undefined') return global;
-    if (typeof self !== 'undefined') return self;
-    return this;
-  })();
-  
-  // Define process on all possible global objects
-  globalObj.process = processObj;
-  if (typeof window !== 'undefined' && window !== globalObj) {
-    window.process = processObj;
-  }
-  if (typeof globalThis !== 'undefined' && globalThis !== globalObj) {
-    globalThis.process = processObj;
-  }
-  
-  // Define process as a true global variable using eval in non-strict context
-  // This is necessary because React accesses 'process' directly as a variable, not as a property
-  try {
-    // Use Function constructor to create a function in global scope
-    // This allows us to define 'process' as a true global variable
-    var defineGlobal = new Function('process', 'this.process = process;');
-    defineGlobal.call(globalObj, processObj);
-    
-  } catch(e) {
-    // Fallback: try Object.defineProperty
-    try {
-      Object.defineProperty(globalObj, 'process', {
-        value: processObj,
-        writable: true,
-        enumerable: true,
-        configurable: true
-      });
-    } catch(e2) {}
+  if (typeof window !== 'undefined' && typeof window.process === 'undefined') {
+    window.process = {
+      env: {
+        NODE_ENV: 'production'
+      }
+    };
   }
 })();
 
 (function() {
   if (typeof document !== 'undefined') {
     const style = document.createElement('style');
-    style.textContent = "code {\n  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',\n    monospace;\n}\n\n\n/* Common styles for all dropdown models */\n\n.cities-dropdown.loading,\n.cities-dropdown.error {\n  padding: 10px 15px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  background: white;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n}\n\n.cities-dropdown.error {\n  color: #d32f2f;\n  border-color: #d32f2f;\n}\n\n\n/* Model 0: Hierarchical Dropdown Styles */\n\n.cities-dropdown {\n  position: relative;\n  display: inline-block;\n  width: 100%;\n  max-width: 400px;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n}\n\n.cities-dropdown-trigger {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  padding: 10px 15px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  background: white;\n  cursor: pointer;\n  user-select: none;\n  min-height: 40px;\n  box-sizing: border-box;\n  flex-wrap: wrap;\n  gap: 8px;\n}\n\n.cities-dropdown-trigger:hover {\n  border-color: #999;\n}\n\n.cities-dropdown-trigger:focus {\n  outline: 2px solid #0066cc;\n  outline-offset: 2px;\n}\n\n.cities-dropdown-text {\n  flex: 1;\n  text-align: left;\n  color: #333;\n  word-wrap: break-word;\n  word-break: break-word;\n  white-space: normal;\n  min-width: 0;\n}\n\n.cities-dropdown-clear {\n  background: none;\n  border: none;\n  font-size: 20px;\n  line-height: 1;\n  padding: 0 8px;\n  cursor: pointer;\n  color: #999;\n  margin-right: 8px;\n  flex-shrink: 0;\n  align-self: center;\n}\n\n.cities-dropdown-clear:hover {\n  color: #333;\n}\n\n.cities-dropdown-arrow {\n  color: #666;\n  font-size: 12px;\n  margin-left: 8px;\n  flex-shrink: 0;\n  align-self: center;\n}\n\n.cities-dropdown-menu {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: white;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n  z-index: 1000;\n  max-height: 400px;\n  overflow-y: auto;\n}\n\n.cities-dropdown-search {\n  padding: 10px 15px;\n  border-bottom: 1px solid #eee;\n  background: #f9f9f9;\n}\n\n.cities-dropdown-search-input {\n  width: 100%;\n  padding: 8px 12px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  font-size: 14px;\n  box-sizing: border-box;\n}\n\n.cities-dropdown-search-input:focus {\n  outline: 2px solid #0066cc;\n  outline-offset: 2px;\n  border-color: #0066cc;\n}\n\n.cities-dropdown-breadcrumb {\n  padding: 10px 15px;\n  border-bottom: 1px solid #eee;\n  background: #f9f9f9;\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  font-size: 12px;\n}\n\n.cities-dropdown-breadcrumb-item {\n  background: none;\n  border: none;\n  padding: 2px 6px;\n  cursor: pointer;\n  color: #0066cc;\n  text-decoration: none;\n}\n\n.cities-dropdown-breadcrumb-item:hover {\n  text-decoration: underline;\n}\n\n.cities-dropdown-list {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n\n.cities-dropdown-item {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 10px 15px;\n  cursor: pointer;\n  border-bottom: 1px solid #f0f0f0;\n  transition: background-color 0.2s;\n}\n\n.cities-dropdown-item:last-child {\n  border-bottom: none;\n}\n\n.cities-dropdown-item:hover {\n  background-color: #f5f5f5;\n}\n\n.cities-dropdown-item.leaf {\n  font-weight: 500;\n}\n\n.cities-dropdown-item.has-children {\n  font-weight: 600;\n}\n\n.cities-dropdown-item.country-item {\n  font-weight: 600;\n  background-color: #f0f7ff;\n}\n\n.cities-dropdown-item.country-item:hover {\n  background-color: #e0efff;\n}\n\n.cities-dropdown-item-name {\n  flex: 1;\n  text-align: left;\n}\n\n.cities-dropdown-item-arrow {\n  color: #999;\n  font-size: 10px;\n  margin-left: 10px;\n}\n\n.cities-dropdown-empty {\n  padding: 20px;\n  text-align: center;\n  color: #999;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n  .cities-dropdown {\n    max-width: 100%;\n  }\n  \n  .cities-dropdown-menu {\n    max-height: 300px;\n  }\n}\n\n\n/* Model 1: Cascading Dropdowns Styles */\n\n.cities-dropdown-cascading {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  width: 100%;\n  max-width: 400px;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n}\n\n.cities-dropdown-cascading-level {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n}\n\n.cities-dropdown-cascading-label {\n  font-size: 14px;\n  font-weight: 600;\n  color: #333;\n  margin-bottom: 4px;\n}\n\n.cities-dropdown-cascading-select {\n  width: 100%;\n  padding: 10px 15px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  background: white;\n  font-size: 14px;\n  color: #333;\n  cursor: pointer;\n  transition: border-color 0.2s;\n  box-sizing: border-box;\n}\n\n.cities-dropdown-cascading-select:hover:not(:disabled) {\n  border-color: #999;\n}\n\n.cities-dropdown-cascading-select:focus {\n  outline: 2px solid #0066cc;\n  outline-offset: 2px;\n  border-color: #0066cc;\n}\n\n.cities-dropdown-cascading-select:disabled {\n  background-color: #f5f5f5;\n  color: #999;\n  cursor: not-allowed;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n  .cities-dropdown-cascading {\n    max-width: 100%;\n  }\n}\n\n";
+    style.textContent = ".cities-dropdown{position:relative;display:inline-block;width:100%;max-width:400px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif}.cities-dropdown-trigger{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 15px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;-webkit-user-select:none;user-select:none;min-height:40px;box-sizing:border-box;flex-wrap:wrap;gap:8px}.cities-dropdown-trigger:hover{border-color:#999}.cities-dropdown-trigger:focus{outline:2px solid #0066cc;outline-offset:2px}.cities-dropdown-text{flex:1;text-align:left;color:#333;word-wrap:break-word;word-break:break-word;white-space:normal;min-width:0}.cities-dropdown-clear{background:none;border:none;font-size:20px;line-height:1;padding:0 8px;cursor:pointer;color:#999;margin-right:8px;flex-shrink:0;align-self:center}.cities-dropdown-clear:hover{color:#333}.cities-dropdown-arrow{color:#666;font-size:12px;margin-left:8px;flex-shrink:0;align-self:center}.cities-dropdown-menu{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 12px #00000026;z-index:1000;max-height:400px;overflow-y:auto}.cities-dropdown-search{padding:10px 15px;border-bottom:1px solid #eee;background:#f9f9f9}.cities-dropdown-search-input{width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box}.cities-dropdown-search-input:focus{outline:2px solid #0066cc;outline-offset:2px;border-color:#06c}.cities-dropdown-breadcrumb{padding:10px 15px;border-bottom:1px solid #eee;background:#f9f9f9;display:flex;flex-wrap:wrap;gap:4px;font-size:12px}.cities-dropdown-breadcrumb-item{background:none;border:none;padding:2px 6px;cursor:pointer;color:#06c;text-decoration:none}.cities-dropdown-breadcrumb-item:hover{text-decoration:underline}.cities-dropdown-list{list-style:none;margin:0;padding:0}.cities-dropdown-item{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;cursor:pointer;border-bottom:1px solid #f0f0f0;transition:background-color .2s}.cities-dropdown-item:last-child{border-bottom:none}.cities-dropdown-item:hover{background-color:#f5f5f5}.cities-dropdown-item.leaf{font-weight:500}.cities-dropdown-item.has-children{font-weight:600}.cities-dropdown-item.country-item{font-weight:600;background-color:#f0f7ff}.cities-dropdown-item.country-item:hover{background-color:#e0efff}.cities-dropdown-item-name{flex:1;text-align:left}.cities-dropdown-item-arrow{color:#999;font-size:10px;margin-left:10px}.cities-dropdown-empty{padding:20px;text-align:center;color:#999}@media (max-width: 768px){.cities-dropdown{max-width:100%}.cities-dropdown-menu{max-height:300px}}.cities-dropdown-cascading{display:flex;flex-direction:column;gap:15px;width:100%;max-width:400px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif}.cities-dropdown-cascading-level{display:flex;flex-direction:column;gap:5px}.cities-dropdown-cascading-label{font-size:14px;font-weight:600;color:#333;margin-bottom:4px}.cities-dropdown-cascading-select{width:100%;padding:10px 15px;border:1px solid #ddd;border-radius:4px;background:#fff;font-size:14px;color:#333;cursor:pointer;transition:border-color .2s;box-sizing:border-box}.cities-dropdown-cascading-select:hover:not(:disabled){border-color:#999}.cities-dropdown-cascading-select:focus{outline:2px solid #0066cc;outline-offset:2px;border-color:#06c}.cities-dropdown-cascading-select:disabled{background-color:#f5f5f5;color:#999;cursor:not-allowed}@media (max-width: 768px){.cities-dropdown-cascading{max-width:100%}}.cities-dropdown.loading,.cities-dropdown.error{padding:10px 15px;border:1px solid #ddd;border-radius:4px;background:#fff;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif}.cities-dropdown.error{color:#d32f2f;border-color:#d32f2f}code{font-family:source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace}\n";
     document.head.appendChild(style);
   }
 })();
