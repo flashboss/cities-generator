@@ -56,6 +56,68 @@ const standaloneConfig = defineConfig({
         manualChunks: undefined,
       },
       plugins: [
+        // Plugin to replace 'process' references with safe access during build
+        {
+          name: 'replace-process-references',
+          transform(code, id) {
+            // Only process JavaScript/TypeScript files from node_modules (React, etc.)
+            if (!id.includes('node_modules') || !code.includes('process')) {
+              return null;
+            }
+            
+            // Safe process object with env
+            const safeProcessObj = '(typeof process !== "undefined" ? process : (typeof window !== "undefined" && window.process ? window.process : (typeof globalThis !== "undefined" && globalThis.process ? globalThis.process : {env: {NODE_ENV: "production"}})))';
+            
+            let modified = false;
+            let newCode = code;
+            
+            // Replace process.env.NODE_ENV and process.env['NODE_ENV'] first
+            // This is the most common pattern in React
+            const envPatterns = [
+              /process\.env\.NODE_ENV/g,
+              /process\.env\[['"]NODE_ENV['"]\]/g,
+              /process\.env\s*\.\s*NODE_ENV/g
+            ];
+            
+            envPatterns.forEach(pattern => {
+              if (pattern.test(newCode)) {
+                newCode = newCode.replace(pattern, safeProcessObj + '.env.NODE_ENV');
+                modified = true;
+              }
+            });
+            
+            // Replace ALL process references with safe access
+            // This includes process.env, process.something, and standalone process
+            // Do this in a single pass to avoid conflicts
+            
+            // First, replace process.env (most common)
+            if (newCode.includes('process.env')) {
+              newCode = newCode.replace(/process\.env/g, safeProcessObj + '.env');
+              modified = true;
+            }
+            
+            // Then replace process.property (like process.browser, etc.)
+            newCode = newCode.replace(/process\.([a-zA-Z_$][a-zA-Z0-9_$]*)/g, (match, prop) => {
+              modified = true;
+              return safeProcessObj + '.' + prop;
+            });
+            
+            // Finally, replace standalone 'process' references
+            // Match 'process' that is not part of a larger identifier
+            newCode = newCode.replace(/([^a-zA-Z0-9_$]|^)process(?![a-zA-Z0-9_$\.])/g, (match, prefix) => {
+              modified = true;
+              return (prefix || '') + safeProcessObj;
+            });
+            
+            if (modified) {
+              return {
+                code: newCode,
+                map: null
+              };
+            }
+            return null;
+          }
+        },
         // Plugin to inject CSS and process polyfill into JS
         {
           name: 'inject-css-and-polyfill',
@@ -66,16 +128,34 @@ const standaloneConfig = defineConfig({
             
             if (jsFile && bundle[jsFile]) {
               // Inject process polyfill FIRST (before CSS, before everything)
+              // Must be executed immediately and synchronously before any other code
+              // Define process globally for React compatibility
+              // React accesses 'process' directly, so we need to make it available as a global variable
+              // Use a simpler, more direct approach that works in all contexts
               const processPolyfill = `
-(function() {
-  if (typeof window !== 'undefined' && typeof window.process === 'undefined') {
-    window.process = {
-      env: {
-        NODE_ENV: 'production'
-      }
-    };
+void function() {
+  var p = {env: {NODE_ENV: 'production'}};
+  try {
+    if (typeof globalThis !== 'undefined') globalThis.process = p;
+    if (typeof window !== 'undefined') window.process = p;
+    if (typeof global !== 'undefined') global.process = p;
+    if (typeof self !== 'undefined') self.process = p;
+    // Use Function constructor to create true global variable
+    (new Function('p', 'this.process = p;')).call(
+      typeof globalThis !== 'undefined' ? globalThis : 
+      typeof window !== 'undefined' ? window : 
+      typeof global !== 'undefined' ? global : 
+      typeof self !== 'undefined' ? self : this,
+      p
+    );
+  } catch(e) {}
+  // Ensure process is available as bare identifier
+  if (typeof process === 'undefined') {
+    try {
+      (function() { process = p; })();
+    } catch(e) {}
   }
-})();
+}();
 `;
               
               // Inject CSS as style tag - preserve Unicode characters like UMD does
@@ -126,7 +206,8 @@ const standaloneConfig = defineConfig({
               }
               
               // Prepend UTF-8 BOM and polyfill/CSS to the bundle
-              // Add UTF-8 BOM to ensure browser interprets file as UTF-8 (like UMD does)
+              // BOM is needed for proper Unicode character interpretation (like UMD does)
+              // The polyfill is designed to work correctly even with BOM present
               const utf8BOM = '\uFEFF';
               bundle[jsFile].code = utf8BOM + processPolyfill + cssInjection + bundle[jsFile].code;
             }
