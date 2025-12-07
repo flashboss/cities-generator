@@ -13,6 +13,8 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -674,6 +676,21 @@ public class OpenStreetMap extends Template {
 					// Add municipalities for provinces
 					addNodes(node.getZones(), numberLevel + 1, nodeId, 8);
 				}
+			}
+
+			// Sort nodes alphabetically by name (case-insensitive, like GeoNames)
+			// This ensures consistent ordering since Overpass API doesn't guarantee order
+			if (!zones.isEmpty()) {
+				Collections.sort(zones, new Comparator<Node>() {
+					@Override
+					public int compare(Node n1, Node n2) {
+						String name1 = n1.getName() != null ? n1.getName() : "";
+						String name2 = n2.getName() != null ? n2.getName() : "";
+						// Case-insensitive comparison to match GeoNames behavior
+						return name1.compareToIgnoreCase(name2);
+					}
+				});
+				logger.debug("Sorted {} nodes alphabetically at level {}", zones.size(), numberLevel);
 			}
 
 			logger.info(
