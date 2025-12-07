@@ -205,10 +205,11 @@ void function() {
                 delete bundle[cssFile];
               }
               
-              // Prepend polyfill/CSS to the bundle
-              // Note: BOM removed to avoid issues with CDN loading
-              // The polyfill must execute before any React code
-              bundle[jsFile].code = processPolyfill + cssInjection + bundle[jsFile].code;
+              // Prepend UTF-8 BOM and polyfill/CSS to the bundle
+              // BOM is needed for proper Unicode character interpretation (like UMD does)
+              // The polyfill is designed to work correctly even with BOM present
+              const utf8BOM = '\uFEFF';
+              bundle[jsFile].code = utf8BOM + processPolyfill + cssInjection + bundle[jsFile].code;
             }
           },
         },
