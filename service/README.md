@@ -23,7 +23,7 @@ To build the service, download the source under `/service` folder and execute:
 Start the service through the command:
 
 ```bash
-java -jar build/libs/cities-generator-service-1.2.7.jar --country=IT --language=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -jar build/libs/cities-generator-service-1.2.8.jar --country=IT --language=it --server.port=8380 --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 Keycloak params are mandatory to connect to a custom keycloak server. It allows the authorization. To use the service connect through browser to <http://cities-generator-service.vige.it:8380/swagger-ui/index.html>
@@ -33,7 +33,7 @@ Keycloak params are mandatory to connect to a custom keycloak server. It allows 
 In a production environment you could use https so:
 
 ```bash
-java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.7.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --language=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
+java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application-ct.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/cities-generator-service-1.2.8.jar --server.ssl.key-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application-ct.keystore --server.ssl.trust-store-password=password --server.port=8743 --country=IT --language=it --keycloak.realm=${realm} --keycloak.auth-server-url=${url} --keycloak.resource=${resource}
 ```
 
 ## Docker
