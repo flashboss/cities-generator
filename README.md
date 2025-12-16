@@ -1,9 +1,3 @@
----
-layout: guide
-title: Cities Generator
-permalink: /guide/
----
-
 # Cities Generator
 
 A comprehensive solution for generating and using cities data. This project consists of three main components:

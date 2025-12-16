@@ -1,9 +1,3 @@
----
-layout: guide
-title: Cities Generator Library
-permalink: /library/
----
-
 # Cities Generator Library
 
 Java library for generating descriptor files with cities data. The library can generate JSON files containing hierarchical location data (regions, provinces, municipalities) for various countries.

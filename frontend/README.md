@@ -1,9 +1,3 @@
----
-layout: guide
-title: Cities Generator Frontend
-permalink: /frontend/
----
-
 # Cities Generator Frontend
 
 A portable, hierarchical dropdown menu component for displaying cities data from cities-generator JSON files. The component is designed to work in any platform (WordPress, Drupal, Liferay, Joomla, etc.) with minimal integration effort.

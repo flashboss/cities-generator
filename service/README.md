@@ -1,9 +1,3 @@
----
-layout: guide
-title: Cities Generator Service
-permalink: /service/
----
-
 # Cities Generator Service
 
 REST service for accessing cities data. This service provides a REST API that returns JSON format with the cities of the used country according to the configured parameters.

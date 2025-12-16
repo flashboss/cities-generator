@@ -27,8 +27,7 @@ index.html
 *~
 
 # Build artifacts that aren't needed
-dist/assets/
-dist/*.html
+dist
 
 # Public folder (only keep README if needed)
 public/
