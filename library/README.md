@@ -43,7 +43,7 @@ Java library for generating descriptor files with cities data. The library can g
 To see DEBUG level logs (more detailed information), use the system property `-Dorg.slf4j.simpleLogger.defaultLogLevel=debug`:
 
 ```bash
-java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT
+java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.8.jar -p EXTRA_GEONAMES -c IT
 ```
 
 Available log levels: `trace`, `debug`, `info`, `warn`, `error` (default: `info`)
@@ -53,13 +53,13 @@ Available log levels: `trace`, `debug`, `info`, `warn`, `error` (default: `info`
 To enable remote debugging, use the `-agentlib:jdwp` parameter:
 
 ```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT -l en
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar cities-generator-1.2.8.jar -p EXTRA_GEONAMES -c IT -l en
 ```
 
 Or with quotes (for zsh compatibility):
 
 ```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address='*:5005' -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT -l en
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address='*:5005' -jar cities-generator-1.2.8.jar -p EXTRA_GEONAMES -c IT -l en
 ```
 
 Parameters:
@@ -76,7 +76,7 @@ Then connect your IDE debugger to `localhost:5005`.
 **Example with DEBUG logs and remote debugging:**
 
 ```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.7.jar -p EXTRA_GEONAMES -c IT -l en
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar cities-generator-1.2.8.jar -p EXTRA_GEONAMES -c IT -l en
 ```
 
 ## Usage Modes
@@ -88,7 +88,7 @@ To generate the cities, you can choose between 3 modes:
 By a command line shell digit:
 
 ```bash
-mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.7:jar -DoutputDirectory=. && java -jar cities-generator-1.2.7.jar -c GB -l en
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:copy -Dartifact=it.vige.cities:cities-generator:1.2.8:jar -DoutputDirectory=. && java -jar cities-generator-1.2.8.jar -c GB -l en
 ```
 
 It will return a json file inside the ${user.home}/cities-generator/EU/GB/en.json (structure: {continent}/{country}/{language}.json)
@@ -100,7 +100,7 @@ Download the source and execute:
 ```bash
 cd library
 ./gradlew build
-java -jar build/libs/cities-generator-1.2.7.jar -c IT -l it
+java -jar build/libs/cities-generator-1.2.8.jar -c IT -l it
 ```
 
 ### Mode 3: Java API
@@ -113,14 +113,14 @@ Through API java follow the instructions:
 <dependency>
     <groupId>it.vige.cities</groupId>
     <artifactId>cities-generator</artifactId>
-    <version>1.2.7</version>
+    <version>1.2.8</version>
 </dependency>
 ```
 
    or on gradle in the build.gradle file:
 
    ```gradle
-   compile('it.vige.cities:cities-generator:1.2.7')
+   compile('it.vige.cities:cities-generator:1.2.8')
    ```
 
 2. Execute the following java instructions:
@@ -161,13 +161,13 @@ After generating the JSON files, you can automatically publish them to a Git rep
 
 ```bash
 # Publish with default repository (https://github.com/flashboss/cities-generator.git)
-java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git"
+java -jar cities-generator-1.2.8.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git"
 
 # Publish with custom repository and branch
-java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,branch=main"
+java -jar cities-generator-1.2.8.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,branch=main"
 
 # Publish with all options
-java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=myuser,token=ghp_xxxxxxxxxxxxx,message=Update cities data"
+java -jar cities-generator-1.2.8.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,branch=main,dir=data,username=myuser,token=ghp_xxxxxxxxxxxxx,message=Update cities data"
 ```
 
 ### Configuration Format
@@ -188,7 +188,7 @@ You can provide credentials in two ways:
 1. **Via command line:**
 
    ```bash
-   java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,username=myuser,token=ghp_xxx"
+   java -jar cities-generator-1.2.8.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git,username=myuser,token=ghp_xxx"
    ```
 
 2. **Via environment variables:**
@@ -196,7 +196,7 @@ You can provide credentials in two ways:
    ```bash
    export GIT_USERNAME=myuser
    export GIT_TOKEN=ghp_xxxxxxxxxxxxx
-   java -jar cities-generator-1.2.7.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git"
+   java -jar cities-generator-1.2.8.jar -c GB -p OPENSTREETMAP --git-config "repo=https://github.com/user/repo.git"
    ```
 
 For GitHub, use a Personal Access Token (PAT) as the token. Create one at: <https://github.com/settings/tokens>
@@ -248,7 +248,7 @@ This library is available on Maven Central:
 <dependency>
     <groupId>it.vige.cities</groupId>
     <artifactId>cities-generator</artifactId>
-    <version>1.2.7</version>
+    <version>1.2.8</version>
 </dependency>
 ```
 
